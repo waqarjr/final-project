@@ -2,23 +2,23 @@ import { useEffect, useState } from "react";
 import { data, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export const CategoriesRead = ()=>{
+export const Read_manufacture = ()=>{
     const navigate =  useNavigate();
     const [data , setData] = useState([]);
     const read_image = async ()=>{
-        const data = await axios.get("http://localhost:4000/readcategory");
+        const data = await axios.get("http://localhost:4000/readmanufacture");
         setData(data.data);
     }
     const delete_image = async (id)=>{    
     const conform = confirm("Are you Sure to delete this ?")
     if(conform){
-        const del =  await axios.get(`http://localhost:4000/deletecategory/${id}`)
+        const del =  await axios.get(`http://localhost:4000/deletemanufacture/${id}`)
         alert(del.data.message);
         setData((prevData) => prevData.filter((data) => data._id !== id));
     }
     }
     const handleStatusChange = async(id, newStatus) => {
-        await axios.post(`http://localhost:4000/selectupdate/${id}`,{ status: newStatus })
+        await axios.post(`http://localhost:4000/selectupdate_manufacture/${id}`,{ status: newStatus })
     };
     
     useEffect(()=>{
@@ -33,7 +33,7 @@ return(<>
         <div className="grid grid-cols-2 p-4 ">
             <p className="text-2xl font-light">Categories</p>
             <div className="justify-self-end">
-                <button  onClick={()=>{navigate('/categoriescreat')}} className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded">
+                <button  onClick={()=>{navigate('/manufacturecreat')}} className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded">
                     Add New
                 </button>
             </div>
@@ -79,7 +79,7 @@ return(<>
                     </select>
                     </td>
                     <td>
-                        <Link to={`/categoriesupdate/${user._id}`}  >
+                        <Link to={`/manufactureupdate/${user._id}`}  >
                         <button  type="button" className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded mr-3" >Edit</button>
                         </Link>
                         <button type="button" className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-yellow-500 rounded"
@@ -96,4 +96,4 @@ return(<>
 </div>
 </>)
 }
-export default CategoriesRead;
+export default Read_manufacture;

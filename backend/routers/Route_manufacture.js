@@ -1,12 +1,12 @@
 const  multer = require("multer");
-const {read_update_category,creat_category,read_category,delete_category, update_category,select_update} = require("../controller/ContolCategories");
+const {read_update_manufacture,creat_manufacture,read_manufacture,delete_manufacture, update_manufacture,select_update} = require("../controller/Control_manufacture");
 
 const express = require("express");
 const router = express.Router();
 
 const storage = multer.diskStorage({
     destination: function(req,file,cd) {
-        cd(null,"Images/categories");
+        cd(null,"Images/manufactuer");
     },
     filename: function(req,file,cd){
         const file_name = `${Date.now()}-${file.originalname}`;
@@ -14,17 +14,17 @@ const storage = multer.diskStorage({
     }
 })
 const uploads = multer({storage:storage})
-router.post('/creatcategories',uploads.single('image'),creat_category);
+router.post('/creatmanufacture',uploads.single('image'),creat_manufacture);
 
-router.get('/readcategory',read_category);
+router.get('/readmanufacture',read_manufacture);
 
-router.get('/deletecategory/:id',delete_category);
+router.get('/deletemanufacture/:id',delete_manufacture);
 
-router.get('/readupdatecategory/:id',read_update_category);
+router.get('/readupdatemanufacture/:id',read_update_manufacture);
 
 const categories_update = multer.diskStorage({
     destination: function(req,file,cd){
-        cd(null,"Images/categories")
+        cd(null,"Images/manufactuer")
     },
     filename:function(req,file,cd){
         const file_name = `${Date.now()}-${file.originalname}`
@@ -33,7 +33,7 @@ const categories_update = multer.diskStorage({
 })
 const update = multer({storage:categories_update});
 
-router.post('/updatecategory/:id',update.single('image'),update_category);
+router.post('/updatemanufacture/:id',update.single('image'),update_manufacture);
 
-router.post('/selectupdate/:id',select_update);
+router.post('/selectupdate_manufacture/:id',select_update);
 module.exports = router;

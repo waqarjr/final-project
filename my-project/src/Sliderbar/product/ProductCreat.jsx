@@ -1,4 +1,66 @@
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+
 export const ProductCreat = ()=>{
+const navigate = useNavigate();
+
+const [singleImage, setSingleImage] = useState(null);
+  const [multipleImages, setMultipleImages] = useState([]);
+
+  const handleSingleDrop = (files) => {
+    const validFile = files.find((file) =>
+      ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)
+    );
+    if (validFile) {
+      setSingleImage(
+        Object.assign(validFile, {
+          preview: URL.createObjectURL(validFile),
+        })
+      );
+    } else {
+      alert('Invalid file type. Please upload a valid image.');
+    }
+  };
+
+  const handleMultipleDrop = (files) => {
+    const validFiles = files.filter((file) =>
+      ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)
+    );
+    const previews = validFiles.map((file) =>
+      Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      })
+    );
+    setMultipleImages((prevImages) => [...prevImages, ...previews]);
+  };
+
+  const singleDropzone = useDropzone({
+    onDrop: handleSingleDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.webp'],
+    },
+    multiple: false,
+  });
+
+  const multipleDropzone = useDropzone({
+    onDrop: handleMultipleDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.webp'],
+    },
+    multiple: true,
+  });
+
+  const removeSingleImage = () => setSingleImage(null);
+  const removeMultipleImage = (fileName) => {
+    setMultipleImages((prevImages) =>
+      prevImages.filter((file) => file.name !== fileName)
+    );
+  };
+
+
 
 return(<>
 
@@ -75,27 +137,83 @@ return(<>
             <div className="grid grid-cols-2 ml-5 space-x-3 ">
                 <div >
                     <label htmlFor="stock" className="font-bold mt-5 block">Stock</label>
-                    <input type="text" id="stock" className="mt-2 h-10 border-2  rounded w-full" />
+                    <input type="text" id="stock" className="mt-2 h-12 border-2  rounded w-full" />
                 </div>
             </div>
         </div>
-        <div className="mt-5 ml-1">
-            <label htmlFor="image" className="font-bold">Image <span className="text-red-700 " >*</span> </label>
-           <input type="file" className="w-full border-2 rounded-md mt-2"  />
+      <div className="">
 
-            <div className="mt-8">
-           <label htmlFor="image" className="font-bold">Multiple Images <span className="text-red-700 " >*</span> </label>
-           <input type="file" multiple className="w-full border-2 rounded-md mt-2"  />
-            </div>
+      <div
+  {...singleDropzone.getRootProps()}
+  className="relative flex flex-col items-center justify-center mt-11 mx-4 w-auto h-[150px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-100  transition cursor-pointer"
+>
+  <input {...singleDropzone.getInputProps()} />
+  {singleImage ? (
+    <div className="relative flex flex-col items-center  size-20 justify-center">
+      <img src={singleImage.preview} alt="Preview" className="w-32 h-32 object-cover rounded-md" />
+      <button
+        onClick={removeSingleImage}
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  text-white bg-red-500 rounded-full size-8 opacity-0 hover:opacity-100 transition" >
+        <span className="text-xl">×</span> 
+      </button>
+    </div>
+  ) : (
+    <img
+      src="../../../public/camera-icon.jpg"
+      alt="Upload Logo"
+      className="w-16 h-16 object-contain opacity-80 hover:opacity-100 transition"
+    />
+  )}
+</div>
 
-        </div>
+
+{/* Multiple IMages */}
+
+<div
+  {...multipleDropzone.getRootProps()}
+  className="flex flex-col items-center justify-center mx-5 mt-5 w-auto h-[180px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-100 transition cursor-pointer overflow-hidden"
+>
+  <input {...multipleDropzone.getInputProps()} />
+  {multipleImages.length > 0 ? (
+    multipleImages.map((file) => (
+      <div key={file.name} className="relative flex flex-col items-center  size-20 justify-center overflow-hidden">
+        <img
+          src={file.preview}
+          alt="Preview"
+          className="w-[100px] object-contain rounded-md"
+        />
+          <button
+          onClick={() => removeMultipleImage(file.name)}
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  text-white bg-red-500 rounded-full size-8 opacity-0 hover:opacity-100 transition" >
+        <span className="text-xl">×</span> 
+      </button>
+      </div>
+    ))
+  ) : (
+    <img
+      src="../../../public/camera-icon.jpg"
+      alt="Upload Logo"
+      className="w-16 h-16 object-contain opacity-80 hover:opacity-100 transition"
+    />
+  )}
+</div>
+
+
+      </div>
         </div>
         
         <div className="mx-5 mt-4">
             <label htmlFor="short_description" className="font-bold">Short Description<span className="text-red-700">*</span> </label>
             <textarea name="short_description" id="short_description" className="w-full border-2"></textarea>
         </div>   
-       
+
+       <div className='mx-5 mt-4 '>
+       <CKEditor  editor={ClassicEditor} config={{ licenseKey: 'YOUR_LICENSE_KEY_HERE', }} data=""
+            // onReady={(editor) => {
+            //     console.log('Editor is ready to use!', editor);
+            // }}
+        />
+       </div>
         <div className="ml-5">
             <p className="font-bold">Status </p>
             <div className="[&>*]:p-2 mt-3">

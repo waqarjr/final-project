@@ -72,7 +72,7 @@ return(<>
                     <td>{user.name}</td>
                     <td><img src={user.image} alt="image" width="80" className=" mx-auto" /></td>
                     <td>
-                    <select value={user.status} onChange={(e) =>  handleStatusChange(user._id, e.target.value)}
+                    <select defaultValue={user.status} onChange={(e) =>  handleStatusChange(user._id, e.target.value)}
                         className="w-[150px] border-2 rounded-md" >
                         <option value="enable">Enable</option>
                         <option value="disable">Disable</option>

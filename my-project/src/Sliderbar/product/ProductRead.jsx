@@ -1,7 +1,21 @@
 import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 
 export const ProductRead = ()=>{
 const navigate = useNavigate();
+
+const [images, setImages] = useState([]);
+ // Handle image upload
+const handleImageUpload = (e) => {
+  const files = Array.from(e.target.files);
+  const imageUrls = files.map((file) => URL.createObjectURL(file));
+  setImages((prevImages) => [...prevImages, ...imageUrls]);
+};
+// Handle image removal
+const removeImage = (index) => {
+  setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+};
+
 return(<>
     <div className="sm:ml-64 mt-14">
         
@@ -72,6 +86,30 @@ return(<>
             </table>
         </div>
         </div>
+    </div>
+<div className="sm:ml-64 mt-14">
+
+<div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
+      <div className="w-full max-w-md">
+        <label className="block cursor-pointer">
+          <div className="border-2 border-dashed border-gray-400 rounded-md p-4 text-center text-gray-500 hover:bg-gray-200 transition">
+            Click to Upload Images
+        <div className="mt-4 grid grid-cols-3 gap-4">
+          {images.map((image, index) => (
+            <div key={index} className="relative w-full h-24 border rounded-md overflow-hidden" >
+              <img src={image} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
+              <button onClick={() => removeImage(index)}
+                className="absolute top-0 right-0 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs transform translate-x-2 -translate-y-2 hover:bg-red-700 transition">&times;
+              </button>
+            </div>
+          ))}
+        </div>
+          </div>
+          <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} />
+        </label>
+      </div>
+    </div>
+
     </div>
 </>)
 

@@ -57,7 +57,7 @@ const update_manufacture = async(req,res)=>{
 const select_update = async(req,res)=>{
 const id = req.params.id;
 const {status} =  req.body;
-console.log(id,status);
+
     await manufacture.updateOne({_id:id},{$set:{status:status}})
 }
 

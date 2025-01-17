@@ -57,7 +57,6 @@ const update_category = async(req,res)=>{
 const select_update = async(req,res)=>{
 const id = req.params.id;
 const {status} =  req.body;
-console.log(id,status);
     await category.updateOne({_id:id},{$set:{status:status}})
 }
 

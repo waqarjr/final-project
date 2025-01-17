@@ -1,20 +1,18 @@
-import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 export const ProductRead = ()=>{
 const navigate = useNavigate();
+const [data ,setData] = useState([]);
 
-const [images, setImages] = useState([]);
- // Handle image upload
-const handleImageUpload = (e) => {
-  const files = Array.from(e.target.files);
-  const imageUrls = files.map((file) => URL.createObjectURL(file));
-  setImages((prevImages) => [...prevImages, ...imageUrls]);
-};
-// Handle image removal
-const removeImage = (index) => {
-  setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-};
+const readData = async()=>{
+  const data = await axios.get('http://localhost:4000/read-product'); 
+  setData(data.data);
+}
+useEffect(()=>{
+readData();
+})
 
 return(<>
     <div className="sm:ml-64 mt-14">
@@ -65,7 +63,7 @@ return(<>
             <div className="p-2">
             <table className="border-2 w-full text-center">
                 <thead className="bg-slate-100 ">
-                    <tr className="[&>*]:p-3">
+                    <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300">
                         <th>#</th>
                         <th>Name</th>
                         <th>Image</th>
@@ -74,42 +72,26 @@ return(<>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>!</td>
-                        <td>!</td>
-                        <td>!</td>
-                        <td>!</td>
-                        <td>!</td>
+                  {data.map((user ,index)=>(
+                    <tr key={user._id} className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300">
+                        <td>{index + 1}</td>
+                        <td>{user.title}</td>
+                        <td><img src={user.image} alt="image" width="80" className=" mx-auto" /></td>
+                        <td>{user.status}</td>
+                        <td>
+                        <Link to={`/productupdate/${user._id}`}>
+                        <button  type="button" className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded mr-3" >Edit</button>
+                        </Link>
+                        <button type="button" className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-yellow-500 rounded"
+                        onClick={()=>{}} >Delete</button>
+                        </td>
                     </tr>
+                  ))}
                 </tbody>
                 <tfoot></tfoot>
             </table>
         </div>
         </div>
-    </div>
-<div className="sm:ml-64 mt-14">
-
-<div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
-      <div className="w-full max-w-md">
-        <label className="block cursor-pointer">
-          <div className="border-2 border-dashed border-gray-400 rounded-md p-4 text-center text-gray-500 hover:bg-gray-200 transition">
-            Click to Upload Images
-        <div className="mt-4 grid grid-cols-3 gap-4">
-          {images.map((image, index) => (
-            <div key={index} className="relative w-full h-24 border rounded-md overflow-hidden" >
-              <img src={image} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
-              <button onClick={() => removeImage(index)}
-                className="absolute top-0 right-0 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs transform translate-x-2 -translate-y-2 hover:bg-red-700 transition">&times;
-              </button>
-            </div>
-          ))}
-        </div>
-          </div>
-          <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} />
-        </label>
-      </div>
-    </div>
-
     </div>
 </>)
 

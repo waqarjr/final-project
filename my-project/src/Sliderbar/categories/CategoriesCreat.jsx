@@ -39,7 +39,7 @@ return(<>
         <p className="capitalize text-3xl font-sans">product categories</p>
     </div>
     
-    <div className="p-4 bg-white w-full shadow-xl ">
+    <div className=" bg-white w-full shadow-xl ">
         <div className="grid grid-cols-2 p-4 ">
             <div><p className="text-2xl font-light">Add New</p></div>
             <div className="justify-self-end">

@@ -12,6 +12,7 @@ import ProductCreat from './Sliderbar/product/ProductCreat';
 import Read_manufacture from './Sliderbar/Manufacturer/Read_manufacture';
 import Creat_manufacture from './Sliderbar/Manufacturer/Creat_maufacture';
 import Update_manufacture from './Sliderbar/Manufacturer/Update_manufacture';
+import ProductUpdate from './Sliderbar/product/ProductUpdate';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           {/* Products */}
           <Route path='/product' element={<ProductRead/>} />
           <Route path='/productscreat' element={<ProductCreat/>} />
+          <Route path='/productupdate/:id' element={<ProductUpdate/>} />
           {/* manufacturer */}
           <Route path='/manufacture' element={<Read_manufacture/>}/>
           <Route path='/manufacturecreat' element={<Creat_manufacture/>} />

@@ -1,23 +1,59 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import {useFormik} from "formik";
 import * as Yup from "yup";
   
-export const ProductCreat = ()=>{
+export const ProductUpdate = ()=>{
 const navigate = useNavigate();
+const {id} = useParams();
 
-// const [images, setImages] = useState([]);
-// const handleImageUpload = (e) => {
-//   const files = Array.from(e.target.files);
-//   const imageUrls = files.map((file) => URL.createObjectURL(file));
-//   setImages((prevImages) => [...prevImages, ...imageUrls]);
-// };
-// const removeImage = (index) => {
-//   setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-// };
+const [title , setTitle] = useState('');
+const [category , setCategories] = useState('');
+const [manufacturer , setManufacturer] = useState('');
+const [vendor , setVendor ] = useState('');
+const [price , setPrice] = useState ('');
+const [price_discount , setPrice_Discount] = useState('');
+const [keywords , setKeywords] = useState('');
+const [stock , setStock ] = useState('');
+const [short_description , setShort_Description] = useState('');
+const [long_description , setLong_Description] = useState('');
+const [status ,SetStatus] = useState('');
+const [image ,setImage] = useState(null);
+const [images , setImages] = useState([]);
+
+const fetchData = async(id)=>{
+    const data = await axios.get(`http://localhost:4000/read-update-product/${id}`)
+    setTitle(data.data.title);
+    setCategories(data.data.category);
+    setManufacturer(data.data.manufacturer);
+    setVendor(data.data.vendor);
+    setPrice(data.data.price);
+    setPrice_Discount(data.data.price_discount);
+    setKeywords(data.data.keywords);
+    setStock(data.data.stock);
+    setShort_Description(data.data.short_description);
+    setLong_Description(data.data.long_description);
+    SetStatus(data.data.status);
+    setImage(data.data.image);
+}
+const multiple = async()=>{ 
+  const a =  await axios.get("http://localhost:4000/read-mul-image-product");
+  setImages(a.data);
+}
+
+useEffect(()=>{
+multiple();
+fetchData(id)
+},[id])
+
+const handleDelete = async(id)=>{
+  const alpha = await axios.get(`http://localhost:4000/del-mul-image-product/${id}`)
+  alert(alpha.data.message);
+  setImages((prevData) => prevData.filter((data) => data._id !== id));
+}
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 1024 * 1024; 
@@ -48,20 +84,21 @@ const validationSchema = Yup.object({
 
 const formik = useFormik({
   initialValues:{
-    title : '',
-    category : '',
-    manufacturer : '',
-    vendor :"",
-    price :"",
-    price_discount :'',
-    keywords :'',
-    stock : '',
-    image: null,
-    multipleImages: [],
-    short_description:'',
-    long_description:'',
-    status:'',
+    title : title,
+    category : category,
+    manufacturer : manufacturer,
+    vendor :vendor,
+    price :price,
+    price_discount :price_discount,
+    keywords :keywords,
+    stock : stock,
+    image: image,
+    multipleImages:images,
+    short_description:short_description,
+    long_description:long_description,
+    status:status,
   },
+  enableReinitialize: true,
   validationSchema : validationSchema,
   onSubmit : async(values)=>{
     console.log(values.title);
@@ -79,13 +116,12 @@ const formik = useFormik({
     formData.append("short_description", values.short_description);
     formData.append("long_description", values.long_description);
     formData.append("status", values.status);
-
     values.multipleImages.forEach((img) => formData.append("multipleImages", img)); 
-    await axios.post('http://localhost:4000/creat-product',formData,{
-      headers:{
-        "Content-Type" : "multipart/form-data"
-      }
-    })
+    // await axios.post(`http://localhost:4000/update-product/${id}`,formData,{
+    //   headers:{
+    //     "Content-Type" : "multipart/form-data"
+    //   }
+    // })
   }
 })
 
@@ -142,7 +178,7 @@ return(<>
                   <div >
                   <label  className="font-bold mt-5 block">Manufacturer<span className="text-red-700  ">*</span></label>
                       <select name="manufacturer" 
-                          onChange={formik.handleChange} onBlur={formik.handleBlur} defaultValue={formik.values.manufacturer}
+                          onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.manufacturer}
                           className="mt-2 h-10 border-2 rounded w-full">
                           <option value="" >....Select....</option>
                           <option value="dell">Dell</option>
@@ -160,7 +196,7 @@ return(<>
                   <div >
                   <label  className="font-bold mt-5 block">Vendor<span className="text-red-700  ">*</span></label>
                       <select name="vendor"
-                        defaultValue={formik.values.vendor} onChange={formik.handleChange} onBlur={formik.handleBlur}
+                        value={formik.values.vendor} onChange={formik.handleChange} onBlur={formik.handleBlur}
                           className="mt-2 h-10 border-2  rounded w-full">
                           <option value="" >....Select....</option>
                           <option value="yes">Yes</option>
@@ -215,41 +251,32 @@ return(<>
           <div>
 
           <div className='mt-6 mx-3'>
-              {/* <div className="w-full bg-gray-100">
-                <label className="block cursor-pointer">
-                  <div className="border-2 border-dashed border-gray-400 rounded-md p-4 text-center text-gray-500 hover:bg-gray-200 transition">
-                    Click to Upload Images
-                <div className="mt-4 grid grid-cols-3 gap-4">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative w-full h-24 border rounded-md overflow-hidden" >
-                      <img src={image} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
-                      <button onClick={() => removeImage(index)}
-                        className="absolute top-0 right-0 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs transform translate-x-2 -translate-y-2 hover:bg-red-700 transition">&times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                  </div>
-                  <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} />
-                </label>
-              </div> */}
                <label className="font-bold  block">Single Images<span className="text-red-700">*</span></label>
               <input type="file" name="image" 
-              className='border-2 border-black mt-2 w-auto  rounded-lg'
+              className='border-2  mt-2  rounded-lg'
               onChange={(event) => formik.setFieldValue("image",event.currentTarget.files[0])} />
-              
               {formik.touched.image && formik.errors.image && (
                   <div className="text-red-500">{formik.errors.image}</div>
               )}
+              <img src={image} alt="image" className='w-32 mx-auto rounded shadow mt-2' />
           </div>
             <div className="mt-6 mx-3 ">
               <label className="font-bold  block">Multiple Images<span className="text-red-700">*</span></label>
               <input type="file" name="multipleImages" multiple 
-              className='border-2 border-black mt-2 w-auto  rounded-lg'
+              className='border-2  mt-2 max-w-sm  rounded-lg'
               onChange={(event) => formik.setFieldValue("multipleImages", Array.from(event.currentTarget.files))} />
               {formik.touched.multipleImages && formik.errors.multipleImages && (
                 <div className="text-red-500">{formik.errors.multipleImages}</div>
               )}
+              {images.map((user)=>(
+                <div key={user._id} className='relative inline-block m-2 rounded shadow-sm group '>
+                  <img src={user.images} alt="images" className='w-24 shadow-sm' />
+                  <div onClick={()=> handleDelete(user._id)} className='hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded'>
+                    &times; 
+                  </div>
+                  
+                </div>
+              ))}
             </div>
 
           </div>
@@ -309,4 +336,4 @@ return(<>
 </div>
 </>)
 }
-export default ProductCreat;
+export default ProductUpdate;

@@ -8,6 +8,7 @@ export const Update_manufacture = ()=>{
 
 const {id} = useParams();    
 const navigate = useNavigate();
+
 const [name , setName ] = useState('');
 const [image , setImage] = useState('');
 const [status , setStatus] = useState('');

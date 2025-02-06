@@ -14,6 +14,18 @@ useEffect(()=>{
 readData();
 })
 
+const deleteData = async(id)=>{
+    let alpha = confirm("Are You Sure To Delete This ?");
+    if(alpha){
+        const a = await axios.get(`http://localhost:4000/deletedata/${id}`)
+        alert(a.data.message);
+        setData((prevData)=> prevData.filter((id)=> data._id !== id ))
+    }
+}
+const handleStatusChange = async(id, newStatus) => {
+    alert(id,newStatus);
+    // await axios.post(`http://localhost:4000/selectupdate/${id}`,{ status: newStatus })
+};
 return(<>
     <div className="sm:ml-64 mt-14">
         
@@ -77,13 +89,19 @@ return(<>
                         <td>{index + 1}</td>
                         <td>{user.title}</td>
                         <td><img src={user.image} alt="image" width="80" className=" mx-auto" /></td>
-                        <td>{user.status}</td>
+                        <td>
+                            <select defaultValue={user.status} onChange={(e) =>  handleStatusChange(user._id, e.target.value)}
+                            className="w-[150px] border-2 rounded-md" >
+                            <option value="enable">Enable</option>
+                            <option value="disable">Disable</option>
+                            </select>
+                        </td>
                         <td>
                         <Link to={`/productupdate/${user._id}`}>
                         <button  type="button" className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded mr-3" >Edit</button>
                         </Link>
                         <button type="button" className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-yellow-500 rounded"
-                        onClick={()=>{}} >Delete</button>
+                        onClick={()=>deleteData(user._id)} >Delete</button>
                         </td>
                     </tr>
                   ))}

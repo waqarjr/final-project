@@ -43,7 +43,7 @@ const update_Read_Data = async (req,res)=>{
 }
 
 const update_Mul_Images = async(req,res)=>{
-    const alpha = await multipleImage.find();
+    const alpha = await multipleImage.find({person_id:req.params.id});
     res.json(alpha);
 }
 
@@ -60,9 +60,80 @@ const mul_Del_Image = async(req,res)=>{
 
 const update = async(req,res)=>{
     const id = req.params.id;
-    console.log(id);
     const {title ,category, manufacturer,vendor,price,price_discount,keywords,stock,short_description,long_description,status} =req.body; 
-    console.log(title ,category, manufacturer,vendor,price,price_discount,keywords,stock,short_description,long_description,status);
+    
+    if(req.files['image'] !== undefined){
+        const imageRecord = await singleImage.findById(id);
+        const filePath = path.join(__dirname, '../', imageRecord.image.replace('http://localhost:4000/', ''));
+    if(req.files["image"][0].path){
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+        }
+        await singleImage.updateOne({_id:id},{$set:{
+            title:title,
+            category:category,
+            manufacturer:manufacturer,
+            vendor:vendor,
+            price:price,
+            price_discount:price_discount,
+            keywords:keywords,
+            stock:stock,
+            short_description:short_description,
+            long_description:long_description,
+            image:`http://localhost:4000/${req.files["image"][0].path}`,
+            status:status,
+            }});
+            res.json({mes:"Your Data Have Been Updated"})}
+    }else {
+    await singleImage.updateOne({_id:id},{$set:{
+        title:title,
+            category:category,
+            manufacturer:manufacturer,
+            vendor:vendor,
+            price:price,
+            price_discount:price_discount,
+            keywords:keywords,
+            stock:stock,
+            short_description:short_description,
+            long_description:long_description,
+            status:status,
+    }});
+    res.json({mes:"Your Data Have Been Updated"})
+    };
+    if (req.files['multipleImages'] !== undefined) {
+        const imagePaths = req.files['multipleImages'].map((file) => `http://localhost:4000/${file.path}`);
+        const imageData = imagePaths.map((path) => ({
+            images: path,
+            person_id:id,
+        }));
+            await multipleImage.insertMany(imageData);
+    }
 }
 
-module.exports = {insertImage,readData,update_Read_Data,update_Mul_Images,mul_Del_Image,update};
+const deleteData = async(req,res)=>{
+const id = req.params.id;
+const imageLoation = await singleImage.findById(id);
+if(imageLoation){
+    await singleImage.deleteOne({_id:id});
+    const filepath = path.join(__dirname, '../', imageLoation.image.replace("http://localhost:4000/",""))
+    if(fs.existsSync(filepath)){
+        fs.unlinkSync(filepath);
+        const multiple = await multipleImage.find({ person_id: id });
+            await multipleImage.deleteMany({person_id: id});
+            for (const item of multiple) {
+                if (item.images) {
+                    const filePathImage = path.join(__dirname, '../', item.images.replace('http://localhost:4000/', ''));
+                    if (fs.existsSync(filePathImage)) {
+                        fs.unlinkSync(filePathImage);
+                    }
+                }
+        }
+        res.json({message:"Your image have been Deleted......."})
+    }
+}
+
+
+
+}
+
+module.exports = {insertImage,readData,update_Read_Data,update_Mul_Images,mul_Del_Image,update,deleteData};

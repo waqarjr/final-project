@@ -21,7 +21,7 @@ const [stock , setStock ] = useState('');
 const [short_description , setShort_Description] = useState('');
 const [long_description , setLong_Description] = useState('');
 const [status ,SetStatus] = useState('');
-const [image ,setImage] = useState(null);
+const [image ,setImage] = useState('');
 const [images , setImages] = useState([]);
 
 const fetchData = async(id)=>{
@@ -39,13 +39,13 @@ const fetchData = async(id)=>{
     SetStatus(data.data.status);
     setImage(data.data.image);
 }
-const multiple = async()=>{ 
-  const a =  await axios.get("http://localhost:4000/read-mul-image-product");
+const multiple = async(id)=>{ 
+  const a =  await axios.get(`http://localhost:4000/read-mul-image-product/${id}`);
   setImages(a.data);
 }
 
 useEffect(()=>{
-multiple();
+multiple(id);
 fetchData(id)
 },[id])
 
@@ -55,8 +55,7 @@ const handleDelete = async(id)=>{
   setImages((prevData) => prevData.filter((data) => data._id !== id));
 }
 
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
-const FILE_SIZE = 1024 * 1024; 
+ 
 
 const validationSchema = Yup.object({
   title:Yup.string().required("Title is required"),
@@ -72,13 +71,9 @@ const validationSchema = Yup.object({
   long_description:Yup.string().required('Long Description is required')
   .min(10, 'Long description must be at least 10 characters'),
   image: Yup.mixed()
-    .required("Please upload an image")
-    .test("fileSize", "File is too large", (value) => value && value.size <= FILE_SIZE)
-    .test("fileFormat", "Unsupported Format", (value) => value && SUPPORTED_FORMATS.includes(value.type)),
+    .required("Please upload an image"),
   multipleImages: Yup.array().of( Yup.mixed()
     .required("Please upload an image")
-    .test("fileSize", "File is too large", (value) => value && value.size <= FILE_SIZE)
-    .test("fileFormat", "Unsupported Format", (value) => value && SUPPORTED_FORMATS.includes(value.type))
     ).min(1, "Please upload at least one image")
 })
 
@@ -116,12 +111,13 @@ const formik = useFormik({
     formData.append("short_description", values.short_description);
     formData.append("long_description", values.long_description);
     formData.append("status", values.status);
-    values.multipleImages.forEach((img) => formData.append("multipleImages", img)); 
-    // await axios.post(`http://localhost:4000/update-product/${id}`,formData,{
-    //   headers:{
-    //     "Content-Type" : "multipart/form-data"
-    //   }
-    // })
+    values.multipleImages.map((img) => formData.append("multipleImages", img)); 
+    
+    await axios.post(`http://localhost:4000/update-product/${id}`,formData,{
+      headers:{
+        "Content-Type" : "multipart/form-data"
+      }
+    })
   }
 })
 

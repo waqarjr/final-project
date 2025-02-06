@@ -8,11 +8,15 @@ import CategoriesUpdate from "./Sliderbar/categories/CategoriesUpdate";
 
 import ProductRead from './Sliderbar/product/ProductRead';
 import ProductCreat from './Sliderbar/product/ProductCreat';
+import ProductUpdate from './Sliderbar/product/ProductUpdate';
 
 import Read_manufacture from './Sliderbar/Manufacturer/Read_manufacture';
 import Creat_manufacture from './Sliderbar/Manufacturer/Creat_maufacture';
 import Update_manufacture from './Sliderbar/Manufacturer/Update_manufacture';
-import ProductUpdate from './Sliderbar/product/ProductUpdate';
+
+import Read_Carousel from './Sliderbar/carousel/Read_Carousel';
+import Creat_Carousel from './Sliderbar/carousel/Creat_Carousel';
+import Update_Carousel from './Sliderbar/carousel/Update_Carousel';
 
 function App() {
   return (
@@ -34,6 +38,10 @@ function App() {
           <Route path='/manufacture' element={<Read_manufacture/>}/>
           <Route path='/manufacturecreat' element={<Creat_manufacture/>} />
           <Route path='/manufactureupdate/:id' element={<Update_manufacture/>} />
+          {/* Carousel */}
+          <Route path='/carousel' element={<Read_Carousel/>} />
+          <Route path='/carouselcreat' element={<Creat_Carousel/>} />
+          <Route path='/carouselupdate/:id' element={<Update_Carousel/>}  />
         </Route>
       </Routes>    
     </BrowserRouter>

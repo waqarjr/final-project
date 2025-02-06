@@ -81,11 +81,13 @@ const formik = useFormik({
     formData.append("status", values.status);
 
     values.multipleImages.forEach((img) => formData.append("multipleImages", img)); 
-    await axios.post('http://localhost:4000/creat-product',formData,{
+    const alpha = await axios.post('http://localhost:4000/creat-product',formData,{
       headers:{
         "Content-Type" : "multipart/form-data"
       }
     })
+    alert(alpha.data.message)
+    resetForm();
   }
 })
 

@@ -8,21 +8,39 @@ import Swal from "sweetalert2";
 export const CategoriesRead = ()=>{
     const navigate =  useNavigate();
     const [data , setData] = useState([]);
-    const [currentDate, setCurrentDate] = useState("");
+    const [toDate, setToDate] = useState("");
+    const [fromDate , setFromDate] = useState("");
+    const [status, setStatus] = useState('');
+    const [search , setSearch] = useState('');
 
     useEffect(() => {
         const today = new Date();
         const formattedDate = today.toISOString().split("T")[0];
-        setCurrentDate(formattedDate);
+        setToDate(formattedDate);
     }, []);
 
-    const read_image = async ()=>{
-        const data = await axios.get("http://localhost:4000/readcategory");
+   
+    const handleFilterStatus =  async(filterStatus)=>{
+        const data = await axios.post("http://localhost:4000/readcategory",{status:filterStatus,todate:toDate,fromdate:fromDate});
         setData(data.data);   
     }
-    useEffect(()=>{
-        read_image();
-    },[])
+    useEffect(() => {
+        handleFilterStatus(status); 
+    }, [fromDate, toDate, status]);
+
+    const handleSearch = async(querySearch)=>   {
+        const data = await axios.post("http://localhost:4000/readcategory",{name:querySearch});
+       setData(data.data)
+    }
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            handleSearch(search);
+        }, 500); 
+        
+        return () => clearTimeout(timeoutId); 
+    }, [search]);
+
     const delete_image = async (id)=>{    
         Swal.fire({
             title: "Are you sure?",
@@ -61,10 +79,7 @@ export const CategoriesRead = ()=>{
         }
     };
     
-    const handleFilterStatus =  async(filterStatus)=>{
-        const data = await axios.post("http://localhost:4000/readcategory",{status:filterStatus});
-        setData(data.data);   
-    }
+    
 
     
 return(<>
@@ -85,21 +100,24 @@ return(<>
 
         <div className=" grid md:grid-cols-4 sm:grid-cols-2  grid-cols-1   " >
             <div className="p-2">
-                <input type="date" className="w-full border-2 p-1 rounded-md " id="date" />
+                <input type="date" value={fromDate} onChange={(e)=>setFromDate(e.target.value)}
+                 className="w-full border-2 p-1 rounded-md " id="date" />
             </div>
             <div className="p-2">
-                <input type="date" value={currentDate} onChange={(e) => setCurrentDate(e.target.value)}  className="w-full border-2 p-1 rounded-md " id="date" />
+                <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)}
+                 className="w-full border-2 p-1 rounded-md " id="date" />
             </div>
             <div className="p-2">
                 <select name="" id="" className=" p-[6px] w-full border-2 text-center  rounded-md"
-                onChange={(e)=> handleFilterStatus(e.target.value)} >
+                onChange={(e)=> setStatus(e.target.value)} >
                     <option value="">All</option>
                     <option value="enable">Enable</option>
                     <option value="disable">Disable</option>
                 </select>
             </div>
             <div className="p-2">
-                <input type="text" placeholder="Search" className="w-full border-2 p-[6px]  rounded-md" id="date" />
+                <input type="text"  value={search} onChange={(e)=>setSearch(e.target.value)}
+                 placeholder="Search" className="w-full border-2 p-[6px]  rounded-md" id="date" />
             </div>
         </div>  
 

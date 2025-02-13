@@ -15,13 +15,20 @@ const creat_category = async (req,res)=>{
 
 const read_category = async (req,res)=>{
     let read;
-    const {status } = req.body;
-    if(status){
-         read = await category.find({status:status});
-    }else{
-         read = await category.find();
-        }
-        res.json(read);
+    const {status ,fromdate,todate, name } = req.body;
+    if (name && name !== '') { 
+        read = await category.find({ name: { $regex: name, $options: "i" } });
+    } 
+    else if (status && status !== '' && fromdate && fromdate !== '') {
+        read = await category.find({ date: { $gte: fromdate, $lte: todate }, status: status });
+    } else if (status === '' && fromdate !== '') {
+        read = await category.find({ date: { $gte: fromdate, $lte: todate } });
+    } else if (status !== '' && fromdate === '') {
+        read = await category.find({ status: status });
+    } else {
+        read = await category.find();
+    }
+    res.json(read);
     }
 
 const delete_category = async (req ,res)=>{

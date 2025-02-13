@@ -3,18 +3,26 @@ const path = require("path");
 const fs = require("fs");
 
 const creat_category = async (req,res)=>{
-    const {name,status} = req.body;
+    const {name,status,date} = req.body;
     await category.create({
         name:name,
         status:status,
+        date:date,
         image:`http://localhost:4000/${req.file.path}`,
     })
+    res.send({message:"your data has been insertes sucessfully..."})
 }
 
 const read_category = async (req,res)=>{
-    const read = await category.find();
-    res.json(read);
-}
+    let read;
+    const {status } = req.body;
+    if(status){
+         read = await category.find({status:status});
+    }else{
+         read = await category.find();
+        }
+        res.json(read);
+    }
 
 const delete_category = async (req ,res)=>{
     const id = req.params.id;
@@ -58,6 +66,9 @@ const select_update = async(req,res)=>{
 const id = req.params.id;
 const {status} =  req.body;
     await category.updateOne({_id:id},{$set:{status:status}})
+    res.send({message:"Status updated sucessfully..."})
 }
+
+
 
 module.exports = {creat_category,read_category,delete_category,read_update_category,update_category,select_update};

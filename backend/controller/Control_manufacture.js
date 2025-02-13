@@ -9,11 +9,18 @@ const creat_manufacture = async (req,res)=>{
         status:status,
         image:`http://localhost:4000/${req.file.path}`,
     })
+    res.send({message:"your data has been insertes sucessfully"})
 }
 
 const read_manufacture = async (req,res)=>{
-    const read = await manufacture.find();
-    res.json(read);
+    let read;
+    const {status } = req.body;
+    if(status){
+         read = await manufacture.find({status:status});
+    }else{
+         read = await manufacture.find();
+        }
+        res.json(read);
 }
 
 const delete_manufacture = async (req ,res)=>{
@@ -57,8 +64,8 @@ const update_manufacture = async(req,res)=>{
 const select_update = async(req,res)=>{
 const id = req.params.id;
 const {status} =  req.body;
-
     await manufacture.updateOne({_id:id},{$set:{status:status}})
+  res.send({message:"Status updated sucessfully..."})
 }
 
 module.exports = {creat_manufacture,read_manufacture,delete_manufacture,read_update_manufacture,update_manufacture,select_update};

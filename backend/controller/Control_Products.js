@@ -10,7 +10,6 @@ const insertImage = async(req,res)=>{
         title:title,
         category:category,
         manufacturer:manufacturer,
-        vendor:vendor,
         price:price,
         price_discount:price_discount,
         keywords:keywords,
@@ -131,9 +130,13 @@ if(imageLoation){
         res.json({message:"Your image have been Deleted......."})
     }
 }
-
-
-
 }
 
-module.exports = {insertImage,readData,update_Read_Data,update_Mul_Images,mul_Del_Image,update,deleteData};
+const select_update_state = async(req,res)=>{
+    const id = req.params.id;
+    const {status} =  req.body;
+    await singleImage.updateOne({_id:id},{$set:{status:status}})
+    res.send({message:"Status updated sucessfully..."})
+}
+
+module.exports = {select_update_state,insertImage,readData,update_Read_Data,update_Mul_Images,mul_Del_Image,update,deleteData};

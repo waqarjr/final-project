@@ -2,7 +2,7 @@ const express =  require("express");
 const router = express.Router();
 const multer = require("multer");
 
-const {insertImage, readData, update_Read_Data, update_Mul_Images, mul_Del_Image, update, deleteData} = require('../controller/Control_Products');
+const {select_update_state,insertImage, readData, update_Read_Data, update_Mul_Images, mul_Del_Image, update, deleteData} = require('../controller/Control_Products');
 
 const insertData = multer.diskStorage({
     destination:function(req,file,cd){
@@ -35,5 +35,7 @@ const updateform = multer({storage:updateData})
 router.post('/update-product/:id',updateform.fields([{name:'image'},{name:'multipleImages'}]),update);
 
 
-router.get('/deletedata/:id',deleteData)
+router.get('/deletedata/:id',deleteData);
+
+router.post('/selectupdatestate/:id',select_update_state);
 module.exports = router;

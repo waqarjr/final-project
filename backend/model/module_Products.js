@@ -5,7 +5,6 @@ mongoose.connect("mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/")
     title:String,
     category:String,
     manufacturer:String,
-    vendor:String,
     price:Number,
     price_discount:Number,
     keywords:String,

@@ -1,61 +1,110 @@
 import { useEffect, useState } from "react";
-import { data, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
 
 export const CategoriesRead = ()=>{
     const navigate =  useNavigate();
     const [data , setData] = useState([]);
+    const [currentDate, setCurrentDate] = useState("");
+
+    useEffect(() => {
+        const today = new Date();
+        const formattedDate = today.toISOString().split("T")[0];
+        setCurrentDate(formattedDate);
+    }, []);
+
     const read_image = async ()=>{
         const data = await axios.get("http://localhost:4000/readcategory");
-        setData(data.data);
+        setData(data.data);   
     }
-    const delete_image = async (id)=>{    
-    const conform = confirm("Are you Sure to delete this ?")
-    if(conform){
-        const del =  await axios.get(`http://localhost:4000/deletecategory/${id}`)
-        alert(del.data.message);
-        setData((prevData) => prevData.filter((data) => data._id !== id));
-    }
-    }
-    const handleStatusChange = async(id, newStatus) => {
-        await axios.post(`http://localhost:4000/selectupdate/${id}`,{ status: newStatus })
-    };
-    
     useEffect(()=>{
         read_image();
     },[])
+    const delete_image = async (id)=>{    
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+          }).then( async (result) => {
+            if (result.isConfirmed) {
+            await axios.get(`http://localhost:4000/deletecategory/${id}`)
+            setData((prevData) => prevData.filter((data) => data._id !== id));
+              Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            }
+          });
+    }
+    const handleStatusChange = async(id, newStatus) => {
+        const alpha = await axios.post(`http://localhost:4000/selectupdate/${id}`,{ status: newStatus })
+        if(alpha.data.message){
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "State has been updated sucessfully"
+              });
+        }
+    };
+    
+    const handleFilterStatus =  async(filterStatus)=>{
+        const data = await axios.post("http://localhost:4000/readcategory",{status:filterStatus});
+        setData(data.data);   
+    }
+
+    
 return(<>
 <div className="sm:ml-64 mt-14">
-    <div className=" p-4">
-        <p className="text-3xl capitalize font-sans " > product categories</p>
-    </div>
-    <div className="max-w-7xl   bg-white shadow-sm mx-3 rounded-md ">
+<div className="p-4">
+    <p className="capitalize text-3xl font-sans py-4 ">product categories</p>
+    
+    <div className="bg-white w-full  rounded-lg border-2 border-slate-200">
         <div className="grid grid-cols-2 p-4 ">
             <p className="text-2xl font-light">Categories</p>
             <div className="justify-self-end">
                 <button  onClick={()=>{navigate('/categoriescreat')}} className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded">
+                <FontAwesomeIcon icon={faPlus} className="mr-2" />
                     Add New
                 </button>
             </div>
         </div><hr />
 
-        <div className=" grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1  p-4 " >
+        <div className=" grid md:grid-cols-4 sm:grid-cols-2  grid-cols-1   " >
             <div className="p-2">
-                <input type="date" className="w-full border-2  rounded-md " id="date" />
+                <input type="date" className="w-full border-2 p-1 rounded-md " id="date" />
             </div>
             <div className="p-2">
-                <input type="date" className="w-full border-2  rounded-md " id="date" />
+                <input type="date" value={currentDate} onChange={(e) => setCurrentDate(e.target.value)}  className="w-full border-2 p-1 rounded-md " id="date" />
             </div>
             <div className="p-2">
-                <input type="text" placeholder="All" className="w-full border-2  rounded-md " id="date" />
+                <select name="" id="" className=" p-[6px] w-full border-2 text-center  rounded-md"
+                onChange={(e)=> handleFilterStatus(e.target.value)} >
+                    <option value="">All</option>
+                    <option value="enable">Enable</option>
+                    <option value="disable">Disable</option>
+                </select>
             </div>
             <div className="p-2">
-                <input type="text" placeholder="Search" className="w-full border-2  rounded-md " id="date" />
+                <input type="text" placeholder="Search" className="w-full border-2 p-[6px]  rounded-md" id="date" />
             </div>
         </div>  
 
         <div className="p-2">
-            <table border="4" className="border-2 table-fixed w-full text-center">
+            <table border="4" className="border-2  w-full text-center">
                 <thead className="bg-slate-100 ">
                     <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 ">
                         <th>#</th>
@@ -73,7 +122,7 @@ return(<>
                     <td><img src={user.image} alt="image" width="80" className=" mx-auto" /></td>
                     <td>
                     <select defaultValue={user.status} onChange={(e) =>  handleStatusChange(user._id, e.target.value)}
-                        className="w-[150px] border-2 rounded-md" >
+                        className="md:w-[100px] lg:w-[150px] border-2 rounded-md" >
                         <option value="enable">Enable</option>
                         <option value="disable">Disable</option>
                     </select>
@@ -93,6 +142,7 @@ return(<>
             </table>
         </div>
     </div>
+</div>
 </div>
 </>)
 }

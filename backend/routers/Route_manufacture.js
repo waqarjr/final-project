@@ -17,6 +17,7 @@ const uploads = multer({storage:storage})
 router.post('/creatmanufacture',uploads.single('image'),creat_manufacture);
 
 router.get('/readmanufacture',read_manufacture);
+router.post('/readmanufacture',read_manufacture);
 
 router.get('/deletemanufacture/:id',delete_manufacture);
 

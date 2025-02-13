@@ -18,6 +18,8 @@ router.post('/creatcategories',uploads.single('image'),creat_category);
 
 router.get('/readcategory',read_category);
 
+router.post('/readcategory',read_category);
+
 router.get('/deletecategory/:id',delete_category);
 
 router.get('/readupdatecategory/:id',read_update_category);
@@ -36,4 +38,5 @@ const update = multer({storage:categories_update});
 router.post('/updatecategory/:id',update.single('image'),update_category);
 
 router.post('/selectupdate/:id',select_update);
+
 module.exports = router;

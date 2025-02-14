@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import {useFormik} from "formik";
 import * as Yup from "yup";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
   
 export const ProductUpdate = ()=>{
 const navigate = useNavigate();
@@ -23,6 +25,22 @@ const [long_description , setLong_Description] = useState('');
 const [status ,SetStatus] = useState('');
 const [image ,setImage] = useState('');
 const [images , setImages] = useState([]);
+
+const [readcategory , setReadCategory ] = useState([]);
+const [readManufacturer , setReadManufacturer] = useState([]);
+
+const category_read = async()=>{
+  const data =  await axios.get("http://localhost:4000/readcategory");
+  setReadCategory(data.data);
+}
+const manufacturer_read = async ()=>{
+  const data = await axios.get("http://localhost:4000/readmanufacture");
+  setReadManufacturer(data.data);
+}
+useEffect(()=>{
+  category_read();
+  manufacturer_read();
+},[])
 
 const fetchData = async(id)=>{
     const data = await axios.get(`http://localhost:4000/read-update-product/${id}`)
@@ -133,6 +151,7 @@ return(<>
             <p className="text-2xl font-light">Add New</p>
             <div className="justify-self-end">
                 <button  onClick={()=>{navigate('/product')}} className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-blue-700 rounded text-right">
+                <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                     Back    
                 </button>
             </div>
@@ -140,9 +159,9 @@ return(<>
 
       <form onSubmit={formik.handleSubmit} >
         <div className="grid grid-cols-[70%_auto] ">
-          <div className="grid grid-cols-1" >
+          <div className="" >
 
-              <div className="ml-5 ">
+              <div className="m-5 md:m-0 md:ml-5">
                   <label htmlFor="title" className="font-bold mt-5 block">Title<span className="text-red-700  ">*</span></label>
                   <input type="text" id="title"  
                   name="title" value={formik.values.title} onChange={formik.handleChange} onBlur={formik.handleBlur}
@@ -152,22 +171,19 @@ return(<>
                   )}
               </div>
 
-              <div className="grid grid-cols-2 ml-5 space-x-3 ">
+              <div className="grid md:grid-cols-2 m-5 md:m-0 md:ml-5 md:space-x-3">
                   <div >
                       <label  className="font-bold mt-5 block">Category<span className="text-red-700  ">*</span></label>
                       <select name="category"
                         value={formik.values.category} onBlur={formik.handleBlur} onChange={formik.handleChange}
                         className="mt-2 h-10 border-2  rounded w-full">
                         <option value="" >....Select....</option>
-                        <option value="laptop">Laptop</option>
-                        <option value="computer">Computer</option>
-                        <option value="lcd">LCD</option>
-                        <option value="speaker">Speaker</option>
-                        <option value="printer">Printer</option>
-                        <option value="Mouse">Mouse</option>
+                        {readcategory.map((user,index)=>(
+                          <option key={index} value={user._id}>{user.name}</option>
+                        ))}
                       </select>
                       {
-                        formik.touched.title && formik.errors.title && (
+                        formik.touched.category && formik.errors.category && (
                           <span className='text-rose-500'>{formik.errors.category}</span>
                         )}
                   </div>
@@ -177,33 +193,18 @@ return(<>
                           onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.manufacturer}
                           className="mt-2 h-10 border-2 rounded w-full">
                           <option value="" >....Select....</option>
-                          <option value="dell">Dell</option>
-                          <option value="lenovo">Lenovo</option>
-                          <option value="apple">Apple</option>
-                          <option value="hp">HP</option>
-                          <option value="samsong">Samsong</option>
+                          {readManufacturer.map((user,index)=>(
+                          <option key={index} value={user._id}>{user.name}</option>
+                        ))}
                       </select>
-                      { formik.touched.category && formik.errors.category && (
-                        <span className='text-red-500'>{formik.errors.category}</span>
+                      { formik.touched.manufacturer && formik.errors.manufacturer && (
+                        <span className='text-red-500'>{formik.errors.manufacturer}</span>
                       )}
                   </div>
               </div>
-              <div className="grid grid-cols-2 ml-5 space-x-3 ">
+              <div className="grid md:grid-cols-2 m-5 md:m-0 md:ml-5 md:space-x-3">
                   <div >
-                  <label  className="font-bold mt-5 block">Vendor<span className="text-red-700  ">*</span></label>
-                      <select name="vendor"
-                        value={formik.values.vendor} onChange={formik.handleChange} onBlur={formik.handleBlur}
-                          className="mt-2 h-10 border-2  rounded w-full">
-                          <option value="" >....Select....</option>
-                          <option value="yes">Yes</option>
-                          <option value="no">No</option>
-                      </select>
-                      {formik.touched.vendor && formik.errors.vendor && (
-                        <span className='text-red-500'>{formik.errors.vendor}</span> 
-                      )}
-                  </div>
-                  <div>
-                      <label htmlFor="price" className="font-bold mt-5 block">Price<span className="text-red-700  ">*</span></label>
+                  <label htmlFor="price" className="font-bold mt-5 block">Price<span className="text-red-700  ">*</span></label>
                       <input type="number" id="price" name='price' 
                       value={formik.values.price} onBlur={formik.handleBlur} onChange={formik.handleChange} 
                       className="mt-2 h-10 border-2  rounded w-full" />
@@ -211,9 +212,7 @@ return(<>
                         <span className='text-red-500' >{formik.errors.price}</span>
                       )}
                   </div>
-              </div>
-              <div className="grid grid-cols-2 ml-5 space-x-3 ">
-                  <div >
+                  <div>
                       <label htmlFor="price_discount" className="font-bold mt-5 block">Price Discount<span className="text-red-700">*</span></label>
                       <input type="number" id="price_discount" name='price_discount'
                       value={formik.values.price_discount} onChange={formik.handleChange} onBlur={formik.handleBlur}
@@ -222,6 +221,8 @@ return(<>
                         <span className='text-rose-500'>{formik.errors.price_discount}</span>
                       )}
                   </div>
+              </div>
+              <div className="grid md:grid-cols-2 m-5 md:m-0 md:ml-5 md:space-x-3">
                   <div >
                       <label htmlFor="keywords" className="font-bold mt-5 block">Keywords<span className="text-red-700">*</span></label>
                       <input type="text" id="keywords" name='keywords'
@@ -231,13 +232,11 @@ return(<>
                         <span className='text-rose-500'>{formik.errors.keywords}</span>
                       )}
                   </div>
-              </div>
-              <div className="grid grid-cols-2 ml-5 space-x-3 ">
                   <div >
                       <label htmlFor="stock" className="font-bold mt-5 block">Stock<span className="text-red-700">*</span></label>
                       <input type="number" id="stock" name='stock' 
                       value={formik.values.stock} onBlur={formik.handleBlur} onChange={formik.handleChange}
-                      className="mt-2 h-12 border-2  rounded w-full" />
+                      className="mt-2 h-10 border-2  rounded w-full" />
                       {formik.touched.stock && formik.errors.stock && (
                         <span className='text-rose-500'>{formik.errors.stock}</span>
                       )}
@@ -256,24 +255,25 @@ return(<>
               )}
               <img src={image} alt="image" className='w-32 mx-auto rounded shadow mt-2' />
           </div>
-            <div className="mt-6 mx-3 ">
-              <label className="font-bold  block">Multiple Images<span className="text-red-700">*</span></label>
-              <input type="file" name="multipleImages" multiple 
-              className='border-2  mt-2 max-w-sm  rounded-lg'
-              onChange={(event) => formik.setFieldValue("multipleImages", Array.from(event.currentTarget.files))} />
-              {formik.touched.multipleImages && formik.errors.multipleImages && (
-                <div className="text-red-500">{formik.errors.multipleImages}</div>
-              )}
-              {images.map((user)=>(
-                <div key={user._id} className='relative inline-block m-2 rounded shadow-sm group '>
-                  <img src={user.images} alt="images" className='w-24 shadow-sm' />
-                  <div onClick={()=> handleDelete(user._id)} className='hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded'>
-                    &times; 
-                  </div>
-                  
+
+          <div className="mt-6 mx-3 ">
+            <label className="font-bold  block">Multiple Images<span className="text-red-700">*</span></label>
+            <input type="file" name="multipleImages" multiple 
+            className='border-2  mt-2 max-w-sm  rounded-lg'
+            onChange={(event) => formik.setFieldValue("multipleImages", Array.from(event.currentTarget.files))} />
+            {formik.touched.multipleImages && formik.errors.multipleImages && (
+              <div className="text-red-500">{formik.errors.multipleImages}</div>
+            )}
+            {images.map((user)=>(
+              <div key={user._id} className='relative inline-block m-2 rounded shadow-sm group '>
+                <img src={user.images} alt="images" className='w-24 shadow-sm' />
+                <div onClick={()=> handleDelete(user._id)} className='hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded'>
+                  &times; 
                 </div>
-              ))}
-            </div>
+                
+              </div>
+            ))}
+          </div>
 
           </div>
 
@@ -300,8 +300,7 @@ return(<>
         )}
        </div>
 
-        <div className="ml-5">
-          <div className="p-4">
+        <div className="ml-5 my-2">
             <p className="font-bold">Status <span className="text-rose-700">*</span></p>
             <div className="[&>*]:p-2 mt-3">
                 <label htmlFor="disable">Disable</label>
@@ -314,14 +313,10 @@ return(<>
                     <span className="text-red-500">{formik.errors.status }</span>
                 )}
             </div> 
-          </div>          
-        <label > 
-            <input type="checkbox" name="" id="" className="mt-3" /> Feature Product  
-        </label>
         </div>
 
-        <div className="mx-2 bg-slate-200 p-4 rounded-lg ">
-            <button type="submit" className="bg-blue-500 hover:bg-blue-600 rounded py-1 px-3">
+        <div className="bg-slate-200 p-4 ">
+            <button type="submit" className="bg-blue-500 hover:bg-blue-600 rounded py-1 px-3 text-white ">
                 Submit
             </button>
         </div>

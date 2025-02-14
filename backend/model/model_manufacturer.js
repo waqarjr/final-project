@@ -5,6 +5,7 @@ mongoose.connect("mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/")
     name:String,
     status:String,
     image:String,
+    date:String,
 })
 
 const category = mongoose.model('manufacture',schema);

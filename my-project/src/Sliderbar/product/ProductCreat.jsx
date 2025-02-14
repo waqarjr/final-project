@@ -27,15 +27,6 @@ useEffect(()=>{
   category();
   manufacturer();
 },[])
-// const [images, setImages] = useState([]);
-// const handleImageUpload = (e) => {
-//   const files = Array.from(e.target.files);
-//   const imageUrls = files.map((file) => URL.createObjectURL(file));
-//   setImages((prevImages) => [...prevImages, ...imageUrls]);
-// };
-// const removeImage = (index) => {
-//   setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-// };
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 1024 * 1024; 
@@ -217,24 +208,6 @@ return(<>
 
           <div>
           <div className='mt-6 mx-3'>
-              {/* <div className="w-full bg-gray-100">
-                <label className="block cursor-pointer">
-                  <div className="border-2 border-dashed border-gray-400 rounded-md p-4 text-center text-gray-500 hover:bg-gray-200 transition">
-                    Click to Upload Images
-                <div className="mt-4 grid grid-cols-3 gap-4">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative w-full h-24 border rounded-md overflow-hidden" >
-                      <img src={image} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
-                      <button onClick={() => removeImage(index)}
-                        className="absolute top-0 right-0 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs transform translate-x-2 -translate-y-2 hover:bg-red-700 transition">&times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                  </div>
-                  <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} />
-                </label>
-              </div> */}
                <label className="font-bold  block">Single Images<span className="text-red-700">*</span></label>
               <input type="file" name="image" 
               className='border-2 border-black mt-2   rounded-lg'

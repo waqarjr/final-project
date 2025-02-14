@@ -16,7 +16,8 @@ const insertData = multer.diskStorage({
 const uplods = multer({storage:insertData})
 router.post('/creat-product',uplods.fields([{name:'image'},{name:'multipleImages'}]),insertImage);
 
-router.get('/read-product',readData)
+router.get('/read-product',readData);
+router.post('/read-product',readData);
 router.get('/read-update-product/:id',update_Read_Data);
 router.get('/read-mul-image-product/:id',update_Mul_Images);
 router.get('/del-mul-image-product/:id',mul_Del_Image);

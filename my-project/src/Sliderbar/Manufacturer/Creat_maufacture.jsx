@@ -1,14 +1,22 @@
-import { useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import {useFormik} from "formik";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import { useState,useEffect } from "react";
 
 export const Creat_manufacture = ()=>{
 
 const navigate = useNavigate();
+const [currentDate , setCurrentDate]= useState();
+useEffect(()=>{
+    const today = new Date();
+    const formetedDate = today.toISOString().split("T")[0];
+    setCurrentDate(formetedDate);
+},[])
+
 const validationSchema = Yup.object({
     name :Yup.string().required("Name is required"),
     image :Yup.mixed().required("Image is required"),
@@ -27,6 +35,7 @@ const formik = useFormik({
         formData.append("name", values.name); 
         formData.append("status", values.status); 
         formData.append("image", values.image);
+        formData.append("date",currentDate);
         const data = await axios.post("http://localhost:4000/creatmanufacture",formData,{
             headers:{
                 "Content-Type" :"multipart/form-data"

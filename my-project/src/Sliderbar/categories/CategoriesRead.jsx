@@ -18,8 +18,7 @@ export const CategoriesRead = ()=>{
         const formattedDate = today.toISOString().split("T")[0];
         setToDate(formattedDate);
     }, []);
-
-   
+       
     const handleFilterStatus =  async(filterStatus)=>{
         const data = await axios.post("http://localhost:4000/readcategory",{status:filterStatus,todate:toDate,fromdate:fromDate});
         setData(data.data);   

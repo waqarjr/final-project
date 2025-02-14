@@ -3,24 +3,32 @@ const path = require("path");
 const fs = require("fs");
 
 const creat_manufacture = async (req,res)=>{
-    const {name,status} = req.body;
+    const {name,status,date} = req.body;
     await manufacture.create({
         name:name,
         status:status,
         image:`http://localhost:4000/${req.file.path}`,
+        date:date
     })
     res.send({message:"your data has been insertes sucessfully"})
 }
 
 const read_manufacture = async (req,res)=>{
     let read;
-    const {status } = req.body;
-    if(status){
-         read = await manufacture.find({status:status});
-    }else{
-         read = await manufacture.find();
-        }
-        res.json(read);
+    const {status ,fromdate,todate, name } = req.body;
+    if (name && name !== '') { 
+        read = await manufacture.find({ name: { $regex: name, $options: "i" } });
+    } 
+    else if (status && status !== '' && fromdate && fromdate !== '') {
+        read = await manufacture.find({ date: { $gte: fromdate, $lte: todate }, status: status });
+    } else if (status === '' && fromdate !== '') {
+        read = await manufacture.find({ date: { $gte: fromdate, $lte: todate } });
+    } else if (status !== '' && fromdate === '') {
+        read = await manufacture.find({ status: status });
+    } else {
+        read = await manufacture.find();
+    }
+    res.json(read);
 }
 
 const delete_manufacture = async (req ,res)=>{

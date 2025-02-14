@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const insertImage = async(req,res)=>{
-    const {title ,category, manufacturer,vendor,price,price_discount,keywords,stock,short_description,long_description,status} = req.body;
+    const {title ,category, manufacturer,price,price_discount,keywords,stock,short_description,long_description,status} = req.body;
     const image = req.files['image'] ? req.files['image'][0] : null;
     await singleImage.create({
         title:title,
@@ -32,8 +32,78 @@ const insertImage = async(req,res)=>{
 }
 
 const readData = async(req,res)=>{
-     const a = await singleImage.find();
-     res.json(a)
+     const {category,manufacturer,status,limit,name} = req.body;
+     let read;
+     if (name && name !== '') { 
+        read = await singleImage.find({ title: { $regex: name, $options: "i" } });
+    } 
+     // for all type value data 
+    else  if((category && category != '') && (manufacturer && manufacturer != '') && (status && status !='') && (limit && limit && limit !='') )
+        {
+        read = await singleImage.find({status:status,category:category,manufacturer:manufacturer}).limit(limit);
+    }
+    else if((category && category != '') && (manufacturer && manufacturer != '') && (status && status !=''))
+        {
+        read = await singleImage.find({status:status,category:category,manufacturer:manufacturer});
+    } 
+    // for categories and manufacturer 
+    else if((category && category != '') && (manufacturer && manufacturer != '') && (limit && limit && limit !='') )
+        {
+         read = await singleImage.find({category:category,manufacturer:manufacturer}).limit(limit);
+     }
+    else if((category && category != '') && (manufacturer && manufacturer != ''))
+        {
+         read = await singleImage.find({category:category,manufacturer:manufacturer});
+     }
+     // for categories and status
+      else if ((category && category != '') && (status && status !='') && (limit && limit && limit !=''))
+        {
+        read = await singleImage.find({category:category,status:status}).limit(limit);
+     }
+      else if ((category && category != '') && (status && status !=''))
+        {
+        read = await singleImage.find({category:category,status:status});
+     }
+     // for manufacturer and Status
+      else if ((manufacturer && manufacturer != '') && (status && status !='') && (limit && limit && limit !=''))
+        {
+        read = await singleImage.find({status:status,manufacturer:manufacturer}).limit(limit);
+     } 
+      else if ((manufacturer && manufacturer != '') && (status && status !=''))
+        {
+        read = await singleImage.find({status:status,manufacturer:manufacturer});
+     } 
+     // for category only
+     else if((category && category != '') && (limit && limit && limit !=''))
+        {
+        read = await singleImage.find({category:category}).limit(limit);
+     } 
+     else if(category && category != '')
+        {
+        read = await singleImage.find({category:category});
+     } 
+    // for manufacutrer
+     else if((manufacturer && manufacturer != '') && (limit && limit && limit !='')){
+        read = await singleImage.find({manufacturer:manufacturer}).limit(limit);
+     }
+     else if(manufacturer && manufacturer != ''){
+        read = await singleImage.find({manufacturer:manufacturer});
+     }
+     // for Status
+     else if ((status && status !='') && (limit && limit && limit !='')) {
+        read = await singleImage.find({status:status}).limit(limit);
+     }
+     else if (status && status !='') {
+        read = await singleImage.find({status:status});
+     }
+     // for all data 
+      else if(limit && limit && limit !='') {
+        read = await singleImage.find().limit(limit);
+     }
+      else {
+        read = await singleImage.find();
+     }
+     res.json(read);
 }
 const update_Read_Data = async (req,res)=>{
     const id = req.params.id;

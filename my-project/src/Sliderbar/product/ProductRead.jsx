@@ -175,6 +175,16 @@ return(<>
                 </tbody>
                 <tfoot></tfoot>
             </table>
+            <div className="flex justify-end mt-4">
+            <button   onClick={() => setLimit(prev => Math.max(prev - 10, 10))} disabled={limit <= 10} 
+                className="bg-gray-300 px-3 py-1 text-black border-none hover:bg-gray-400 rounded mr-3">
+                Previous
+            </button>
+            <button onClick={() => setLimit(prev => prev + 10)} 
+                className="bg-gray-300 px-3 py-1 text-black border-none hover:bg-gray-400 rounded">
+                Next
+            </button>
+        </div>
         </div>
         </div>
     </div>

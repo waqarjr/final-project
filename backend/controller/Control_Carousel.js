@@ -55,10 +55,11 @@ const update_carousel = async(req,res)=>{
     }
 }
 
-const select_update_carousel = async(req,res)=>{
-const id = req.params.id;
-const {status} =  req.body;
-    await carousel.updateOne({_id:id},{$set:{status:status}})
-}
+const select_update_carousel = async (req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
+    await carousel.updateOne({ _id: id }, { $set: { status: status } });
+    res.json({ message: "Status updated sucessfully..." }); 
+};
 
 module.exports = {creat_carousel,read_carousel,delete_carousel,read_update_carousel,update_carousel,select_update_carousel};

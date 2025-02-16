@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronUp , faChevronDown , faGear } from "@fortawesome/free-solid-svg-icons";
 
 export const  Index = ()=>{
 
-
+  const [webSetting , setWebSwtting] = useState(false);
+  
 return(<>
 <div >
 
@@ -116,12 +120,32 @@ return(<>
             <span className="flex-1 ms-3 whitespace-nowrap">Carousel</span>
             </NavLink>
         </li>
+
+        <li>
+            <button type="button" className="flex items-center w-full p-2 text-base text-gray-900 transition duration-500  rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" 
+                  onClick={()=>setWebSwtting(!webSetting)}
+                  >
+                  <svg className="shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white">
+                      <FontAwesomeIcon icon={faGear} />
+                  </svg>
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Website Setting</span>
+                  <svg className="w-4 h-4">
+                  <FontAwesomeIcon icon={ webSetting ? faChevronDown : faChevronUp}   />
+                  </svg>
+            </button>
+            <ul className={` ${webSetting ? '' : 'hidden'} duration-200 py-2 space-y-2`}> 
+                  <li>
+                     <NavLink to='/contactus' className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Contact Us Setting</NavLink>
+                  </li>
+                  <li>
+                     <NavLink to='/iconchange' className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Icon Change</NavLink>
+                  </li>
+            </ul>
+         </li>
+
       </ul>
     </div>
   </aside>
-
-  
-
 </div>
 </>)
 

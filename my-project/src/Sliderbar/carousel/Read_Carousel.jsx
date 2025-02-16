@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { data, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
 
 export const CategoriesRead = ()=>{
     const navigate =  useNavigate();
@@ -11,15 +14,42 @@ export const CategoriesRead = ()=>{
         setData(data.data);
     }
     const delete_image = async (id)=>{    
-    const conform = confirm("Are you Sure to delete this ?")
-    if(conform){
-        const del =  await axios.get(`http://localhost:4000/deletecategory/${id}`)
-        alert(del.data.message);
-        setData((prevData) => prevData.filter((data) => data._id !== id));
-    }
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+          }).then( async (result) => {
+            if (result.isConfirmed) {
+            await axios.get(`http://localhost:4000/deletecategory/${id}`)
+            setData((prevData) => prevData.filter((data) => data._id !== id));
+              Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            }
+          });
+    
     }
     const handleStatusChange = async(id, newStatus) => {
-        await axios.post(`http://localhost:4000/selectupdate/${id}`,{ status: newStatus })
+     const alpha =  await axios.post(`http://localhost:4000/selectupdatecarousel/${id}`,{ status: newStatus })   
+        if(alpha.data.message){
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+            });
+            Toast.fire({
+            icon: "success",
+            title: `${alpha.data.message}`
+            });
+        }
     };
     
     useEffect(()=>{
@@ -28,38 +58,26 @@ export const CategoriesRead = ()=>{
 return(<>
 <div className="sm:ml-64 mt-14">
     <div className=" p-4">
-        <p className="text-3xl capitalize font-sans " > Carousel</p>
-    </div>
-    <div className="max-w-7xl   bg-white shadow-sm mx-3 rounded-md ">
+        <p className="capitalize text-3xl font-sans py-4 " > Carousel</p>
+    
+    <div className="bg-white w-full  rounded-lg border-2 border-slate-200">
         <div className="grid grid-cols-2 p-4 ">
             <p className="text-2xl font-light">Categories</p>
             <div className="justify-self-end">
                 <button  onClick={()=>{navigate('/carouselcreat')}} className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded">
-                    Add New
+                <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                  Add New
                 </button>
             </div>
         </div><hr />
 
-        <div className=" grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1  p-4 " >
-            <div className="p-2">
-                <input type="date" className="w-full border-2  rounded-md " id="date" />
-            </div>
-            <div className="p-2">
-                <input type="date" className="w-full border-2  rounded-md " id="date" />
-            </div>
-            <div className="p-2">
-                <input type="text" placeholder="All" className="w-full border-2  rounded-md " id="date" />
-            </div>
-            <div className="p-2">
-                <input type="text" placeholder="Search" className="w-full border-2  rounded-md " id="date" />
-            </div>
-        </div>  
+          
 
         <div className="p-2">
-            <table border="4" className="border-2 table-fixed w-full text-center">
+            <table border="4" className="border-2  w-full text-center">
                 <thead className="bg-slate-100 ">
                     <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 ">
-                        <th>#</th>
+                        <th width='50px'>#</th>
                         <th>Name</th>
                         <th>Image</th>
                         <th>Status</th>
@@ -92,6 +110,7 @@ return(<>
                 </tbody>
                 <tfoot></tfoot>
             </table>
+        </div>
         </div>
     </div>
 </div>

@@ -34,11 +34,6 @@ const formik = useFormik({
         formData.append('name',values.name),
         formData.append('status',values.status),
         formData.append('image',values.image)
-        const alpha = await axios.post(`http://localhost:4000/updatemanufacture/${id}`,formData,{
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        })
         if(alpha.data.mes){
             Swal.fire({
             title: "Do you want to save the changes?",
@@ -46,8 +41,13 @@ const formik = useFormik({
             showCancelButton: true,
             confirmButtonText: "Save",
             denyButtonText: `Don't save`
-            }).then((result) => {
+            }).then(async(result) => {
             if (result.isConfirmed) {
+                await axios.post(`http://localhost:4000/updatemanufacture/${id}`,formData,{
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                })
                 Swal.fire("Saved!", "", "success");
             } else if (result.isDenied) {
                 Swal.fire("Changes are not saved", "", "info");

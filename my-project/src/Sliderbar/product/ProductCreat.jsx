@@ -1,13 +1,14 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import React, { useCallback,useEffect, useState } from 'react';
+import { useDropzone } from "react-dropzone";
 
 
 export const ProductCreat = ()=>{
@@ -27,6 +28,10 @@ useEffect(()=>{
   category();
   manufacturer();
 },[])
+
+const [singleImage, setSingleImage] = useState(null);
+const [multipleImages, setMultipleImages] = useState([]);
+
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 1024 * 1024; 
@@ -99,9 +104,50 @@ const formik = useFormik({
       });
     }
     resetForm();
+    setSingleImage(null);
+    setMultipleImages([]);
   }
 })
 
+const onDropSingle = useCallback((acceptedFiles) => {
+  if (acceptedFiles.length > 0) {
+    const selectedFile = acceptedFiles[0];
+    setSingleImage(Object.assign(selectedFile, { preview: URL.createObjectURL(selectedFile) }));
+    formik.setFieldValue("image", selectedFile);
+  }
+}, []);
+
+const { getRootProps: getRootPropsSingle, getInputProps: getInputPropsSingle } = useDropzone({
+  onDrop: onDropSingle,
+  accept: { "image/*": [] },
+  multiple: false,
+});
+
+const deleteFilePreview = () => {
+  if (singleImage) {
+    URL.revokeObjectURL(singleImage.preview);
+    setSingleImage(null);
+  }
+};
+
+const onDropMultiple = useCallback((acceptedFiles) => {
+  const filesWithPreview = acceptedFiles.map((file) =>
+    Object.assign(file, { preview: URL.createObjectURL(file) })
+  );
+  setMultipleImages((prevFiles) => [...prevFiles, ...filesWithPreview]);
+  formik.setFieldValue("multipleImages", filesWithPreview);
+}, [formik]);
+
+const { getRootProps: getRootPropsMul, getInputProps: getInputPropsMul } = useDropzone({
+  onDrop: onDropMultiple,
+  accept: { "image/*": [] },
+  multiple: true,
+});
+
+const deleteMulFilePreview = (file) => {
+  setMultipleImages((prevFiles) => prevFiles.filter((f) => f !== file));
+  URL.revokeObjectURL(file.preview);
+};
 
 return(<>
 
@@ -209,19 +255,46 @@ return(<>
           <div>
           <div className='mt-6 mx-3'>
                <label className="font-bold  block">Single Images<span className="text-red-700">*</span></label>
-              <input type="file" name="image" 
-              className='border-2 border-black mt-2   rounded-lg'
-              onChange={(event) => formik.setFieldValue("image",event.currentTarget.files[0])} />
-              
+                      {/* for single images  */}
+                <div className=" w-full">
+                  <div {...getRootPropsSingle()}
+                    className="border-2 border-dashed border-blue-500 p-6 text-center cursor-pointer mb-6 flex items-center justify-center min-h-[150px]">
+                    <input {...getInputPropsSingle()} />
+                    {!singleImage && <p>Drag & drop an image here, or click to select one</p>}
+                    {singleImage && (
+                      <div className="relative inline-block m-2 rounded shadow-sm group">
+                        <img src={singleImage.preview} alt={singleImage.name} className="w-24 shadow-sm" id='image' 
+                        name='image'  />
+                        <button type='button' onClick={(e) => { e.stopPropagation(); deleteFilePreview(); }}
+                          className="hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded" >
+                          X
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               {formik.touched.image && formik.errors.image && (
                   <div className="text-red-500">{formik.errors.image}</div>
               )}
           </div>
             <div className="mt-6 mx-3 ">
               <label className="font-bold  block">Multiple Images<span className="text-red-700">*</span></label>
-              <input type="file" name="multipleImages" multiple 
-              className='border-2 border-black mt-2   rounded-lg'
-              onChange={(event) => formik.setFieldValue("multipleImages", Array.from(event.currentTarget.files))} />
+              {/* Multiple Images Upload */}
+                <div {...getRootPropsMul()}
+                  className="border-2 border-dashed border-blue-500 p-6 text-center cursor-pointer mb-6 flex flex-wrap gap-3 min-h-[150px] items-center justify-center" >
+                  <input {...getInputPropsMul()} />
+                  {multipleImages.length === 0 && <p>Drag & drop some images here, or click to select multiple images</p>}
+                  {multipleImages.map((file, index) => (
+                    <div key={index} className="relative inline-block m-2 rounded shadow-sm group">
+                      <img src={file.preview} alt={file.name} className="w-24 shadow-sm" id='multipleImages'
+                      name="multipleImages" onChange={(event) => formik.setFieldValue("multipleImages", Array.from(event.currentTarget.files))} />
+                      <button type='button' onClick={(e) => { e.stopPropagation(); deleteMulFilePreview(file); }}
+                        className="hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded">
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
               {formik.touched.multipleImages && formik.errors.multipleImages && (
                 <div className="text-red-500">{formik.errors.multipleImages}</div>
               )}

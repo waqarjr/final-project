@@ -18,6 +18,9 @@ import Read_Carousel from './Sliderbar/carousel/Read_Carousel';
 import Creat_Carousel from './Sliderbar/carousel/Creat_Carousel';
 import Update_Carousel from './Sliderbar/carousel/Update_Carousel';
 
+import Contact_Us from './Sliderbar/Websetting/Contact_Us';
+import Icon_change from './Sliderbar/Websetting/Icon__change';
+
 function App() {
   return (
   <>
@@ -42,11 +45,13 @@ function App() {
           <Route path='/carousel' element={<Read_Carousel/>} />
           <Route path='/carouselcreat' element={<Creat_Carousel/>} />
           <Route path='/carouselupdate/:id' element={<Update_Carousel/>}  />
+          {/* webSetting */}
+          <Route path='/contactus' element={<Contact_Us/>} /> 
+          <Route path='/iconchange' element={<Icon_change/>} />
         </Route>
       </Routes>    
     </BrowserRouter>
   </div>
-
   </>
   )
 }

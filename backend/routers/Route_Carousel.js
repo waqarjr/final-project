@@ -36,5 +36,5 @@ const update = multer({storage:categories_update});
 
 router.post('/updatecarousel/:id',update.single('image'),update_carousel);
 
-router.post('/selectupdate/:id',select_update_carousel);
+router.post('/selectupdatecarousel/:id',select_update_carousel);
 module.exports = router;

@@ -1,13 +1,13 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useNavigate, useParams } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback,useEffect, useState } from 'react';
 import axios from "axios";
-import {useFormik} from "formik";
+import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-  
+import { useDropzone } from 'react-dropzone';
 export const ProductUpdate = ()=>{
 const navigate = useNavigate();
 const {id} = useParams();
@@ -28,6 +28,11 @@ const [images , setImages] = useState([]);
 
 const [readcategory , setReadCategory ] = useState([]);
 const [readManufacturer , setReadManufacturer] = useState([]);
+
+const [singleImage, setSingleImage] = useState(null);
+const [multipleImages, setMultipleImages] = useState([]);
+
+
 
 const category_read = async()=>{
   const data =  await axios.get("http://localhost:4000/readcategory");
@@ -55,13 +60,18 @@ const fetchData = async(id)=>{
     setShort_Description(data.data.short_description);
     setLong_Description(data.data.long_description);
     SetStatus(data.data.status);
-    setImage(data.data.image);
-}
-const multiple = async(id)=>{ 
-  const a =  await axios.get(`http://localhost:4000/read-mul-image-product/${id}`);
-  setImages(a.data);
+    const imageUrl = data.data.image;
+  setSingleImage({ preview: imageUrl, name: "Fetched Image" });
+  formik.setFieldValue("image", imageUrl);
 }
 
+const multiple = async (id) => {
+  const response = await axios.get(`http://localhost:4000/read-mul-image-product/${id}`);
+  const images = response.data.map((img) => ({ preview: img,  name: "Fetched Image"}));
+  setMultipleImages(images);
+  formik.setFieldValue("multipleImages", images);
+};
+                                                                            
 useEffect(()=>{
 multiple(id);
 fetchData(id)
@@ -130,7 +140,7 @@ const formik = useFormik({
     formData.append("long_description", values.long_description);
     formData.append("status", values.status);
     values.multipleImages.map((img) => formData.append("multipleImages", img)); 
-    
+    console.log(values,"hello");
     await axios.post(`http://localhost:4000/update-product/${id}`,formData,{
       headers:{
         "Content-Type" : "multipart/form-data"
@@ -139,14 +149,54 @@ const formik = useFormik({
   }
 })
 
+const onDropSingle = useCallback((acceptedFiles) => {
+  if (acceptedFiles.length > 0) {
+    const selectedFile = acceptedFiles[0];
+    setSingleImage(Object.assign(selectedFile, { preview: URL.createObjectURL(selectedFile) }));
+    formik.setFieldValue("image", selectedFile);
+  }
+}, []);
+
+const { getRootProps: getRootPropsSingle, getInputProps: getInputPropsSingle } = useDropzone({
+  onDrop: onDropSingle,
+  accept: { "image/*": [] },
+  multiple: false,
+});
+
+const deleteFilePreview = () => {
+  if (singleImage) {
+    URL.revokeObjectURL(singleImage.preview);
+    setSingleImage(null);
+  }
+};
+
+const onDropMultiple = useCallback((acceptedFiles) => {
+  const filesWithPreview = acceptedFiles.map((file) =>
+    Object.assign(file, { preview: URL.createObjectURL(file) })
+  );
+  setMultipleImages((prevFiles) => [...prevFiles, ...filesWithPreview]);
+  formik.setFieldValue("multipleImages", filesWithPreview);
+}, [formik]);
+
+const { getRootProps: getRootPropsMul, getInputProps: getInputPropsMul } = useDropzone({
+  onDrop: onDropMultiple,
+  accept: { "image/*": [] },
+  multiple: true,
+});
+
+const deleteMulFilePreview = (file) => {
+  setMultipleImages((prevFiles) => prevFiles.filter((f) => f !== file));
+  URL.revokeObjectURL(file.preview);
+};
+
 
 return(<>
 
 <div className="sm:ml-64 mt-14">
     <div className=" p-4">
-        <p className="text-3xl capitalize font-sans " > product categories</p>
-    </div>
-    <div className="max-w-7xl   bg-white shadow-sm mx-3 rounded-md ">
+        <p className="text-3xl capitalize font-sans py-4" > product categories</p>
+    
+    <div className="bg-white w-full  rounded-lg border-2 border-slate-200 ">
         <div className="grid grid-cols-2 p-4 ">
             <p className="text-2xl font-light">Add New</p>
             <div className="justify-self-end">
@@ -247,37 +297,49 @@ return(<>
 
           <div className='mt-6 mx-3'>
                <label className="font-bold  block">Single Images<span className="text-red-700">*</span></label>
-              <input type="file" name="image" 
-              className='border-2  mt-2  rounded-lg'
-              onChange={(event) => formik.setFieldValue("image",event.currentTarget.files[0])} />
-              {formik.touched.image && formik.errors.image && (
-                  <div className="text-red-500">{formik.errors.image}</div>
-              )}
-              <img src={image} alt="image" className='w-32 mx-auto rounded shadow mt-2' />
+
+               <div className=" w-full">
+                  <div {...getRootPropsSingle()}
+                    className="border-2 border-dashed border-blue-500 p-6 text-center cursor-pointer mb-6 flex items-center justify-center min-h-[150px]">
+                    <input {...getInputPropsSingle()} />
+                    {!singleImage && <p>Drag & drop an image here, or click to select one</p>}
+                    {singleImage && (
+                      <div className="relative inline-block m-2 rounded shadow-sm group">
+                        <img src={singleImage.preview} alt={singleImage.name} className="w-24 shadow-sm" id='image' 
+                        name='image'  />
+                        <button type='button' onClick={(e) => { e.stopPropagation(); deleteFilePreview(); }}
+                          className="hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded" >
+                          X
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div> 
           </div>
 
           <div className="mt-6 mx-3 ">
             <label className="font-bold  block">Multiple Images<span className="text-red-700">*</span></label>
-            <input type="file" name="multipleImages" multiple 
-            className='border-2  mt-2 max-w-sm  rounded-lg'
-            onChange={(event) => formik.setFieldValue("multipleImages", Array.from(event.currentTarget.files))} />
-            {formik.touched.multipleImages && formik.errors.multipleImages && (
-              <div className="text-red-500">{formik.errors.multipleImages}</div>
-            )}
-            {images.map((user)=>(
-              <div key={user._id} className='relative inline-block m-2 rounded shadow-sm group '>
-                <img src={user.images} alt="images" className='w-24 shadow-sm' />
-                <div onClick={()=> handleDelete(user._id)} className='hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded'>
-                  &times; 
+
+            <div {...getRootPropsMul()}
+                  className="border-2 border-dashed border-blue-500 p-6 text-center cursor-pointer mb-6 flex flex-wrap gap-3 min-h-[150px] items-center justify-center" >
+                  <input {...getInputPropsMul()} />
+                  {multipleImages.length === 0 && <p>Drag & drop some images here, or click to select multiple images</p>}
+                  {multipleImages.map((file, index) => (
+                    <div key={index} className="relative inline-block m-2 rounded shadow-sm group">
+                      <img src={file.preview.images} alt={file.name} className="w-24 shadow-sm" id='multipleImages'
+                      name="multipleImages" onChange={(event) => formik.setFieldValue("multipleImages", Array.from(event.currentTarget.files))} />
+                      <button type='button' onClick={(e) => { e.stopPropagation(); deleteMulFilePreview(file); }}
+                        className="hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded">
+                        X
+                      </button>
+                    </div>
+                  ))}
                 </div>
-                
-              </div>
-            ))}
           </div>
 
           </div>
 
-      </div>
+        </div>
         
         <div className="mx-5 mt-4">
             <label htmlFor="short_description" className="font-bold">Short Description<span className="text-red-700">*</span> </label>
@@ -323,7 +385,7 @@ return(<>
 
       </form>        
     </div>
-    
+    </div>
 </div>
 </>)
 }

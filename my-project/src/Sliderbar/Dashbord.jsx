@@ -1,113 +1,117 @@
-import React, { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight, faChartPie, faShip } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 
 export const Dashbord = () => {
-  const [files, setFiles] = useState([]);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  
+    const [toDate, setToDate] = useState("");
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const filesWithPreview = acceptedFiles.map((file) =>
-      Object.assign(file, { preview: URL.createObjectURL(file) })
-    );
-    setFiles((prevFiles) => [...prevFiles, ...filesWithPreview]);
-  }, []);
+     useEffect(() => {
+            const today = new Date();
+            const formattedDate = today.toISOString().split("T")[0];
+            setToDate(formattedDate);
+        }, []);
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: { "image/*": [] },
-    multiple: true,
-  });
+  return (<>
+   <div className="sm:ml-64 mt-14">
+<div className="p-4">
+    <p className="capitalize text-3xl font-sans py-2 ">Dashbord</p>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-4 ">
 
-  const uploadFiles = async () => {
-    const formData = new FormData();
-    files.forEach((file) => {
-      formData.append("files[]", file);
-    });
-
-    try {
-      const response = await axios.post("http://localhost:3000/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      console.log("Files uploaded successfully:", response.data);
-      setUploadedFiles([...uploadedFiles, ...files]);
-      setFiles([]);
-    } catch (error) {
-      console.error("Error uploading files:", error);
-    }
-  };
-
-  const deleteFilePreview = (file) => {
-    setFiles((prevFiles) => prevFiles.filter((f) => f !== file));
-    URL.revokeObjectURL(file.preview);
-  };
-
-  const deleteFile = async (filename) => {
-    try {
-      await axios.delete(`http://localhost:3000/files/${filename}`);
-      setUploadedFiles(uploadedFiles.filter((file) => file.name !== filename));
-      console.log("File deleted successfully:", filename);
-    } catch (error) {
-      console.error("Error deleting file:", error);
-    }
-  };
-
-  return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">React Dropzone Example</h1>
-      
-      <div
-        {...getRootProps()}
-        className="border-2 border-dashed border-blue-500 p-6 text-center cursor-pointer mb-6 flex flex-wrap gap-3 min-h-[150px] items-center justify-center"
-      >
-        <input {...getInputProps()} />
-        {files.length === 0 && <p>Drag & drop some images here, or click to select files</p>}
-        {files.map((file, index) => (
-          <div key={index} className="relative w-24 h-24">
-            <img src={file.preview} alt={file.name} className="w-full h-full object-cover rounded-lg" />
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteFilePreview(file);
-              }}
-              className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full px-1"
-            >
-              X
-            </button>
-          </div>
-        ))}
-      </div>
-      
-      <button 
-        onClick={uploadFiles} 
-        disabled={files.length === 0}
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg disabled:bg-gray-400"
-      >
-        Upload Files
-      </button>
-      
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold mb-3">Uploaded Files:</h2>
-        <div className="flex flex-wrap gap-3">
-          {uploadedFiles.map((file, index) => (
-            <div key={index} className="relative w-24 h-24">
-              <img
-                src={`http://localhost:3000/uploads/${file.name}`}
-                alt={file.name}
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <button
-                onClick={() => deleteFile(file.name)}
-                className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full px-1"
-              >
-                X
-              </button>
-            </div>
-          ))}
+    <div className="w-full h-[150px] bg-blue-400 text-white rounded-lg shadow-md flex flex-col group">
+    <div className="p-3 flex justify-between items-center">
+        <div>
+            <p className="font-bold text-white text-2xl md:text-4xl pb-3">3</p>
+            <p className="text-white text-1xl md:text-[20px]">Total Orders</p>
         </div>
-      </div>
+        <div className=" flex items-center justify-center ">
+            <FontAwesomeIcon icon={faShip} className=' text-blue-600 w-[40px] h-[40px] md:w-[70px] md:h-[70px] group-hover:scale-110 group-hover:duration-500 scale-100 transition-transform p-3 ' />
+        </div>
+        </div>
+        <div className="w-full h-8  bg-blue-700 flex justify-center items-center">
+            <p className="text-white">More Info</p> 
+            <FontAwesomeIcon icon={faArrowRight} className=' m-2 px-1 bg-white text-blue-300 rounded-full'/>
+        </div>
     </div>
-  );
+
+    <div className="w-full h-[150px] bg-[#17a2b8] text-white rounded-lg shadow-md flex flex-col group">
+    <div className="p-3 flex justify-between items-center">
+        <div>
+            <p className="font-bold text-white text-2xl md:text-4xl pb-3">3</p>
+            <p className="text-white text-1xl md:text-[20px]">Pending Orders</p>
+        </div>
+        <div className=" flex items-center justify-center ">
+            <FontAwesomeIcon icon={faShip} className=' text-[#348491] w-[40px] h-[40px] md:w-[70px] md:h-[70px] group-hover:scale-110 group-hover:duration-500 scale-100 transition-transform p-3 ' />
+        </div>
+        </div>
+        <div className="w-full h-8 bg-[#348491] flex justify-center items-center">
+            <p className="text-white">More Info</p> 
+            <FontAwesomeIcon icon={faArrowRight} className=' m-2 px-1 bg-white text-blue-300 rounded-full'/>
+        </div>
+    </div>
+    <div className="w-full h-[150px] bg-[#dc3545] text-white rounded-lg shadow-md flex flex-col group">
+    <div className="p-3 flex justify-between items-center">
+        <div>
+            <p className="font-bold text-white text-2xl md:text-4xl pb-3">3</p>
+            <p className="text-white text-1xl md:text-[20px]">Complete</p>
+        </div>
+        <div className=" flex items-center justify-center ">
+            <FontAwesomeIcon icon={faChartPie} className=' text-[#b93542] w-[40px] h-[40px] md:w-[70px] md:h-[70px] group-hover:scale-110 group-hover:duration-500 scale-100 transition-transform p-3 ' />
+        </div>
+        </div>
+        <div className="w-full h-8 bg-[#b93542] flex justify-center items-center">
+            <p className="text-white">More Info</p> 
+            <FontAwesomeIcon icon={faArrowRight} className=' m-2 px-1 bg-white text-blue-300 rounded-full'/>
+        </div>
+    </div>
+        
+    </div>
+
+    <div className="bg-white w-full  rounded-lg border-2 border-slate-200">
+        <div className="grid grid-cols-2 p-4 ">
+            <p className="text-2xl ">Total Orders</p>
+        </div><hr />
+        <div className=" grid md:grid-cols-4 sm:grid-cols-2  grid-cols-1   " >
+            <div className="p-2">
+                <input type="date"
+                 className="w-full border-2 p-1 rounded-md " defaultValue={toDate} id="date" />
+            </div>
+            <div className="p-2">
+                <input type="date" 
+                 className="w-full border-2 p-1 rounded-md " defaultValue={toDate} id="date" />
+            </div>
+            <div className="p-2">
+                <select name="" id="" className=" p-[6px] w-full border-2 text-center  rounded-md">
+                    <option value="">All</option>
+                </select>
+            </div>
+            <div className="p-2">
+                <input type="text"  placeholder="Search" className="w-full border-2 p-[6px]  rounded-md" id="date" />
+            </div>
+        </div>  
+
+        <div className="p-2">
+            <table border="4" className="border-2  w-full text-center rounded-sm">
+                <thead className="bg-slate-100 ">
+                    <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 font-semibold">
+                        <th>#</th>
+                        <th>Customer Name</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Created at</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+                <tfoot></tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+  </>)
 };
 
 export default Dashbord;

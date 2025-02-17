@@ -3,6 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
 
 export const Update_Carousel = ()=>{
 
@@ -30,12 +33,25 @@ const formik = useFormik({
         formData.append('name',values.name),
         formData.append('status',values.status),
         formData.append('image',values.image)
-        const alpha = await axios.post(`http://localhost:4000/updatecarousel/${id}`,formData,{
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        })
-        alert(alpha.data.mes);
+        Swal.fire({
+            title: "Do you want to save the changes?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            denyButtonText: `Don't save`
+            }).then( async(result) => {
+            if (result.isConfirmed) {
+                Swal.fire("Saved!", "", "success");
+                await axios.post(`http://localhost:4000/updatecarousel/${id}`,formData,{
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                })
+            } else if (result.isDenied) {
+                Swal.fire("Changes are not saved", "", "info");
+            }
+            });
+    
     }
 })
 
@@ -55,16 +71,16 @@ return(<>
 <div className="sm:ml-64 mt-14 ">
     
     <div className="p-4">
-        <p className="capitalize text-3xl font-sans">product categories</p>
-    </div>
+        <p className="capitalize text-3xl font-sans py-4">product categories</p>
     
-    <div className="p-4 bg-white w-full shadow-xl ">
+    
+    <div className=" bg-white w-full rounded-lg border-2 border-gray-200 ">
         <div className="grid grid-cols-2 p-4 ">
             <div><p className="text-2xl font-light">Update Categories</p></div>
             <div className="justify-self-end">
                 <button   className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-yellow-500 rounded text-right"
-                 onClick={()=>{navigate("/carousel")}}
-                 >Back
+                 onClick={()=>{navigate("/carousel")}}>
+                 <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />   Back
                 </button>
             </div>
         </div><hr />    
@@ -85,12 +101,12 @@ return(<>
                 name="image"  onChange={(e)=>formik.setFieldValue("image",e.currentTarget.files[0])}
                 className="border-2 w-full  mt-2  rounded-lg p-2 " />
                 
-                <img src={image} alt="image" width="80"  />
+                <img src={image} alt="image" width="80" className="mx-1 my-2 shadow-lg rounded-lg"  />
             </div>
 
             <div className="p-4">
                 <p className="font-bold">Status <span className="text-rose-700">*</span></p>
-                <div className="[&>*]:p-2 mt-3">
+                <div className="[&>*]:p-2 mt-2  ">
 
                     <label htmlFor="disable">Disable</label>
                     <input type="radio" name="status" id="disable" value="disable" 
@@ -101,15 +117,10 @@ return(<>
                     checked={formik.values.status  === "enable"} onChange={formik.handleChange}
                     /><br/>
                 </div>
-
-                <div className="mt-6">
-                    <input type="checkbox" name="navbar" id="navbar" /> 
-                    <label htmlFor="navbar"> Show on Navbar</label>
-                </div>
             </div>
 
-            <div className="mt-5 bg-slate-200 p-4 rounded-lg ">
-                <button type="submit" className="bg-blue-500 hover:bg-blue-600 rounded py-1 px-3">
+            <div className="mt-5 bg-slate-200 p-4 ">
+                <button type="submit" className="bg-blue-500 text-white hover:bg-blue-600 rounded py-1 px-3">
                     Submit
                 </button>
             </div>
@@ -117,7 +128,7 @@ return(<>
         </form>
     </div>
 </div> 
-
+</div>
 </>)
 
 }

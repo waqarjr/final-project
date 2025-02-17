@@ -27,6 +27,7 @@ const manufacturer = async ()=>{
 useEffect(()=>{
   category();
   manufacturer();
+  document.title = 'Product';
 },[])
 
 const filterData = async(sendCategory,sendManufacturer,sendStatus,sendLimit)=>{

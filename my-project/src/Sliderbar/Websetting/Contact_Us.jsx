@@ -3,7 +3,7 @@ import {useFormik} from "formik";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-
+import { useMask } from '@react-input/mask';
 export const Contact_Us = ()=>{
 
     const [email , setEmail] = useState('');
@@ -23,6 +23,16 @@ export const Contact_Us = ()=>{
         readData();
         document.title = "Contact Us Setting";
     },[])
+
+    
+const inputRef = useMask({
+    mask: '+__ ___ _______',
+    replacement: { _: /\d/ },
+  });
+const inputRef1 = useMask({
+    mask: '+__ ___ _______',
+    replacement: { _: /\d/ },
+  });
 
     const validationSchema = Yup.object().shape({
         email: Yup.string().email("Invalid email address").required("Email is required"),
@@ -88,7 +98,7 @@ export const Contact_Us = ()=>{
                     </tr>
                     <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 ">
                     <td  className="w-[20%]">Phone no 1</td>
-                    <td><input type="text" className="border-2 w-full  my-2  rounded-lg p-2 " id="phoneNo1" name="phoneNo1"
+                    <td><input type="text" ref={inputRef1} className="border-2 w-full  my-2  rounded-lg p-2 " id="phoneNo1" name="phoneNo1"
                     onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.phoneNo1}/>
                     {formik.touched.phoneNo1 && formik.errors.phoneNo1 && (
                         <span className="text-red-500">{formik.errors.phoneNo1}</span>
@@ -97,8 +107,12 @@ export const Contact_Us = ()=>{
                     </tr>
                     <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 ">
                         <td  className="w-[20%]">Phone no 2</td>
-                        <td><input type="text" className="border-2 w-full  my-2  rounded-lg p-2 " id="phoneNo2" name="phoneNo2" 
-                        onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.phoneNo2}  /></td>
+                        <td>
+                            
+                        <input type="text" ref={inputRef} className="border-2 w-full  my-2  rounded-lg p-2 " id="phoneNo2" name="phoneNo2" 
+                        onChange={(e)=>setPhoneNo2(e.target.value)} onBlur={formik.handleBlur} value={formik.values.phoneNo2}  />
+                        
+                        </td>
                     </tr>
                     <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 ">
                         <td  className="w-[20%]">Address</td>

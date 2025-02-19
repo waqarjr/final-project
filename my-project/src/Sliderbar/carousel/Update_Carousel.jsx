@@ -80,7 +80,7 @@ return(<>
             <div><p className="text-2xl font-light">Update Categories</p></div>
             <div className="justify-self-end">
                 <button   className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-yellow-500 rounded text-right"
-                 onClick={()=>{navigate("/carousel")}}>
+                 onClick={()=>{navigate("/admin/carousel")}}>
                  <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />   Back
                 </button>
             </div>

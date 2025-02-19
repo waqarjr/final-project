@@ -99,7 +99,7 @@ return(<>
             <div className="grid grid-cols-2 p-4 ">
                 <p className="text-2xl font-light">Products</p>
                 <div className="justify-self-end">
-                    <button  onClick={()=>{navigate('/productscreat')}} className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded text-right">
+                    <button  onClick={()=>{navigate('/admin/productscreat')}} className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded text-right">
                     <FontAwesomeIcon icon={faPlus} className="mr-2" />
                     Add New
                     </button>
@@ -165,7 +165,7 @@ return(<>
                             </select>
                         </td>
                         <td>
-                        <Link to={`/productupdate/${user._id}`}>
+                        <Link to={`/admin/productupdate/${user._id}`}>
                         <button  type="button" className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded mr-3" >Edit</button>
                         </Link>
                         <button type="button" className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-yellow-500 rounded"

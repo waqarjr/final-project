@@ -161,7 +161,7 @@ return(<>
         <div className="grid grid-cols-2 p-4 ">
             <p className="text-2xl font-light">Add New</p>
             <div className="justify-self-end">
-                <button  onClick={()=>{navigate('/product')}} className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-blue-700 rounded text-right">
+                <button  onClick={()=>{navigate('/admin/product')}} className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-blue-700 rounded text-right">
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                     Back    
                 </button>

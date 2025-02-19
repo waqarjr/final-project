@@ -130,7 +130,7 @@ const mul_Del_Image = async(req,res)=>{
 const update = async(req,res)=>{
     const id = req.params.id;
     const {title ,category, manufacturer,vendor,price,price_discount,keywords,stock,short_description,long_description,status} =req.body; 
-    
+
     if(req.files['image'] !== undefined){
         const imageRecord = await singleImage.findById(id);
         const filePath = path.join(__dirname, '../', imageRecord.image.replace('http://localhost:4000/', ''));

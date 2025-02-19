@@ -29,7 +29,6 @@ const formik = useFormik({
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: async (values)=>{
-        alert("hello");
         const  formData = new FormData();
         formData.append('name',values.name),
         formData.append('status',values.status),
@@ -80,7 +79,7 @@ return(<>
             <div><p className="text-2xl font-light">Update Categories</p></div>
             <div className="justify-self-end">
                 <button   className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-yellow-500 rounded text-right"
-                 onClick={()=>{navigate("/manufacture")}}>
+                 onClick={()=>{navigate("/admin/manufacture")}}>
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                 Back
                 </button>

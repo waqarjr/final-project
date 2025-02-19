@@ -64,7 +64,7 @@ const formik = useFormik({
         <div className="grid grid-cols-2 p-4 ">
             <div><p className="text-2xl font-light">Add New</p></div>
             <div className="justify-self-end">
-                <button  onClick={()=>{navigate('/manufacture')}} className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-yellow-500 rounded text-right">
+                <button  onClick={()=>{navigate('/admin/manufacture')}} className="bg-yellow-400 px-3 py-1 text-white border-none hover:bg-yellow-500 rounded text-right">
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                  Back
                 </button>

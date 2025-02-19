@@ -28,26 +28,26 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout/>} >
-          <Route path="/" element={<Dashbord/>} /> 
+          <Route path="/admin/dashbord" element={<Dashbord/>} /> 
           {/* Categories */}
-          <Route path='/categories' element={<CategoriesRead/>}/>
-          <Route path='/categoriescreat' element={<CategoriesCreat/> }/>
-          <Route path='/categoriesupdate/:id' element={<CategoriesUpdate/>} />
+          <Route path='/admin/categories' element={<CategoriesRead/>}/>
+          <Route path='/admin/categoriescreat' element={<CategoriesCreat/> }/>
+          <Route path='/admin/categoriesupdate/:id' element={<CategoriesUpdate/>} />
           {/* Products */}
-          <Route path='/product' element={<ProductRead/>} />
-          <Route path='/productscreat' element={<ProductCreat/>} />
-          <Route path='/productupdate/:id' element={<ProductUpdate/>} />
+          <Route path='/admin/product' element={<ProductRead/>} />
+          <Route path='/admin/productscreat' element={<ProductCreat/>} />
+          <Route path='/admin/productupdate/:id' element={<ProductUpdate/>} />
           {/* manufacturer */}
-          <Route path='/manufacture' element={<Read_manufacture/>}/>
-          <Route path='/manufacturecreat' element={<Creat_manufacture/>} />
-          <Route path='/manufactureupdate/:id' element={<Update_manufacture/>} />
+          <Route path='/admin/manufacture' element={<Read_manufacture/>}/>
+          <Route path='/admin/manufacturecreat' element={<Creat_manufacture/>} />
+          <Route path='/admin/manufactureupdate/:id' element={<Update_manufacture/>} />
           {/* Carousel */}
-          <Route path='/carousel' element={<Read_Carousel/>} />
-          <Route path='/carouselcreat' element={<Creat_Carousel/>} />
-          <Route path='/carouselupdate/:id' element={<Update_Carousel/>}  />
+          <Route path='/admin/carousel' element={<Read_Carousel/>} />
+          <Route path='/admin/carouselcreat' element={<Creat_Carousel/>} />
+          <Route path='/admin/carouselupdate/:id' element={<Update_Carousel/>}  />
           {/* webSetting */}
-          <Route path='/contactus' element={<Contact_Us/>} /> 
-          <Route path='/iconchange' element={<Icon_change/>} />
+          <Route path='/admin/contactus' element={<Contact_Us/>} /> 
+          <Route path='/admin/iconchange' element={<Icon_change/>} />
         </Route>
       </Routes>    
     </BrowserRouter>

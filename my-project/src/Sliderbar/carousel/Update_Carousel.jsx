@@ -65,6 +65,7 @@ const apiFetch = async(id)=>{
 
 useEffect(()=>{
 apiFetch(id); 
+document.title = "Update Carousel";
 },[id])
 
 return(<>
@@ -101,7 +102,7 @@ return(<>
                 name="image"  onChange={(e)=>formik.setFieldValue("image",e.currentTarget.files[0])}
                 className="border-2 w-full  mt-2  rounded-lg p-2 " />
                 
-                <img src={image} alt="image" width="80" className="mx-1 my-2 shadow-lg rounded-lg"  />
+                <img src={image} alt="image" width="80" className="mx-1 my-2  rounded-lg"  />
             </div>
 
             <div className="p-4">

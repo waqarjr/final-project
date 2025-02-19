@@ -15,7 +15,6 @@ const {id} = useParams();
 const [title , setTitle] = useState('');
 const [category , setCategories] = useState('');
 const [manufacturer , setManufacturer] = useState('');
-const [vendor , setVendor ] = useState('');
 const [price , setPrice] = useState ('');
 const [price_discount , setPrice_Discount] = useState('');
 const [keywords , setKeywords] = useState('');
@@ -23,8 +22,6 @@ const [stock , setStock ] = useState('');
 const [short_description , setShort_Description] = useState('');
 const [long_description , setLong_Description] = useState('');
 const [status ,SetStatus] = useState('');
-const [image ,setImage] = useState('');
-const [images , setImages] = useState([]);
 
 const [readcategory , setReadCategory ] = useState([]);
 const [readManufacturer , setReadManufacturer] = useState([]);
@@ -45,6 +42,7 @@ const manufacturer_read = async ()=>{
 useEffect(()=>{
   category_read();
   manufacturer_read();
+  document.title = "Product Update";
 },[])
 
 const fetchData = async(id)=>{
@@ -52,7 +50,6 @@ const fetchData = async(id)=>{
     setTitle(data.data.title);
     setCategories(data.data.category);
     setManufacturer(data.data.manufacturer);
-    setVendor(data.data.vendor);
     setPrice(data.data.price);
     setPrice_Discount(data.data.price_discount);
     setKeywords(data.data.keywords);
@@ -61,13 +58,15 @@ const fetchData = async(id)=>{
     setLong_Description(data.data.long_description);
     SetStatus(data.data.status);
     const imageUrl = data.data.image;
-  setSingleImage({ preview: imageUrl, name: "Fetched Image" });
+  setSingleImage({ preview: imageUrl});
   formik.setFieldValue("image", imageUrl);
 }
 
 const multiple = async (id) => {
   const response = await axios.get(`http://localhost:4000/read-mul-image-product/${id}`);
+  console.log("Database Response:", response.data);
   const images = response.data.map((img) => ({ preview: img,  name: "Fetched Image"}));
+  console.log("Mapped Images:", images);
   setMultipleImages(images);
   formik.setFieldValue("multipleImages", images);
 };
@@ -80,16 +79,13 @@ fetchData(id)
 const handleDelete = async(id)=>{
   const alpha = await axios.get(`http://localhost:4000/del-mul-image-product/${id}`)
   alert(alpha.data.message);
-  setImages((prevData) => prevData.filter((data) => data._id !== id));
+  // setImages((prevData) => prevData.filter((data) => data._id !== id));
 }
-
- 
 
 const validationSchema = Yup.object({
   title:Yup.string().required("Title is required"),
   category:Yup.string().required("Category is required"),
   manufacturer:Yup.string().required('manufacturer is required'),
-  vendor:Yup.string().required('Vendor is required'),
   price:Yup.number().required('Price is required'),
   price_discount:Yup.number().required('price discount is required'),
   keywords:Yup.string().required("Keywords is required"),
@@ -98,8 +94,6 @@ const validationSchema = Yup.object({
   status:Yup.string().required('Status is required'),
   long_description:Yup.string().required('Long Description is required')
   .min(10, 'Long description must be at least 10 characters'),
-  image: Yup.mixed()
-    .required("Please upload an image"),
   multipleImages: Yup.array().of( Yup.mixed()
     .required("Please upload an image")
     ).min(1, "Please upload at least one image")
@@ -110,13 +104,10 @@ const formik = useFormik({
     title : title,
     category : category,
     manufacturer : manufacturer,
-    vendor :vendor,
     price :price,
     price_discount :price_discount,
     keywords :keywords,
     stock : stock,
-    image: image,
-    multipleImages:images,
     short_description:short_description,
     long_description:long_description,
     status:status,
@@ -124,28 +115,25 @@ const formik = useFormik({
   enableReinitialize: true,
   validationSchema : validationSchema,
   onSubmit : async(values)=>{
-    console.log(values.title);
-
+    console.log(values);
     const formData = new FormData();
     formData.append("title", values.title); 
     formData.append("category", values.category); 
     formData.append("manufacturer", values.manufacturer);
-    formData.append("vendor", values.vendor);
     formData.append("price", values.price);
     formData.append("price_discount", values.price_discount);
     formData.append("keywords", values.keywords);
     formData.append("stock", values.stock);
-    formData.append("image", values.image);
+    // formData.append("image", values.image);
     formData.append("short_description", values.short_description);
     formData.append("long_description", values.long_description);
     formData.append("status", values.status);
-    values.multipleImages.map((img) => formData.append("multipleImages", img)); 
-    console.log(values,"hello");
-    await axios.post(`http://localhost:4000/update-product/${id}`,formData,{
-      headers:{
-        "Content-Type" : "multipart/form-data"
-      }
-    })
+    // values.multipleImages.map((img) => formData.append("multipleImages", img)); 
+    // await axios.post(`http://localhost:4000/update-product/${id}`,formData,{
+    //   headers:{
+    //     "Content-Type" : "multipart/form-data"
+    //   }
+    // })
   }
 })
 
@@ -163,19 +151,14 @@ const { getRootProps: getRootPropsSingle, getInputProps: getInputPropsSingle } =
   multiple: false,
 });
 
-const deleteFilePreview = () => {
-  if (singleImage) {
-    URL.revokeObjectURL(singleImage.preview);
-    setSingleImage(null);
-  }
-};
 
 const onDropMultiple = useCallback((acceptedFiles) => {
   const filesWithPreview = acceptedFiles.map((file) =>
     Object.assign(file, { preview: URL.createObjectURL(file) })
   );
+
   setMultipleImages((prevFiles) => [...prevFiles, ...filesWithPreview]);
-  formik.setFieldValue("multipleImages", filesWithPreview);
+  formik.setFieldValue("multipleImages", (prev) => [...prev, ...filesWithPreview]);
 }, [formik]);
 
 const { getRootProps: getRootPropsMul, getInputProps: getInputPropsMul } = useDropzone({
@@ -304,17 +287,16 @@ return(<>
                     <input {...getInputPropsSingle()} />
                     {!singleImage && <p>Drag & drop an image here, or click to select one</p>}
                     {singleImage && (
-                      <div className="relative inline-block m-2 rounded shadow-sm group">
-                        <img src={singleImage.preview} alt={singleImage.name} className="w-24 shadow-sm" id='image' 
+                      <div className="relative inline-block m-2 rounded  group">
+                        <img src={singleImage.preview} alt={singleImage.name} className="w-24 " id='image' 
                         name='image'  />
-                        <button type='button' onClick={(e) => { e.stopPropagation(); deleteFilePreview(); }}
-                          className="hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded" >
-                          X
-                        </button>
                       </div>
                     )}
                   </div>
-                </div> 
+                </div>
+                {formik.touched.image && formik.errors.image && (
+                  <div className="text-red-500">{formik.errors.image}</div>
+              )} 
           </div>
 
           <div className="mt-6 mx-3 ">
@@ -325,8 +307,9 @@ return(<>
                   <input {...getInputPropsMul()} />
                   {multipleImages.length === 0 && <p>Drag & drop some images here, or click to select multiple images</p>}
                   {multipleImages.map((file, index) => (
-                    <div key={index} className="relative inline-block m-2 rounded shadow-sm group">
-                      <img src={file.preview.images} alt={file.name} className="w-24 shadow-sm" id='multipleImages'
+                    <div key={index} className="relative inline-block m-2  group">
+                      <img src={typeof file.preview === "string" ? file.preview : file.preview?.images} 
+                      alt={file.name} className="w-24 " id='multipleImages'
                       name="multipleImages" onChange={(event) => formik.setFieldValue("multipleImages", Array.from(event.currentTarget.files))} />
                       <button type='button' onClick={(e) => { e.stopPropagation(); deleteMulFilePreview(file); }}
                         className="hover:cursor-pointer absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-2xl font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded">
@@ -335,7 +318,10 @@ return(<>
                     </div>
                   ))}
                 </div>
-          </div>
+                {formik.touched.multipleImages && formik.errors.multipleImages && (
+                <div className="text-red-500">{formik.errors.multipleImages}</div>
+              )}    
+          </div> 
 
           </div>
 

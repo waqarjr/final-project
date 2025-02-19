@@ -5,10 +5,15 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
 
 
 export const Creat_Carousel = ()=>{
 const navigate = useNavigate();
+
+useEffect(()=>{
+    document.title = "Create Carousel";
+},[])
 
 const validationSchema = Yup.object({
     name :Yup.string().required("Name is required"),

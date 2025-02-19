@@ -17,6 +17,7 @@ export const CategoriesRead = ()=>{
         const today = new Date();
         const formattedDate = today.toISOString().split("T")[0];
         setToDate(formattedDate);
+        document.title = "Categories";
     }, []);
        
     const handleFilterStatus =  async(filterStatus)=>{

@@ -12,6 +12,7 @@ export const Icon_change = ()=>{
             const {data} = await axios.get("http://localhost:4000/readicon");
             setIcon(data[0].icon);
         }
+        document.title = "Icon Setting";
         fetchIcon();
     },[])
     const formik = useFormik({

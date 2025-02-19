@@ -27,6 +27,7 @@ const manufacturer = async ()=>{
 useEffect(()=>{
   category();
   manufacturer();
+  document.title = "Product Creat";
 },[])
 
 const [singleImage, setSingleImage] = useState(null);
@@ -102,10 +103,11 @@ const formik = useFormik({
         icon: "success",
         confirmButtonText: "OK",
       });
-    }
-    resetForm();
+      resetForm();
     setSingleImage(null);
     setMultipleImages([]);
+    }
+    
   }
 })
 

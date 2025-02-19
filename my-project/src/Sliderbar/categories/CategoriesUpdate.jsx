@@ -65,6 +65,7 @@ const apiFetch = async(id)=>{
 
 useEffect(()=>{
 apiFetch(id); 
+document.title = "Update Categories";
 },[id])
 
 return(<>

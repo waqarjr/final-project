@@ -10,6 +10,7 @@ export const Dashbord = () => {
             const today = new Date();
             const formattedDate = today.toISOString().split("T")[0];
             setToDate(formattedDate);
+            document.title = "Dashbord";
         }, []);
 
   return (<>
@@ -29,7 +30,7 @@ export const Dashbord = () => {
         </div>
         </div>
         <div className="w-full h-8  bg-blue-700 flex justify-center items-center">
-            <p className="text-white">More Info</p> 
+            <p className="text-white cursor-pointer">More Info</p> 
             <FontAwesomeIcon icon={faArrowRight} className=' m-2 px-1 bg-white text-blue-300 rounded-full'/>
         </div>
     </div>
@@ -45,7 +46,7 @@ export const Dashbord = () => {
         </div>
         </div>
         <div className="w-full h-8 bg-[#348491] flex justify-center items-center">
-            <p className="text-white">More Info</p> 
+            <p className="text-white cursor-pointer">More Info</p> 
             <FontAwesomeIcon icon={faArrowRight} className=' m-2 px-1 bg-white text-blue-300 rounded-full'/>
         </div>
     </div>
@@ -60,7 +61,7 @@ export const Dashbord = () => {
         </div>
         </div>
         <div className="w-full h-8 bg-[#b93542] flex justify-center items-center">
-            <p className="text-white">More Info</p> 
+            <p className="text-white cursor-pointer">More Info</p> 
             <FontAwesomeIcon icon={faArrowRight} className=' m-2 px-1 bg-white text-blue-300 rounded-full'/>
         </div>
     </div>

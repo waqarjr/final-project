@@ -29,12 +29,11 @@ const formik = useFormik({
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: async (values)=>{
-        
+        alert("hello");
         const  formData = new FormData();
         formData.append('name',values.name),
         formData.append('status',values.status),
         formData.append('image',values.image)
-        if(alpha.data.mes){
             Swal.fire({
             title: "Do you want to save the changes?",
             showDenyButton: true,
@@ -53,7 +52,7 @@ const formik = useFormik({
                 Swal.fire("Changes are not saved", "", "info");
             }
             });
-        }
+        
     }
 })
 
@@ -67,6 +66,7 @@ const apiFetch = async(id)=>{
 
 useEffect(()=>{
 apiFetch(id); 
+document.title = "Update Manufacturer";
 },[id])
 
 return(<>
@@ -87,7 +87,7 @@ return(<>
             </div>
         </div><hr />    
 
-        <form onSubmit={formik.handleSubmit} >
+        <form onSubmit={formik.handleSubmit}>
             <div className="p-4" >
                 
                 <label htmlFor="name" className="font-bold block">Name <span className="text-rose-700">*</span></label>
@@ -125,6 +125,7 @@ return(<>
                 <button type="submit" className="bg-blue-500 text-white hover:bg-blue-600 rounded py-1 px-3">
                     Submit
                 </button>
+                
             </div>
 
         </form>

@@ -14,7 +14,7 @@ app.use('/',manufacture);
 app.use('/',category);
 app.use('/',products);
 app.use('/',carousel);
-app.use('/',websetting)
+app.use('/',websetting);
 app.use('/images', express.static('images'));
 
 app.listen(4000);

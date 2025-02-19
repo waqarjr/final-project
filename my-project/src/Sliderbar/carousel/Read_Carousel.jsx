@@ -54,6 +54,7 @@ export const CategoriesRead = ()=>{
     
     useEffect(()=>{
         read_image();
+        document.title = "Carousel";
     },[])
 return(<>
 <div className="sm:ml-64 mt-14">

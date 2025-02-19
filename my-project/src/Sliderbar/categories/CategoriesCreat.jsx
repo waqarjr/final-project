@@ -15,6 +15,7 @@ useEffect(()=>{
     const today = new Date();
     const formetedDate = today.toISOString().split("T")[0];
     setCurrentDate(formetedDate);
+    document.title = "Creat Categories";
 },[])
 
 const validationSchema = Yup.object({

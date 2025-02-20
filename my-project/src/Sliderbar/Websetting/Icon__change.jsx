@@ -3,6 +3,7 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Index from "../Index";
 
 export const Icon_change = ()=>{
     
@@ -46,6 +47,7 @@ export const Icon_change = ()=>{
         }
     })
     return(<>
+        <Index/>
         <div className="sm:ml-64 mt-14 ">
     <div className="p-4">
         <p className="capitalize text-3xl font-sans py-4 ">Icon</p>

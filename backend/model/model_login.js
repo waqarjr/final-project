@@ -13,7 +13,6 @@ schema.pre('save', function(next) {
     this.password = password;
     next(); 
     });
-    
 
 const Login = mongoose.model('Login',schema);
 module.exports = Login;

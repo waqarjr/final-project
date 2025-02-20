@@ -4,6 +4,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import Index from "../Index";
 
 export const ProductRead = ()=>{
 const navigate = useNavigate();
@@ -89,12 +90,11 @@ const handleStatusChange = async(id, newStatus) => {
     }
 };
 return(<>
+    <Index/>
     <div className="sm:ml-64 mt-14">
-        
         <div className=" p-4">
             <p className="text-3xl capitalize font-sans py-4 " > product </p>
          
-
         <div className="bg-white w-full  rounded-lg border-2 border-slate-200">
             <div className="grid grid-cols-2 p-4 ">
                 <p className="text-2xl font-light">Products</p>

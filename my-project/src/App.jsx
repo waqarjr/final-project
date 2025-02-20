@@ -23,6 +23,8 @@ import Icon_change from './Sliderbar/Websetting/Icon__change';
 
 import Admin from './Sliderbar/Login/Login';
 
+import ProtectedRoute from './Sliderbar/ProtecedRouter';
+
 function App() {
   return (
   <>
@@ -32,26 +34,26 @@ function App() {
         <Route path="/admin" element={<Admin/>} />
 
         <Route path="/" element={<Layout/>} >
-          <Route path="/admin/dashbord" element={<Dashbord/>} /> 
+          <Route path="/admin/dashbord" element={<ProtectedRoute><Dashbord/></ProtectedRoute>} /> 
           {/* Categories */}
-          <Route path='/admin/categories' element={<CategoriesRead/>}/>
-          <Route path='/admin/categoriescreat' element={<CategoriesCreat/> }/>
-          <Route path='/admin/categoriesupdate/:id' element={<CategoriesUpdate/>} />
+          <Route path='/admin/categories' element={<ProtectedRoute><CategoriesRead/></ProtectedRoute> }/>
+          <Route path='/admin/categoriescreat' element={<ProtectedRoute><CategoriesCreat/></ProtectedRoute>  }/>
+          <Route path='/admin/categoriesupdate/:id' element={<ProtectedRoute><CategoriesUpdate/></ProtectedRoute> } />
           {/* Products */}
-          <Route path='/admin/product' element={<ProductRead/>} />
-          <Route path='/admin/productscreat' element={<ProductCreat/>} />
-          <Route path='/admin/productupdate/:id' element={<ProductUpdate/>} />
+          <Route path='/admin/product' element={ <ProtectedRoute><ProductRead/></ProtectedRoute> } />
+          <Route path='/admin/productscreat' element={  <ProtectedRoute><ProductCreat/></ProtectedRoute> } />
+          <Route path='/admin/productupdate/:id' element={<ProtectedRoute><ProductUpdate/></ProtectedRoute> } />
           {/* manufacturer */}
-          <Route path='/admin/manufacture' element={<Read_manufacture/>}/>
-          <Route path='/admin/manufacturecreat' element={<Creat_manufacture/>} />
-          <Route path='/admin/manufactureupdate/:id' element={<Update_manufacture/>} />
+          <Route path='/admin/manufacture' element={ <ProtectedRoute><Read_manufacture/></ProtectedRoute> }/>
+          <Route path='/admin/manufacturecreat' element={<ProtectedRoute><Creat_manufacture/></ProtectedRoute> } />
+          <Route path='/admin/manufactureupdate/:id' element={<ProtectedRoute><Update_manufacture/></ProtectedRoute> } />
           {/* Carousel */}
-          <Route path='/admin/carousel' element={<Read_Carousel/>} />
-          <Route path='/admin/carouselcreat' element={<Creat_Carousel/>} />
-          <Route path='/admin/carouselupdate/:id' element={<Update_Carousel/>}  />
+          <Route path='/admin/carousel' element={ <ProtectedRoute><Read_Carousel/></ProtectedRoute>} />
+          <Route path='/admin/carouselcreat' element={<ProtectedRoute><Creat_Carousel/></ProtectedRoute> } />
+          <Route path='/admin/carouselupdate/:id' element={<ProtectedRoute><Update_Carousel/></ProtectedRoute>}  />
           {/* webSetting */}
-          <Route path='/admin/contactus' element={<Contact_Us/>} /> 
-          <Route path='/admin/iconchange' element={<Icon_change/>} />
+          <Route path='/admin/contactus' element={<ProtectedRoute><Contact_Us/></ProtectedRoute> } /> 
+          <Route path='/admin/iconchange' element={<ProtectedRoute><Icon_change/></ProtectedRoute> } />
           {/* Admin Page */}
         </Route>
       </Routes>    

@@ -4,6 +4,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import Index from "../Index";
 
 export const CategoriesRead = ()=>{
     const navigate =  useNavigate();
@@ -83,6 +84,7 @@ export const CategoriesRead = ()=>{
 
     
 return(<>
+<Index/>
 <div className="sm:ml-64 mt-14">
 <div className="p-4">
     <p className="capitalize text-3xl font-sans py-4 ">product categories</p>

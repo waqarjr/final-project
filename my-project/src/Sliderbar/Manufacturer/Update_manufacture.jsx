@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import Index from "../Index";
 
 export const Update_manufacture = ()=>{
 
@@ -69,8 +70,8 @@ document.title = "Update Manufacturer";
 },[id])
 
 return(<>
+<Index />
 <div className="sm:ml-64 mt-14 ">
-    
     <div className="p-4">
         <p className="capitalize text-3xl font-sans py-4">product categories</p>
 

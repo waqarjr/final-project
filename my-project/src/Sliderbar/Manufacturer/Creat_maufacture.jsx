@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { useState,useEffect } from "react";
+import Index from "../Index";
 
 export const Creat_manufacture = ()=>{
 
@@ -55,8 +56,8 @@ const formik = useFormik({
 })
 
     return(<>
+    <Index />
     <div className="sm:ml-64 mt-14 ">
-    
     <div className="p-4">
         <p className="capitalize text-3xl font-sans py-4">Products Manufacturer</p>
     

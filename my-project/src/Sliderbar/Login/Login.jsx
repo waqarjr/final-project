@@ -1,12 +1,17 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 export const Admin = () => {    
 
   const [mess , setMess] = useState("");
   const [showPass , setShowPass] = useState(false);
 
+  useEffect(() => {
+    document.title = "Admin Login";
+  },[]);
+  
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -20,12 +25,12 @@ export const Admin = () => {
           const formData = new FormData();
           formData.append("email", values.email);
           formData.append("password", values.password);
-          const responce = await axios.post("http://localhost:4000/login", formData,{
-            headers:{
-                "Content-Type" :"multipart/form-data"
-            }
-          });
-          setMess(responce.data.message)
+          const responce = await axios.post("http://localhost:4000/login", formData);
+          if(responce.data.a){
+            localStorage.setItem("isAdminLoggedIn", "true");
+            window.location.href = "/admin/dashbord";
+          }
+          setMess(responce.data.message);
         }
       });
 

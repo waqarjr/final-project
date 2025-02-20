@@ -6,7 +6,7 @@ const login = async(req,res)=>{
     const alpha = await Login.findOne();
     if(req.body.email == alpha.email){
         if(bcrypt.compareSync(req.body.password,alpha.password)){
-            res.send({ message:"Login Successfull"});
+            res.send({ message:"Login Successfull",a:true});
         }else{
             res.send({message:"Password is incorrect"});
         }

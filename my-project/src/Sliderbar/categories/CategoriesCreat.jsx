@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useState , useEffect } from "react";
 import Swal from "sweetalert2";
+import Index from "../Index";
 
 export const CategoriesCreat = ()=>{
 const navigate = useNavigate();
@@ -54,6 +55,7 @@ const formik = useFormik({
 })
 
 return(<>
+<Index/>
 <div className="sm:ml-64 mt-14 ">
 <div className="p-4">
     <p className="capitalize text-3xl font-sans py-4 ">product categories</p>

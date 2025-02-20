@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useDropzone } from 'react-dropzone';
 import Swal from 'sweetalert2';
+import Index from '../Index';
 
 export const ProductUpdate = ()=>{
 const navigate = useNavigate();
@@ -198,7 +199,7 @@ const deleteMulFilePreview = async (file,id) => {
 
 
 return(<>
-
+<Index/>
 <div className="sm:ml-64 mt-14">
     <div className=" p-4">
         <p className="text-3xl capitalize font-sans py-4" > product categories</p>

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useMask } from '@react-input/mask';
+import Index from "../Index";
 export const Contact_Us = ()=>{
 
     const [email , setEmail] = useState('');
@@ -75,6 +76,7 @@ const inputRef1 = useMask({
     })
 
     return(<>
+    <Index/>
 <div className="sm:ml-64 mt-14 ">
     <div className="p-4">
         <p className="capitalize text-3xl font-sans py-4 ">Contact Us Setting</p>

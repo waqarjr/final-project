@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faChartPie, faShip } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import Index from './Index';
 
 export const Dashbord = () => {
   
@@ -14,6 +15,7 @@ export const Dashbord = () => {
         }, []);
 
   return (<>
+  <Index/>
    <div className="sm:ml-64 mt-14">
 <div className="p-4">
     <p className="capitalize text-3xl font-sans py-2 ">Dashbord</p>

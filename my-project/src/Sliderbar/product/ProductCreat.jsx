@@ -9,7 +9,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import React, { useCallback,useEffect, useState } from 'react';
 import { useDropzone } from "react-dropzone";
-
+import Index from "../Index";
 
 export const ProductCreat = ()=>{
 const navigate = useNavigate();
@@ -152,7 +152,7 @@ const deleteMulFilePreview = (file) => {
 };
 
 return(<>
-
+  <Index/>
 <div className="sm:ml-64 mt-14">
     <div className=" p-4">
         <p className="text-3xl capitalize font-sans py-4 " > product categories</p>

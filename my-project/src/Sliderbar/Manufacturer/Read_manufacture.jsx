@@ -4,6 +4,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import Index from "../Index";
 
 export const Read_manufacture = ()=>{
     const navigate =  useNavigate();
@@ -82,6 +83,7 @@ export const Read_manufacture = ()=>{
     
 
 return(<>
+<Index />
 <div className="sm:ml-64 mt-14">
     <div className=" p-4">
         <p className="text-3xl capitalize font-sans py-4" > product manufacturer</p>

@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
-
+import Index from "../Index";
 
 export const Creat_Carousel = ()=>{
 const navigate = useNavigate();
@@ -50,6 +50,7 @@ const formik = useFormik({
 })
 
 return(<>
+<Index />   
 <div className="sm:ml-64 mt-14 ">
     
     <div className="p-4">

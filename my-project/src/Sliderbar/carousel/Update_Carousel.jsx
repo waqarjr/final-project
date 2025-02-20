@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
-
+import Index from "../Index";
 export const Update_Carousel = ()=>{
 
 const {id} = useParams();    
@@ -69,6 +69,7 @@ document.title = "Update Carousel";
 },[id])
 
 return(<>
+<Index />
 <div className="sm:ml-64 mt-14 ">
     
     <div className="p-4">

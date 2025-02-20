@@ -21,12 +21,16 @@ import Update_Carousel from './Sliderbar/carousel/Update_Carousel';
 import Contact_Us from './Sliderbar/Websetting/Contact_Us';
 import Icon_change from './Sliderbar/Websetting/Icon__change';
 
+import Admin from './Sliderbar/Login/Login';
+
 function App() {
   return (
   <>
   <div className='bg-slate-100 '>
     <BrowserRouter>
       <Routes>
+        <Route path="/admin" element={<Admin/>} />
+
         <Route path="/" element={<Layout/>} >
           <Route path="/admin/dashbord" element={<Dashbord/>} /> 
           {/* Categories */}
@@ -48,10 +52,12 @@ function App() {
           {/* webSetting */}
           <Route path='/admin/contactus' element={<Contact_Us/>} /> 
           <Route path='/admin/iconchange' element={<Icon_change/>} />
+          {/* Admin Page */}
         </Route>
       </Routes>    
     </BrowserRouter>
   </div>
+    
   </>
   )
 }

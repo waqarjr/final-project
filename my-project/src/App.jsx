@@ -24,6 +24,12 @@ import Icon_change from './Sliderbar/Websetting/Icon__change';
 import Admin from './Sliderbar/Login/Login';
 
 import ProtectedRoute from './Sliderbar/ProtecedRouter';
+import ConformPassword from './Sliderbar/Login/ConformPassword';
+import ChangePassword from './Sliderbar/Login/ChangePassword';
+import ProtectChanPass from './Sliderbar/ProtectedChngPass';
+import Weblayout from './Web/weblayout';
+
+import Header from './Web/Header';
 
 function App() {
   return (
@@ -31,6 +37,9 @@ function App() {
   <div className='bg-slate-100 '>
     <BrowserRouter>
       <Routes>
+
+        
+
         <Route path="/admin" element={<Admin/>} />
 
         <Route path="/" element={<Layout/>} >
@@ -55,10 +64,25 @@ function App() {
           <Route path='/admin/contactus' element={<ProtectedRoute><Contact_Us/></ProtectedRoute> } /> 
           <Route path='/admin/iconchange' element={<ProtectedRoute><Icon_change/></ProtectedRoute> } />
           {/* Admin Page */}
+          <Route path='/admin/conformpassword' element={<ProtectedRoute><ConformPassword/></ProtectedRoute> } />  
+
+          <Route path='/admin/changepassword' element={<ProtectedRoute> <ProtectChanPass><ChangePassword/></ProtectChanPass></ProtectedRoute>} />
+
         </Route>
       </Routes>    
     </BrowserRouter>
   </div>
+
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Weblayout/>} >
+
+        <Route path='/' element={<Header/>} />
+        
+        </Route>
+      </Routes>    
+    </BrowserRouter>
+  
     
   </>
   )

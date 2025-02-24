@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronUp , faChevronDown , faGear ,faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faChevronUp , faChevronDown , faGear ,faRightFromBracket , faCircle } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 
 export const  Index = ()=>{
@@ -42,8 +42,7 @@ return(<>
             </svg>
           </button>
           <a href="#" className="flex ms-2 md:me-24">
-            <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 me-3" alt="FlowBite Logo" />
-            <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Flowbite</span>
+            <img src="../../public/waqarjr.png" className="w-[130px]" alt="FlowBite Logo" />
           </a>
         </div>
 
@@ -157,6 +156,15 @@ return(<>
                   </li>
             </ul>
          </li>
+         <li>
+          <NavLink to="/admin/conformpassword" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+            <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" >
+            <FontAwesomeIcon icon={faCircle} />
+            </svg>
+            <span className="flex-1 ms-3 whitespace-nowrap">Change Password</span>
+            </NavLink>
+          <NavLink to="/admin/changepassword"></NavLink>
+        </li>
          <li>
           <NavLink onClick={logout}  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
             <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" >

@@ -2,16 +2,25 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 
 export const Admin = () => {    
 
   const [mess , setMess] = useState("");
   const [showPass , setShowPass] = useState(false);
+  const  navigate  = useNavigate();
 
   useEffect(() => {
     document.title = "Admin Login";
+    const isAuthenticated = localStorage.getItem("isAdminLoggedIn");
+    if (isAuthenticated) {
+      navigate("/admin/dashbord"); 
+    }
+
   },[]);
   
+  
+
     const formik = useFormik({
         initialValues: {
             email: '',

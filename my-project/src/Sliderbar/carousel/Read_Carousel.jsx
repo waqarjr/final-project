@@ -8,11 +8,16 @@ import Index from "../Index";
 export const CategoriesRead = ()=>{
     const navigate =  useNavigate();
     const [data , setData] = useState([]);
-    // read data
+
     const read_image = async ()=>{
         const data = await axios.get("http://localhost:4000/readcarousel");
         setData(data.data);
     }
+    useEffect(()=>{
+        read_image();
+        document.title = "Carousel";
+    },[])
+    
     const delete_image = async (id)=>{    
         Swal.fire({
             title: "Are you sure?",
@@ -24,7 +29,7 @@ export const CategoriesRead = ()=>{
             confirmButtonText: "Yes, delete it!",
           }).then( async (result) => {
             if (result.isConfirmed) {
-            await axios.get(`http://localhost:4000/deletecategory/${id}`)
+            await axios.get(`http://localhost:4000/deletecarousel/${id}`)
             setData((prevData) => prevData.filter((data) => data._id !== id));
               Swal.fire("Deleted!", "Your file has been deleted.", "success");
             }
@@ -52,10 +57,7 @@ export const CategoriesRead = ()=>{
         }
     };
     
-    useEffect(()=>{
-        read_image();
-        document.title = "Carousel";
-    },[])
+    
 return(<>
 <Index />
 <div className="sm:ml-64 mt-14">
@@ -91,7 +93,7 @@ return(<>
                     <tr key={user._id} className="[&>*]:p-1 [&>*]:border-2 [&>*]:border-gray-300 " >
                     <td>{index + 1}</td>
                     <td>{user.name}</td>
-                    <td><img src={user.image} alt="image" width="80" className=" mx-auto" /></td>
+                    <td ><img src={user.image} alt="image" width="200" className=" mx-auto" /></td>
                     <td>
                     <select defaultValue={user.status} onChange={(e) =>  handleStatusChange(user._id, e.target.value)}
                         className="w-[150px] border-2 rounded-md" >

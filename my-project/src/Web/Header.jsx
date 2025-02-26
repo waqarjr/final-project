@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faUser, faChevronDown, faMagnifyingGlass ,  faPhone,faLocationDot } from "@fortawesome/free-solid-svg-icons"
 import { useState } from "react"
 import { Link } from "react-router-dom";
-import Footer from "./Footer";
 export const Header = ()=>{
    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
    const [isLanguageOpen, setIsLanguageOpen] = useState(false)
@@ -10,9 +9,7 @@ export const Header = ()=>{
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 return(<>
-{/* #f8ffe5 - lightYellow  , 06d6a0 - emerald*/}
 
-<header>
 
 <div className="bg-[#06d6a0] text-white py-2 px-4">
    <div className="w-full px-4 sm:px-6 lg:px-12 mx-auto flex items-center justify-between text-sm">
@@ -169,9 +166,7 @@ return(<>
    </div>
 </nav>
    
-</header>
 
-<Footer/>
 </>)
 }
  export default Header;

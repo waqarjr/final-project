@@ -28,8 +28,8 @@ import ConformPassword from './Sliderbar/Login/ConformPassword';
 import ChangePassword from './Sliderbar/Login/ChangePassword';
 import ProtectChanPass from './Sliderbar/ProtectedChngPass';
 import Weblayout from './Web/weblayout';
-
-import Header from './Web/Header';
+import Index from './Web/Index';
+import Carousel from './Web/Home/Carousel';
 
 function App() {
   return (
@@ -37,8 +37,6 @@ function App() {
   <div className='bg-slate-100 '>
     <BrowserRouter>
       <Routes>
-
-        
 
         <Route path="/admin" element={<Admin/>} />
 
@@ -77,7 +75,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Weblayout/>} >
 
-        <Route path='/' element={<Header/>} />
+        <Route path='/' element={<Index/>} />
+        <Route path='/carousel' element={<Carousel/>} />
         
         </Route>
       </Routes>    

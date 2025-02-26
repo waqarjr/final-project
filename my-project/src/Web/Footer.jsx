@@ -2,10 +2,10 @@ import {Link} from "react-router-dom"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faCopyright, faEnvelope, faLocationDot, faPhone, faVoicemail } from "@fortawesome/free-solid-svg-icons";
+import {faEnvelope, faLocationDot, faPhone } from "@fortawesome/free-solid-svg-icons";
 export default function Footer() {
   return (
-    <footer className="bg-[#f8ffe5] w-full px-4 sm:px-6 lg:px-12  mt-[200px]">
+    <footer className="bg-[#f8ffe5] w-full px-4 sm:px-6 lg:px-12  ">
       <div className="w-full mx-auto grid grid-cols-1  lg:grid-cols-[30%_auto] gap-4">
 
         <div className="">
@@ -81,9 +81,9 @@ export default function Footer() {
           <h3 className="text-lg font-semibold mb-4">Contact</h3>
           <div className="space-y-2">
             <p className="text-gray-600 flex items-start">
-                <div>
+                <span>
                     <FontAwesomeIcon icon={faLocationDot} className="mr-2 text-[#06d6a0]" />9 Asim Plaza,Tehsil Road Aamir Colony,Okara,PK
-                </div>
+                </span>
             </p>
             <p className="text-gray-600">
               <Link href="tel:+923317407677" className="hover:text-gray-900">

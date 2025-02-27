@@ -104,7 +104,7 @@ export default function Footer() {
         </div>
         </div>    
       </div> <hr className="my-4" />
-        <div className="flex items-center pb-2 text-gray-600 "> 
+        <div className="flex items-center justify-center pb-2 text-gray-600  "> 
              Copyright &copy; 2025 waqarjr. All Rights Reserved
         </div>    
     </footer>

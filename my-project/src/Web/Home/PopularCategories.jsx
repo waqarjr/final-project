@@ -14,12 +14,12 @@ read_data();
 
 return(<>
 
-<section className="max-w-6xl mx-auto px-4 py-8">
+<section className="max-w-6xl mx-auto px-4 py-8 ">
       <h2 className="text-2xl font-semibold mb-6">Popular Categories</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {data.map((values,index) => (
-          <div  key={index} className="flex items-center bg-white border  border-emerald rounded-md p-4 hover:shadow-md transition-shadow">
+          <div  key={index} className="flex items-center bg-white border  hover:border-emerald rounded-md p-4 hover:shadow-sm transition-shadow">
             <img  src={values.image}  alt={values.name} className="w-14 h-14 object-contain mr-4" />
             <div>
               <h3 className="text-lg font-medium">{values.name}</h3>

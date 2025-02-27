@@ -3,7 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faStar ,faChevronLeft,faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-export const Products = () =>{
+export const ProductsCarousel = () =>{
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
     slidesToScroll: 1,
@@ -54,7 +54,7 @@ export const Products = () =>{
                         <span className="text-lg font-semibold">JBL TUNE 600BTNC</span>
                         <span className="text-gray-600 text-sm pl-4 absolute right-0 top-1">$59.00</span>
                         <p className="text-sm text-gray-500 mt-2"> Premium Bone Conduction Open Ear Bluetooth</p>
-                        <div className="flex items-center justify-center mt-2">
+                        <div className=" mt-2 ">
                             <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
                             <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
                             <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
@@ -88,4 +88,4 @@ export const Products = () =>{
     </div>
   );
 }
-export default Products;
+export default ProductsCarousel;

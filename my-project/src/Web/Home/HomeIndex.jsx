@@ -1,13 +1,23 @@
+import Brands from "./Brands";
 import Carousel from "./Carousel";
+import ContactUs from "./ContactUs";
+import FreeSiping from "./FreeShiping";
 import PopularCategories from "./PopularCategories";
-import Products from "./Products";
+import Product from "./Product";
+import  ProductsCarousel from "./ProductsCarousel";
+import ShopList from "./ShopList";
 
 export const HomeIndex = ()=>{
 
 return(<>
-{/* <Carousel/> */}
+<Carousel/>
 <PopularCategories/>
-{/* <Products/> */}
+<ProductsCarousel/>
+<Product/>
+<ShopList/>
+<FreeSiping/>
+<Brands/>
+<ContactUs/>
 </>)
 
 }

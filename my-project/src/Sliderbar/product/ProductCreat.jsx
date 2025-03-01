@@ -34,8 +34,7 @@ const [singleImage, setSingleImage] = useState(null);
 const [multipleImages, setMultipleImages] = useState([]);
 
 
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
-const FILE_SIZE = 1024 * 1024; 
+
 
 const validationSchema = Yup.object({
   title:Yup.string().required("Title is required"),
@@ -50,13 +49,9 @@ const validationSchema = Yup.object({
   long_description:Yup.string().required('Long Description is required')
   .min(10, 'Long description must be at least 10 characters'),
   image: Yup.mixed()
-    .required("Please upload an image")
-    .test("fileSize", "File is too large", (value) => value && value.size <= FILE_SIZE)
-    .test("fileFormat", "Unsupported Format", (value) => value && SUPPORTED_FORMATS.includes(value.type)),
+    .required("Please upload an image"),
   multipleImages: Yup.array().of( Yup.mixed()
     .required("Please upload an image")
-    .test("fileSize", "File is too large", (value) => value && value.size <= FILE_SIZE)
-    .test("fileFormat", "Unsupported Format", (value) => value && SUPPORTED_FORMATS.includes(value.type))
     ).min(1, "Please upload at least one image")
 })
 
@@ -283,7 +278,7 @@ return(<>
               <label className="font-bold  block">Multiple Images<span className="text-red-700">*</span></label>
               {/* Multiple Images Upload */}
                 <div {...getRootPropsMul()}
-                  className="border-2 border-dashed border-blue-500 p-6 text-center cursor-pointer mb-6 flex flex-wrap gap-3 min-h-[150px] items-center justify-center" >
+                  className="border-2 border-dashed border-blue-500 p-6 text-center cursor-pointer mb-6 flex flex-wrap gap-3 min-h-[150px]" >
                   <input {...getInputPropsMul()} />
                   {multipleImages.length === 0 && <p>Drag & drop some images here, or click to select multiple images</p>}
                   {multipleImages.map((file, index) => (

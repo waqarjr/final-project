@@ -64,7 +64,7 @@ const deleteData = async(id)=>{
           }).then( async (result) => {
             if (result.isConfirmed) {
             await axios.get(`http://localhost:4000/deletedata/${id}`)
-            setData((prevData)=> prevData.filter((id)=> data._id !== id ))
+            setData((prevData)=> prevData.filter((id)=> data._id !== id ));
             Swal.fire("Deleted!", "Your file has been deleted.", "success");
             }
           });
@@ -154,7 +154,7 @@ return(<>
                   {data.map((user ,index)=>(
                     <tr key={user._id} className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300">
                         <td>{index + 1}</td>
-                        <td>{user.title}</td>
+                        <td width={400} >{user.title}</td>
                         <td>{user.price}</td>
                         <td><img src={user.image} alt="image" width="80" className=" mx-auto" /></td>
                         <td>

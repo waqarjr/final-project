@@ -17,6 +17,7 @@ useEffect(()=>{
 
 const validationSchema = Yup.object({
     name :Yup.string().required("Name is required"),
+    title :Yup.string().required("Name is required"),
     image :Yup.mixed().required("Image is required"),
     status : Yup.string().required("Please select any option ")
 })
@@ -24,13 +25,15 @@ const validationSchema = Yup.object({
 const formik = useFormik({
     initialValues:{
         name:"",
+        title:"",
         image:null,
         status:""
     },
     validationSchema : validationSchema,
     onSubmit :async (values, { resetForm })=>{
         const formData = new FormData();
-        formData.append("name", values.name); 
+        formData.append("name", values.name);
+        formData.append("title",values.title); 
         formData.append("status", values.status); 
         formData.append("image", values.image);
         const alpha = await axios.post("http://localhost:4000/creatcarousel",formData,{
@@ -80,6 +83,14 @@ return(<>
                     <span className="text-red-500">{formik.errors.name}</span>
                 )}
 
+                <label htmlFor="title" className="font-bold block mt-2">Title <span className="text-rose-700">*</span></label>
+                <input type="text" id="title" 
+                name="title" value={formik.values.title} onChange={formik.handleChange} onBlur={formik.handleBlur}
+                className=" border-2 w-full size-8 mt-2  rounded-md " /><br />
+                {formik.touched.title && formik.errors.title &&(
+                    <span className="text-red-500">{formik.errors.title}</span>
+                )}
+
                 <label htmlFor="picure" className="block font-bold mt-3 ">Picture <span className="text-rose-700">*</span></label>
                 <input type="file" id="image" 
                 name="image"  onChange={(e)=>formik.setFieldValue("image",e.currentTarget.files[0])}
@@ -110,10 +121,7 @@ return(<>
                     )}
                 </div>
 
-                <div className="mt-6">
-                    <input type="checkbox" name="navbar" id="navbar" /> 
-                    <label htmlFor="navbar"> Show on Navbar</label>
-                </div>
+                
             </div>
 
             <div className="mt-5 bg-slate-200 p-4 ">

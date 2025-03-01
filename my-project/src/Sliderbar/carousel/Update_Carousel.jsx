@@ -12,6 +12,7 @@ export const Update_Carousel = ()=>{
 const {id} = useParams();    
 const navigate = useNavigate();
 const [name , setName ] = useState('');
+const [title , setTitle ] = useState('');
 const [image , setImage] = useState('');
 const [status , setStatus] = useState('');
 const validationSchema = Yup.object({
@@ -23,6 +24,7 @@ const formik = useFormik({
     initialValues:{
         name:name,
         image:image,
+        title:title,
         status:status,
     },
     enableReinitialize: true,
@@ -31,6 +33,7 @@ const formik = useFormik({
         
         const  formData = new FormData();
         formData.append('name',values.name),
+        formData.append('title',values.title),
         formData.append('status',values.status),
         formData.append('image',values.image)
         Swal.fire({
@@ -61,6 +64,7 @@ const apiFetch = async(id)=>{
     setName(data.data.name);
     setImage(data.data.image);
     setStatus(data.data.status);
+    setTitle(data.data.title);
 }
 
 useEffect(()=>{
@@ -97,13 +101,20 @@ return(<>
                 {formik.touched.name && formik.errors.name &&(
                     <span className="text-red-500">{formik.errors.name}</span>
                 )}
+                <label htmlFor="name" className="font-bold block">Name <span className="text-rose-700">*</span></label>
+                <input type="text" id="title" 
+                name="title" value={formik.values.title} onChange={formik.handleChange} onBlur={formik.handleBlur}
+                className=" border-2 w-full size-8 mt-2  rounded-md " /><br />
+                {formik.touched.title && formik.errors.title &&(
+                    <span className="text-red-500">{formik.errors.title}</span>
+                )}
 
                 <label htmlFor="picure" className="block font-bold mt-3 ">Picture <span className="text-rose-700">*</span></label>
                 <input type="file" id="image" 
                 name="image"  onChange={(e)=>formik.setFieldValue("image",e.currentTarget.files[0])}
                 className="border-2 w-full  mt-2  rounded-lg p-2 " />
                 
-                <img src={image} alt="image" width="80" className="mx-1 my-2  rounded-lg"  />
+                <img src={image} alt="image" width="300" className="mx-1 my-2  "  />
             </div>
 
             <div className="p-4">

@@ -1,12 +1,14 @@
 const carousel = require("../model/module_Carousel");
 const path = require("path");
 const fs = require("fs");
+const { title } = require("process");
 
 const creat_carousel = async (req,res)=>{
-    const {name,status} = req.body;
+    const {name,status,title} = req.body;
     await carousel.create({
         name:name,
         status:status,
+        title:title,
         image:`http://localhost:4000/${req.file.path}`,
     })
     res.send({message:"Your data have been updated"});
@@ -36,7 +38,7 @@ const read_update_carousel = async(req ,res)=>{
 
 const update_carousel = async(req,res)=>{
     const id = req.params.id;
-    const {name , status} = req.body;
+    const {name , status,title} = req.body;
 
     if(req.file != undefined){
     const imageRecord = await carousel.findById(id);
@@ -46,11 +48,11 @@ const update_carousel = async(req,res)=>{
             fs.unlinkSync(filePath);
         }
         const {name,status} = req.body;
-        await carousel.updateOne({_id:id},{$set:{name:name,image:`http://localhost:4000/${req.file.path}`,status:status}});
+        await carousel.updateOne({_id:id},{$set:{name:name,image:`http://localhost:4000/${req.file.path}`,status:status,title:title}});
     }
     res.json({mes:"Your Data Have Been Updated"})
     }else {
-    await carousel.updateOne({_id:id},{$set:{name:name,status:status}});
+    await carousel.updateOne({_id:id},{$set:{name:name,status:status,title:title}});
     res.json({mes:"Your Data Have Been Updated"})
     }
 }

@@ -20,7 +20,7 @@ return(<>
     </div>
 
 <div className="overflow-hidden" >
-        <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 ">
+        <div className="grid md:grid-cols-4 grid-cols-2  ">
           {products.map(( values,index) => (
             <div key={index} className="px-1 py-2" >
                 <div className="relative max-w-xs bg-white border rounded-lg shadow-sm p-4  hover:border-emerald hover:shadow-md ">

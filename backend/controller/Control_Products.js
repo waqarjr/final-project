@@ -209,4 +209,38 @@ const select_update_state = async(req,res)=>{
     res.send({message:"Status updated sucessfully..."})
 }
 
-module.exports = {select_update_state,insertImage,readData,update_Read_Data,update_Mul_Images,mul_Del_Image,update,deleteData};
+const front_filter = async(req,res)=>{
+    const category =  req.body.category;
+    const manufacture = req.body.manufacture;
+    const Array_Category = category.split(',');
+    const Array_Manufacture = manufacture.split(',');
+    let data ;
+
+    
+        if(category.trim() && manufacture.trim()){
+            data = await singleImage.find({
+                category: { $in: Array_Category },
+                manufacturer: { $in: Array_Manufacture }
+              });
+        } else if(category.trim()){
+
+            data = await Promise.all(
+                Array_Category.map( async(e )=>{
+                  return await singleImage.find({category:e})  
+                } ) 
+            );
+        } else if(manufacture.trim()){
+
+            data = await Promise.all(
+                Array_Manufacture.map( async(e )=>{
+                 return  await singleImage.find({manufacturer:e})  
+                } ) 
+            );
+           }
+        else {
+            data = await singleImage.find();
+        }
+    res.json(data);
+}
+
+module.exports = {select_update_state,insertImage,readData,update_Read_Data,update_Mul_Images,mul_Del_Image,update,deleteData,front_filter};

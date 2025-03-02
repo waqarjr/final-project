@@ -20,7 +20,6 @@ export const PopularCategories = () => {
     Product_data();
   }, []);
 
-  // Calculate product count for each category
   const categoryCounts = useMemo(() => {
     const counts = {};
     products.forEach((prod) => {

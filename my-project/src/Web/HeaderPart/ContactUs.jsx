@@ -1,10 +1,35 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone,faLocationDot,faEnvelope, faCalendar, faClock, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import Header from "../Header";
+import Footer from "../Footer";
+import { useState,useEffect } from "react";
+import axios from "axios";
 export const ContactUs = ()=>{
 
-return(<>
+  const [email, setEmail] = useState('');
+    const [phoneNo1, setPhoneNo1] = useState('');
+    const [phoneNo2, setPhoneNo2] = useState('');
+    const [address , setAddress] = useState('');
 
-<div className="relative mx-auto   max-w-7xl bg-slate-200 mt-11"  >
+  const constact_Data = async()=>{
+    const data = await axios.get("http://localhost:4000/readwebsetting");
+        setEmail(data.data[0].email);
+        setPhoneNo1(data.data[0].phoneNo1);
+        setPhoneNo2(data.data[0].phoneNo2);
+        setAddress(data.data[0].address);
+  }
+
+  useEffect(()=>{
+    constact_Data();
+  },[])
+
+return(<>
+<Header/>
+<div className="max-w-[1390px] mx-auto px-4 py-2">
+  <div className='my-4 ' >
+        <p className='text-gray-400' > <span className='hover:text-black cursor-pointer'>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Contact Us</span> </p>
+    </div> <hr />
+<div className="relative mx-auto    bg-slate-200 "  >
 <div className="bg-[url('../../../public/contact-header-bg.jpg')]  w-full h-[400px] flex items-center justify-center">
 <div className=" text-white text-center ">
     <h3 className="md:text-5xl text-2xl ">Contact Us  </h3>
@@ -30,22 +55,22 @@ return(<>
                     <div className="space-y-2  ">
                         <div className="text-gray-600">
                             <span>
-                                <FontAwesomeIcon icon={faLocationDot} className="mr-2 text-emerald" />9 Asim Plaza,Tehsil Road Aamir Colony,Okara,PK
+                                <FontAwesomeIcon icon={faLocationDot} className="mr-2 text-emerald" />{address}
                             </span>
                         </div>
                         <div className="text-gray-600">
                             <span  className="hover:text-gray-900">
-                                <FontAwesomeIcon icon={faPhone} className="mr-1 text-emerald" /> +923317407677
+                                <FontAwesomeIcon icon={faPhone} className="mr-1 text-emerald" /> {phoneNo1}
                             </span>
                         </div>
                         <div className="text-gray-600">
                             <span  className="hover:text-gray-900 ">
-                                <FontAwesomeIcon icon={faPhone} className="mr-1 text-emerald" /> +923217407677
+                                <FontAwesomeIcon icon={faPhone} className="mr-1 text-emerald" /> {phoneNo2}
                             </span>
                         </div>
                         <div className="text-gray-600">
                             <span  className="hover:text-gray-900">
-                                <FontAwesomeIcon icon={faEnvelope} className="mr-1 text-emerald" /> support@alibabacomputer.com
+                                <FontAwesomeIcon icon={faEnvelope} className="mr-1 text-emerald" /> {email}
                             </span>
                         </div>
                     </div>
@@ -145,7 +170,9 @@ return(<>
         </div>
         </div>
       </div>
+</div>
 
+<Footer/>
 </>)
 
 }

@@ -1,30 +1,67 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faMinus, faPlus, faRotateLeft, faStar, faTruck} from '@fortawesome/free-solid-svg-icons';
+import Header from '../Header';
+import Footer from '../Footer';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export const Product = ()=>{
+const {id} = useParams();
+const [title , setTitle] = useState();
+const [keywords, setKeywords] = useState();
+const [price, setPrice] = useState();
+const [long_description,setLong_Description] = useState();
+const [image , setImage] = useState();
+const [mulImage, setMulImage] = useState([]);
+const [toggle , setToogle ]= useState(false);
+
+useEffect(()=>{
+fetchData(id);
+fetchMultiple(id);
+},[id])
+
+const fetchData = async(id)=>{
+  const data = await axios.get(`http://localhost:4000/read-update-product/${id}`)
+  setTitle(data.data.title);
+  setKeywords(data.data.keywords);
+  setPrice(data.data.price);
+  setLong_Description(data.data.long_description);
+  setImage(data.data.image);
+}
+const fetchMultiple = async(id)=>{
+  const response = await axios.get(`http://localhost:4000/read-mul-image-product/${id}`);
+  setMulImage(response.data)
+}
 
 return(<>
 
+<Header/>
+<div className='my-8 max-w-7xl mx-auto' >
+        <p className='text-gray-400' > <span className='hover:text-black cursor-pointer'>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Product</span> </p>
+    </div>
 <div className="min-h-screen bg-white p-6 md:p-12">
       <div className="mx-auto max-w-7xl">
 
         <div className="grid gap-12 lg:grid-cols-2  ">   
           <div className="space-y-4  ">
             <div className="relative  overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center ">
-              <img src="../../../public/1738995109366-computer.jpg" className=" w-[400px] object-contain p-4"/>
+              <img src={image} className=" w-[400px] object-contain p-4"/>
             </div>
             <div className="grid grid-cols-4 gap-4 ">
-                <button className="relative   overflow-hidden rounded-lg border border-black bg-gray-100 hover:border-gray-900">
-                  <img src="../../../public/1738995109366-computer.jpg" className="h-full w-full object-contain  " />
+                  {mulImage.map((value,index)=>(
+                <button key={index} className="relative   overflow-hidden rounded-lg border border-black bg-gray-100 hover:border-gray-900">
+                  <img src={value.images} className="h-full w-full object-contain  " />
                 </button>
+                  ))}
             </div>
           </div>
 
           <div className="space-y-8 ">
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold text-gray-900">Airpods Max</h1>
+              <h1 className="text-4xl font-bold text-gray-900">{keywords}</h1>
               <p className="text-gray-500">
-                A perfect balance of high-fidelity audio with the effortless magic of Airpods.
+                {title}
               </p>
               <div className="flex items-center space-x-1">
                 {[...Array(5)].map((_, i) => (
@@ -36,8 +73,7 @@ return(<>
 
             <div className="space-y-4">
               <div className="flex items-baseline space-x-3">
-                <span className="text-3xl font-bold text-gray-900">$549.00</span>
-                <span className="text-sm text-gray-500">or 99.99/month</span>
+                <span className="text-3xl font-bold text-gray-900">${price}</span>
               </div>
             </div>
 
@@ -87,17 +123,20 @@ return(<>
     </div> <hr />
     <div className='my-10  ' >
       <div className='text-center my-5 ' >
-           <span className='p-4 hover:text-emerald  hover:border-b hover:border-emerald transition-colors duration-100 cursor-pointer'>Long Description</span> |     
-           <span className='p-4 hover:text-emerald  hover:border-b hover:border-emerald transition-colors duration-100 cursor-pointer' > Reviews</span>     
+           <span className='p-4 hover:text-emerald  hover:border-b hover:border-emerald transition-colors duration-100 cursor-pointer' onClick={()=>{setToogle(true)}}>Long Description</span> |     
+           <span className='p-4 hover:text-emerald  hover:border-b hover:border-emerald transition-colors duration-100 cursor-pointer' onClick={()=>{setToogle(false)}} > Reviews</span>     
       </div>
-      <div className='' >
-        <h3>this is a heading threee</h3>
+      <div className={`${toggle ? "hidden": ""} my-8 max-w-7xl mx-auto border-2 rounded border-gray-200 `} >
+
+        <div className='m-3'>
+          {long_description}
+        </div>
       </div>
-      <div  className='' >
-        <h2>this is a heading 2 </h2>
+      <div  className={`${toggle ? "": "hidden"}`} >
+        <h2> 2 </h2>
       </div>
     </div>            
-
+<Footer/>
 </>)
 
 }

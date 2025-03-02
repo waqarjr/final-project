@@ -38,18 +38,18 @@ return(<>
 
          <div className="hidden lg:flex items-center space-x-8 md:px-4">
             <div className="relative">
-               <button className="flex items-center text-emerald hover:text-gray-900 focus:outline-none">
-                  Categories
-                <FontAwesomeIcon icon={faChevronDown} className="ml-1 h-3 w-3" />
-               </button>
+               <Link to="/" className="flex items-center text-emerald hover:text-gray-900 focus:outline-none">
+                  Home
+               </Link>
             </div>
-            <Link  className="text-emerald hover:text-gray-900">
+            <Link to="/shop" className="text-emerald hover:text-gray-900">
               Shop
+              <FontAwesomeIcon icon={faChevronDown} className="ml-1 h-3 w-3" />
             </Link>
-            <Link  className="text-emerald hover:text-gray-900">
+            <Link to="/account" className="text-emerald hover:text-gray-900">
               Account
             </Link>
-            <Link  className="text-emerald hover:text-gray-900">
+            <Link to="/contact" className="text-emerald hover:text-gray-900">
               Contact Us
             </Link>
          </div>

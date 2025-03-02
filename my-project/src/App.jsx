@@ -30,6 +30,9 @@ import ProtectChanPass from './Sliderbar/ProtectedChngPass';
 import Weblayout from './Web/weblayout';
 import Index from './Web/Index';
 import Carousel from './Web/Home/Carousel';
+import ShopList from './Web/HeaderPart/ShopList';
+import ContactUs from './Web/HeaderPart/ContactUs';
+import Product from './Web/HeaderPart/Product';
 
 function App() {
   return (
@@ -77,6 +80,9 @@ function App() {
 
         <Route path='/' element={<Index/>} />
         <Route path='/carousel' element={<Carousel/>} />
+        <Route path="/shop"  element={<ShopList/>}  />
+        <Route path='/contact' element={<ContactUs/>} />
+        <Route path='/product/:id' element={<Product/>} />
         
         </Route>
       </Routes>    

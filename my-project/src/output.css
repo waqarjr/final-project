@@ -742,6 +742,11 @@ video {
   margin-bottom: 2rem;
 }
 
+.my-\[11px\] {
+  margin-top: 11px;
+  margin-bottom: 11px;
+}
+
 .my-auto {
   margin-top: auto;
   margin-bottom: auto;
@@ -963,6 +968,10 @@ video {
 
 .w-24 {
   width: 6rem;
+}
+
+.w-28 {
+  width: 7rem;
 }
 
 .w-3 {
@@ -1932,10 +1941,6 @@ video {
   cursor: pointer;
 }
 
-.hover\:border-b:hover {
-  border-bottom-width: 1px;
-}
-
 .hover\:border-b-2:hover {
   border-bottom-width: 2px;
 }
@@ -2081,6 +2086,18 @@ video {
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.focus\:outline-2:focus {
+  outline-width: 2px;
+}
+
+.focus\:outline-offset-2:focus {
+  outline-offset: 2px;
+}
+
+.focus\:outline-emerald:focus {
+  outline-color: #06d6a0;
 }
 
 .focus\:ring-2:focus {
@@ -2311,6 +2328,12 @@ video {
     margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
+  .md\:space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+  }
+
   .md\:space-y-6 > :not([hidden]) ~ :not([hidden]) {
     --tw-space-y-reverse: 0;
     margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
@@ -2479,6 +2502,11 @@ video {
   .dark\:text-blue-500 {
     --tw-text-opacity: 1;
     color: rgb(59 130 246 / var(--tw-text-opacity, 1));
+  }
+
+  .dark\:text-emerald {
+    --tw-text-opacity: 1;
+    color: rgb(6 214 160 / var(--tw-text-opacity, 1));
   }
 
   .dark\:text-gray-300 {

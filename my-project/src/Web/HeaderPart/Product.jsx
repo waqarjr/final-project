@@ -2,10 +2,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faMinus, faPlus, faRotateLeft, faStar, faTruck} from '@fortawesome/free-solid-svg-icons';
 import Header from '../Header';
 import Footer from '../Footer';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
 export const Product = ()=>{
 const {id} = useParams();
 const [title , setTitle] = useState();
@@ -122,18 +121,23 @@ return(<>
       </div>
     </div> <hr />
     <div className='my-10  ' >
-      <div className='text-center my-5 ' >
-           <span className='p-4 hover:text-emerald  hover:border-b hover:border-emerald transition-colors duration-100 cursor-pointer' onClick={()=>{setToogle(true)}}>Long Description</span> |     
-           <span className='p-4 hover:text-emerald  hover:border-b hover:border-emerald transition-colors duration-100 cursor-pointer' onClick={()=>{setToogle(false)}} > Reviews</span>     
+      <div className='text-center my-[11px] ' >
+           <span className={`p-3 hover:text-emerald  hover:border-b-2 hover:border-emerald transition-colors duration-100 cursor-pointer ${toggle ? "":"text-emerald border-emerald border-b-2"}`}
+           onClick={()=>{setToogle(false)}}>Long Description</span> |     
+           <span className={`p-3 hover:text-emerald  hover:border-b-2 hover:border-emerald transition-colors duration-100 cursor-pointer ${toggle ? "text-emerald border-emerald border-b-2":""}`}
+            onClick={()=>{setToogle(true)}} > Reviews ( 0 ) </span>     
       </div>
-      <div className={`${toggle ? "hidden": ""} my-8 max-w-7xl mx-auto border-2 rounded border-gray-200 `} >
+      <div className={`${toggle ? "hidden": ""}  max-w-7xl mx-auto border-2 rounded border-gray-200 `} >
 
         <div className='m-3'>
           {long_description}
         </div>
       </div>
-      <div  className={`${toggle ? "": "hidden"}`} >
-        <h2> 2 </h2>
+      <div  className={`${toggle ? "": "hidden"}  max-w-7xl mx-auto border-2 rounded border-gray-200`} >
+      <div className='m-3'>
+          <span>Recomanded ( 0 ) </span>
+          <Link to="/signin" className='flex justify-center text-emerald'>Sing in / Sign up</Link>
+        </div>
       </div>
     </div>            
 <Footer/>

@@ -16,4 +16,3 @@ schema.pre('save', function(next) {
 
 const Login = mongoose.model('Login',schema);
 module.exports = Login;
-//// $2b$10$lGtLxAvh1Mr5XEcyH0c4gO7oOHU6kEyaWKnNvraNK6aDa5humYA4u

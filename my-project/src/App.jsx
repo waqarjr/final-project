@@ -33,6 +33,8 @@ import Carousel from './Web/Home/Carousel';
 import ShopList from './Web/HeaderPart/ShopList';
 import ContactUs from './Web/HeaderPart/ContactUs';
 import Product from './Web/HeaderPart/Product';
+import Signin from './Web/HeaderPart/SignIn';
+import SignUp from './Web/HeaderPart/SignUp';
 
 function App() {
   return (
@@ -83,7 +85,8 @@ function App() {
         <Route path="/shop"  element={<ShopList/>}  />
         <Route path='/contact' element={<ContactUs/>} />
         <Route path='/product/:id' element={<Product/>} />
-        
+        <Route path='/signin' element={<Signin/>} />
+        <Route path='/signup' element={<SignUp/>} />
         </Route>
       </Routes>    
     </BrowserRouter>

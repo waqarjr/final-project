@@ -66,8 +66,8 @@ const inputRef1 = useMask({
             denyButtonText: `Don't save`
             }).then(async (result) => {
             if(result.isConfirmed) {
-                Swal.fire("Saved!", "", "success");
                 await axios.post('http://localhost:4000/updatewebsetting',formData)
+                Swal.fire("Saved!", "", "success");
             } else if (result.isDenied) {
                 Swal.fire("Changes are not saved", "", "info");
             }
@@ -110,10 +110,8 @@ const inputRef1 = useMask({
                     <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 ">
                         <td  className="w-[20%]">Phone no 2</td>
                         <td>
-                            
                         <input type="text" ref={inputRef} className="border-2 w-full  my-2  rounded-lg p-2 " id="phoneNo2" name="phoneNo2" 
                         onChange={(e)=>setPhoneNo2(e.target.value)} onBlur={formik.handleBlur} value={formik.values.phoneNo2}  />
-                        
                         </td>
                     </tr>
                     <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 ">

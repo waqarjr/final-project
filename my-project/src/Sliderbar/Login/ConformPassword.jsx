@@ -39,7 +39,7 @@ export const ConformPassword = () => {
     <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0 ">
         <div className="p-6  sm:p-8">
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
-            Ali Baba Computers
+            Waqar Ahmad
             </h1>
         </div>
         <hr />

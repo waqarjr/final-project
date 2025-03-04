@@ -35,6 +35,7 @@ import ContactUs from './Web/HeaderPart/ContactUs';
 import Product from './Web/HeaderPart/Product';
 import Signin from './Web/HeaderPart/SignIn';
 import SignUp from './Web/HeaderPart/SignUp';
+import Account from './Web/HeaderPart/Account';
 
 function App() {
   return (
@@ -87,6 +88,7 @@ function App() {
         <Route path='/product/:id' element={<Product/>} />
         <Route path='/signin' element={<Signin/>} />
         <Route path='/signup' element={<SignUp/>} />
+        <Route path='/account' element={<Account/>} />
         </Route>
       </Routes>    
     </BrowserRouter>

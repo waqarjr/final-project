@@ -94,7 +94,7 @@ return(<>
                 Buy Now
               </button>
               <button className="flex-1 rounded-full border border-black px-4 py-3 text-gray-900 hover:border-gray-100 hover:bg-gray-100 transition-colors">
-                Add to Cart
+                Add to Cart 
               </button>
             </div>
 
@@ -136,7 +136,25 @@ return(<>
       <div  className={`${toggle ? "": "hidden"}  max-w-7xl mx-auto border-2 rounded border-gray-200`} >
       <div className='m-3'>
           <span>Recomanded ( 0 ) </span>
-          <Link to="/signin" className='flex justify-center text-emerald'>Sing in / Sign up</Link>
+          <div className='grid grid-cols-[60%_auto]' >
+                <div className='grid grid-cols-[20%_auto]  '>
+                  <div className='border-r border-emerald p-2 [&_*]:py-1 [&_*]:text-gray-400' >
+                    <p >Waqar </p>
+                    <p>2025-02-26</p>
+                    <p>12:24:28</p>
+                  </div>
+                  <div className='p-2 text-gray-500'>
+                    <p>This product exceeded my expectations! Highly recommend.</p>
+                  </div>
+                </div>
+                <div className=' mx-auto'>
+                  <p className='text-center py-2 text-xl font-medium text-emerald'>Add a review</p>
+                  <textarea name="review" id="review" cols={35} 
+                  className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " ></textarea><br />
+                  <button type="submit" className=" rounded-sm px-4 py-2 hover:bg-emerald text-emerald hover:text-white  border-emerald border-2 " > Submit </button>
+                </div>
+          </div>
+          {/* <Link to="/signin" className='flex justify-center text-emerald hidden'>Sing in / Sign up</Link> */}
         </div>
       </div>
     </div>            

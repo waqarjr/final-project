@@ -1,7 +1,7 @@
 const Login = require('../model/model_login');
 const bcrypt = require("bcrypt");
 const sign = require('../model/model_userSignUp');
-
+const contact = require('../model/model_Contactus');
 const login = async(req,res)=>{
 
     const alpha = await Login.findOne();
@@ -41,19 +41,45 @@ const changeConformpassword = async (req,res)=>{
 const signup = async (req,res)=>{
     const {firstname, lastname,email,phone,password} = req.body;
     const a =await sign.find({email:email});
-    console.log(a);
-    if(a != []){
-        //  await sign.create({
-        //     firstname:firstname,
-        //     lastname:lastname,
-        //     email:email,
-        //     phone:phone,
-        //     password:password,
-        // })
+    if (a.length > 0){
+         await sign.create({
+            firstname:firstname,
+            lastname:lastname,
+            email:email,
+            phone:phone,
+            password:password,
+        })
         res.send({message:"your message here"})
     } else {
         res.send({message:"this email has been already used"})
     }
 }
 
-module.exports = {login,conformpassword,changeConformpassword,signup};
+const signin = async(req,res)=>{
+    const {email , password} = req.body
+    const user = await sign.findOne({ email: email });
+    if(user){
+        if(bcrypt.compareSync(req.body.password,user.password)){
+            res.send({message:true})
+        }else{
+            res.send({password1:"your password is incorrect"}) 
+        }
+    } else{
+        res.send({email1:"your email is incorrect"})
+    } 
+
+}
+
+const contactus = async(req,res)=>{
+    const { firstname,lastname,email,phone,subject,message }= req.body;
+    await contact.create({
+        firstname:firstname,
+        lastname:lastname,
+        email:email,
+        phone:phone,
+        subject:subject,
+        message:message
+    })
+    res.send({contact:"Your information has been updated sucessfully..."})
+} 
+module.exports = {login,conformpassword,changeConformpassword,signup,signin,contactus};

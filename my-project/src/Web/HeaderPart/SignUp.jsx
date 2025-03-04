@@ -2,9 +2,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useMask } from '@react-input/mask';
+import { useNavigate } from "react-router-dom";
 export const SignUp = ()=>{
 
-
+  const navigate = useNavigate();
   const validationSchema = Yup.object({
     firstname:Yup.string().required("First Name is required"),
     lastname:Yup.string().required("Last Name is required"),
@@ -98,7 +99,10 @@ return(<>
           {formik.touched.conformpassword &&  formik.errors.conformpassword && (
             <span className="text-rose-500" >{formik.errors.conformpassword}<br /></span> 
           )}
+          <div className="flex items-center justify-between" >
           <button type="submit" className=" text-white bg-emerald   font-medium rounded-sm text-sm px-5 py-2.5 text-center">Sign up</button>
+          <span className="hover:underline text-emerald border-emerald  cursor-pointer " onClick={()=>{navigate('/signin')}}  >Sign in</span>
+          </div>
         </form>
       </div>
     </div>

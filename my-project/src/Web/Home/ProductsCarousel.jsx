@@ -3,6 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faStar ,faChevronLeft,faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export const ProductsCarousel = () =>{
   const [data, setData] = useState([]);
@@ -96,10 +97,10 @@ export const ProductsCarousel = () =>{
             <div key={index} className="md:flex-[0_0_20%] px-1 " >
                 <div className="relative max-w-xs bg-white border rounded-lg shadow-sm p-4  hover:border-emerald hover:shadow-md ">
 
-                    <div className="flex justify-center mb-4">
-                        <img src={values.image} alt="JBL TUNE 600BTNC" className="w-40 h-40 object-contain" />
-                    </div>
-
+                    <Link to={`/product/${values._id}`} className="flex justify-center mb-4">
+                        <img src={values.image} alt={values.name} className="w-40 h-40 object-contain" />
+                    </Link>
+        
                     <div className="relative">
                         <span className="text-lg font-semibold">{values.keywords} </span>
                         <span className="text-gray-600 text-sm pl-4 absolute right-0 top-1">${values.price}</span>

@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useMask } from '@react-input/mask';
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 export const SignUp = ()=>{
 
   const navigate = useNavigate();
@@ -25,7 +26,6 @@ export const SignUp = ()=>{
     },
     validationSchema: validationSchema,
     onSubmit: async(value)=>{
-      console .log(value);
       const formData = new FormData();
       formData.append("firstname",value.firstname);
       formData.append("lastname",value.lastname);
@@ -33,7 +33,17 @@ export const SignUp = ()=>{
       formData.append("phone",value.phone);
       formData.append('password',value.password);
       const alpha = await axios.post('http://localhost:4000/signup',formData);
-      console.log(alpha.data.message)
+      if(alpha.data.message){
+        localStorage.setItem('isSigup','true');
+        localStorage.setItem('userFirstname',value.firstname);
+        localStorage.setItem('userLastname',value.lastname);
+        localStorage.setItem('userEmail',value.email);
+        Swal.fire({
+          title: "Good job!",
+          text: "You clicked the button!",
+          icon: "success"
+        });
+      }
     }
 
   })

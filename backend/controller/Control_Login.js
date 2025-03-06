@@ -2,6 +2,7 @@ const Login = require('../model/model_login');
 const bcrypt = require("bcrypt");
 const sign = require('../model/model_userSignUp');
 const contact = require('../model/model_Contactus');
+const reviewsalpha = require('../model/model_reviews');
 const login = async(req,res)=>{
 
     const alpha = await Login.findOne();
@@ -41,7 +42,7 @@ const changeConformpassword = async (req,res)=>{
 const signup = async (req,res)=>{
     const {firstname, lastname,email,phone,password} = req.body;
     const a =await sign.find({email:email});
-    if (a.length > 0){
+    if (a.length == 0){
          await sign.create({
             firstname:firstname,
             lastname:lastname,
@@ -59,7 +60,7 @@ const signin = async(req,res)=>{
     const {email , password} = req.body
     const user = await sign.findOne({ email: email });
     if(user){
-        if(bcrypt.compareSync(req.body.password,user.password)){
+        if(bcrypt.compareSync(password,user.password)){
             res.send({message:true})
         }else{
             res.send({password1:"your password is incorrect"}) 
@@ -67,7 +68,6 @@ const signin = async(req,res)=>{
     } else{
         res.send({email1:"your email is incorrect"})
     } 
-
 }
 
 const contactus = async(req,res)=>{
@@ -82,4 +82,23 @@ const contactus = async(req,res)=>{
     })
     res.send({contact:"Your information has been updated sucessfully..."})
 } 
-module.exports = {login,conformpassword,changeConformpassword,signup,signin,contactus};
+
+const review = async(req,res)=>{
+    const { reviews,rating,currentDate,currentTime,productId ,firstName,lastName,email} = req.body;
+    await reviewsalpha.create({
+        reviews:reviews,
+        rating:rating,
+        currentDate:currentDate,
+        currentTime:currentTime,
+        productId:productId,
+        firstName:firstName,
+        lastName:lastName,
+    })
+    res.send({mess:"your review has been send sucessfully..."})
+}
+const getReviews = async(req,res)=>{
+    const id = req.params.id
+    const alpha = await reviewsalpha.find({productId:id})
+    res.json(alpha);
+}
+module.exports = {login,conformpassword,changeConformpassword,signup,signin,contactus,review,getReviews};

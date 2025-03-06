@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 
 export const PopularCategories = () => {
   const [data, setData] = useState([]);
@@ -36,10 +37,8 @@ export const PopularCategories = () => {
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {data.map((values, index) => (
-          <div
-            key={index}
-            className="flex items-center bg-white border hover:border-emerald rounded-md p-4 hover:shadow-sm transition-shadow"
-          >
+          <Link to="/shop" key={index}
+            className="flex items-center bg-white border hover:border-emerald rounded-md p-4 hover:shadow-sm transition-shadow" >
             <img
               src={values.image}
               alt={values.name}
@@ -51,7 +50,7 @@ export const PopularCategories = () => {
                 {categoryCounts[values._id] || 0} Items Available
               </p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

@@ -5,7 +5,10 @@ import Footer from '../Footer';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useFormik } from 'formik';
+import * as Yup from "yup";
 export const Product = ()=>{
+
 const {id} = useParams();
 const [title , setTitle] = useState();
 const [keywords, setKeywords] = useState();
@@ -14,12 +17,35 @@ const [long_description,setLong_Description] = useState();
 const [image , setImage] = useState();
 const [mulImage, setMulImage] = useState([]);
 const [toggle , setToogle ]= useState(false);
+const [rating, setRating] = useState(0);
+const [eror , setEror] = useState('');
+const [currentDate , setCurrentDate] = useState();
+const [currentTime , setCurrentTime] = useState();
+const [firstName , setFirstName] = useState();
+const [lastName , setLastName] = useState();
+const [allReviews,setAllReviews] = useState([]);
+useEffect(()=>{
+  const today = new Date();
+  const formetedDate = today.toISOString().split("T")[0];
+  const formattedTime = today.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+  setCurrentDate(formetedDate);
+  setCurrentTime(formattedTime);
+  document.title = "Creat Categories";
+  const usertFistName = localStorage.getItem("userFirstname");
+  const userLastname = localStorage.getItem("userLastname");
+  setFirstName(usertFistName);
+  setLastName(userLastname);
+},[])
 
 useEffect(()=>{
 fetchData(id);
 fetchMultiple(id);
+fetchReviews(id);
 },[id])
-
+const fetchReviews = async(id)=>{
+  const data = await axios.get(`http://localhost:4000/getreviews/${id}`);
+  setAllReviews(data.data);
+}
 const fetchData = async(id)=>{
   const data = await axios.get(`http://localhost:4000/read-update-product/${id}`)
   setTitle(data.data.title);
@@ -32,6 +58,31 @@ const fetchMultiple = async(id)=>{
   const response = await axios.get(`http://localhost:4000/read-mul-image-product/${id}`);
   setMulImage(response.data)
 }
+
+const formik = useFormik({
+  initialValues:{
+    reviews:'',
+  },
+  validationSchema: Yup.object({
+    reviews:Yup.string().required("please write ur idea about this product").min(10,"text must be longer then 10 digits"),
+  }),
+  onSubmit: async(values)=>{
+    if(rating == 0){
+      setEror("please select this");
+    } else  {
+      const formData = new FormData();
+      formData.append("reviews",values.reviews);
+      formData.append("rating",rating);
+      formData.append("currentDate",currentDate);
+      formData.append("currentTime",currentTime);
+      formData.append("productId",id);
+      formData.append("firstName",firstName);
+      formData.append("lastName",lastName);
+      const alpha =  await axios.post("http://localhost:4000/reviews",formData)
+      console.log(alpha.data.mess);
+    }
+  }
+})
 
 return(<>
 
@@ -125,36 +176,64 @@ return(<>
            <span className={`p-3 hover:text-emerald  hover:border-b-2 hover:border-emerald transition-colors duration-100 cursor-pointer ${toggle ? "":"text-emerald border-emerald border-b-2"}`}
            onClick={()=>{setToogle(false)}}>Long Description</span> |     
            <span className={`p-3 hover:text-emerald  hover:border-b-2 hover:border-emerald transition-colors duration-100 cursor-pointer ${toggle ? "text-emerald border-emerald border-b-2":""}`}
-            onClick={()=>{setToogle(true)}} > Reviews ( 0 ) </span>     
+            onClick={()=>{setToogle(true)}} > Reviews ( {allReviews.length} ) </span>     
       </div>
       <div className={`${toggle ? "hidden": ""}  max-w-7xl mx-auto border-2 rounded border-gray-200 `} >
 
-        <div className='m-3'>
-          {long_description}
+        <div className='m-3' dangerouslySetInnerHTML={{ __html: long_description }}>
         </div>
       </div>
       <div  className={`${toggle ? "": "hidden"}  max-w-7xl mx-auto border-2 rounded border-gray-200`} >
       <div className='m-3'>
-          <span>Recomanded ( 0 ) </span>
+          <span>Reviews ( {allReviews.length} ) </span>
           <div className='grid grid-cols-[60%_auto]' >
-                <div className='grid grid-cols-[20%_auto]  '>
-                  <div className='border-r border-emerald p-2 [&_*]:py-1 [&_*]:text-gray-400' >
-                    <p >Waqar </p>
-                    <p>2025-02-26</p>
-                    <p>12:24:28</p>
-                  </div>
-                  <div className='p-2 text-gray-500'>
-                    <p>This product exceeded my expectations! Highly recommend.</p>
+                {allReviews.map((value,index)=>(
+                <div key={index} className=''>
+                  <div className='grid grid-cols-[22%_auto]'  >
+                    <div className='border-r border-emerald p-2 [&_*]:py-1   inline-block '>
+                      <p className='text-gray-400' >{value.firstName} {value.lastName} </p>
+                      {[...Array(value.rating)].map((_, i) => (
+                      <FontAwesomeIcon key={i}  icon={faStar} className="fa-solid fa-star text-lg text-yellow-400  " />
+                      ))}
+                      < p className='text-gray-400'>{value.currentDate}</p>
+                      <p className='text-gray-400' >{value.currentTime}</p>
+                    </div>
+                    <div className='p-2 text-gray-500 '>
+                      <p>{value.reviews}</p>
+                    </div>
                   </div>
                 </div>
-                <div className=' mx-auto'>
+                 ))} 
+                <Link to="/signin" className={`flex justify-center text-emerald ${localStorage.getItem('isSigup') ? 'hidden':''}`}>Sing in / Sign up</Link>
+                <div className={`mx-auto ${localStorage.getItem('isSigup') ? '':'hidden'} `}>
+                  <form onSubmit={formik.handleSubmit}>
+                  <div className="flex flex-col ">
                   <p className='text-center py-2 text-xl font-medium text-emerald'>Add a review</p>
-                  <textarea name="review" id="review" cols={35} 
-                  className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " ></textarea><br />
-                  <button type="submit" className=" rounded-sm px-4 py-2 hover:bg-emerald text-emerald hover:text-white  border-emerald border-2 " > Submit </button>
+                  <div className="flex flex-col items-center justify-center  pb-4">
+                    <div className="flex items-center space-x-1">
+                      {[...Array(5)].map((_, index) => {
+                        const starNumber = index + 1;
+                        return (
+                          <button key={index}  onClick={() => setRating(starNumber)}    
+                          className="focus:outline-none" type="button">
+                            <FontAwesomeIcon  icon={faStar} className={`fa fa-star text-3xl transition-colors duration-200 ${
+                                starNumber <= rating ? 'text-yellow-400': 'text-gray-300 hover:text-yellow-300'}`} />
+                          </button>
+                        );
+                      })}
+                    </div> <span className='text-red-500' >{eror}</span>
+                  </div>
+                <textarea name="reviews" id="reviews" cols={40} rows={4} value={formik.values.reviews} onBlur={formik.handleBlur} onChange={formik.handleChange}
+                className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " ></textarea>
+                {formik.touched.reviews && formik.errors.reviews &&(
+                  <span className='text-red-500' >{formik.errors.reviews}</span>
+                )}<br />
                 </div>
+                <button type="submit"   className=" rounded-sm px-4 py-2 hover:bg-emerald text-emerald hover:text-white  border-emerald border-2 " > Submit </button>
+                  </form>
+              </div>
           </div>
-          {/* <Link to="/signin" className='flex justify-center text-emerald hidden'>Sing in / Sign up</Link> */}
+          
         </div>
       </div>
     </div>            

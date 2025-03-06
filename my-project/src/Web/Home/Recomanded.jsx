@@ -2,6 +2,7 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faStar } from '@fortawesome/free-solid-svg-icons';
+import { Link } from "react-router-dom";
 export const Recomanded = ()=>{
   const [products , setProducts] = useState([])
 
@@ -25,9 +26,9 @@ return(<>
             <div key={index} className="px-1 py-2" >
                 <div className="relative max-w-xs bg-white border rounded-lg shadow-sm p-4  hover:border-emerald hover:shadow-md ">
 
-                    <div className="flex justify-center mb-4">
+                    <Link to={`/product/${values._id}`} className="flex justify-center mb-4">
                         <img src={values.image} alt={values.name} className="w-40 h-40 object-contain" />
-                    </div>
+                    </Link>
 
                     <div className="relative">
                         <span className="text-lg font-semibold">{values.keywords} </span>
@@ -39,6 +40,7 @@ return(<>
                             <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
                             <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
                             <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
+                            
                         <span className="ml-2 text-sm text-gray-500">(121)</span>
                         </div>
                         <button className="mt-4  border-2 border-emerald hover:text-lightyellow duration-100 p-2   rounded-2xl hover:bg-emerald">

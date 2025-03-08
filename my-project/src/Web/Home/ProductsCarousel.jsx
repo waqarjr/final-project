@@ -10,7 +10,6 @@ export const ProductsCarousel = () =>{
   const [products , setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
-  const addToCart = useStore((state) => state.addToCart);
 
   const Product_data = async () => {
     const res = await axios.get("http://localhost:4000/read-product");

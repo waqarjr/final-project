@@ -24,6 +24,7 @@ const [currentTime , setCurrentTime] = useState();
 const [firstName , setFirstName] = useState();
 const [lastName , setLastName] = useState();
 const [allReviews,setAllReviews] = useState([]);
+const [count , setCount] = useState(1);
 useEffect(()=>{
   const today = new Date();
   const formetedDate = today.toISOString().split("T")[0];
@@ -84,6 +85,11 @@ const formik = useFormik({
   }
 })
 
+const toCart = async ()=>{
+  const email = localStorage.getItem("userEmail");
+    await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:count})
+}
+
 return(<>
 
 <Header/>
@@ -128,24 +134,21 @@ return(<>
             </div>
 
             <div className="flex items-center space-x-6">
-              <div className="flex items-center rounded-md border border-black">
-                <button className="px-3 py-2 hover:bg-gray-100">
-                  <FontAwesomeIcon icon={faMinus} className='text-sm' />
+              <div className="flex items-center rounded-md border border-emerald">
+                <button className="px-3 py-2 rounded-l-md hover:bg-gray-100" onClick={()=> count <= 1 ? "" : setCount(count - 1)}>
+                  <FontAwesomeIcon icon={faMinus} className='text-sm'  />
                 </button>
-                <span className="w-12 text-center">1</span>
-                <button className="px-3 py-2 hover:bg-gray-100">
-                    <FontAwesomeIcon icon={faPlus} className='text-sm' />
+                <span className="w-12 text-center">{count}</span>
+                <button className="px-3 py-2  rounded-r-md hover:bg-gray-200" onClick={()=>setCount(count + 1)}>
+                    <FontAwesomeIcon icon={faPlus} className='text-sm'  />
                 </button>
               </div>
               <span className="text-sm text-orange-500">Only 7 items Left!</span>
             </div>
 
             <div className="flex space-x-4">
-              <button className="flex-1 rounded-full bg-emerald px-4 py-3 text-white hover:bg-[#3ac6a1] transition-colors">
-                Buy Now
-              </button>
-              <button className="flex-1 rounded-full border border-black px-4 py-3 text-gray-900 hover:border-gray-100 hover:bg-gray-100 transition-colors">
-                Add to Cart 
+              <button onClick={toCart} className="flex-1 rounded-full bg-emerald px-4 py-3 text-white hover:bg-[#3ac6a1] transition-colors">
+                Add to a Cart
               </button>
             </div>
 

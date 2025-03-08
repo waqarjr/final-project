@@ -10,6 +10,7 @@ export const ProductsCarousel = () =>{
   const [products , setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
+  const addToCart = useStore((state) => state.addToCart);
 
   const Product_data = async () => {
     const res = await axios.get("http://localhost:4000/read-product");
@@ -24,8 +25,6 @@ export const ProductsCarousel = () =>{
     read_data()
     Product_data();
   },[])
-
-
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
@@ -71,6 +70,12 @@ export const ProductsCarousel = () =>{
     setActiveTab(name);
   };
 
+  const getId = async(id)=>{
+    const email = localStorage.getItem("userEmail");
+    const quantity = 1;
+    await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+  }
+
   return (<>
     <div className="relative max-w-[1390px] mx-auto px-4 py-8">   
 
@@ -113,7 +118,8 @@ export const ProductsCarousel = () =>{
                             <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
                         <span className="ml-2 text-sm text-gray-500">(121)</span>
                         </div>
-                        <button className="mt-4  border-2 border-emerald hover:text-lightyellow duration-100 p-2   rounded-2xl hover:bg-emerald">
+                        <button className="mt-4  border-2 border-emerald hover:text-lightyellow duration-100 px-2 py-1 font-light   rounded-2xl hover:bg-emerald"
+                       onClick={() => getId(values._id)}>
                         Add to Cart
                         </button>
                     </div>

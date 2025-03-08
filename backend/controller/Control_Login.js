@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const sign = require('../model/model_userSignUp');
 const contact = require('../model/model_Contactus');
 const reviewsalpha = require('../model/model_reviews');
+const cart = require('../model/model_cart');
 const login = async(req,res)=>{
 
     const alpha = await Login.findOne();
@@ -101,4 +102,35 @@ const getReviews = async(req,res)=>{
     const alpha = await reviewsalpha.find({productId:id})
     res.json(alpha);
 }
-module.exports = {login,conformpassword,changeConformpassword,signup,signin,contactus,review,getReviews};
+
+const cartitems = async(req,res)=>{
+    const {email,productid,quantity} = req.body;
+    const items =  await cart.findOne({product_id:productid,userEmail:email})
+    if(items == null ){
+        await cart.create({
+            product_id: productid,
+            userEmail: email,
+            quantity:quantity,
+        });
+    }
+    else {
+       await cart.updateOne({product_id:productid,userEmail:email },{$inc:{quantity:quantity}})
+    }
+}
+
+const cartPrducts = async(req,res)=>{
+    const {email} = req.body;
+    const cartItems = await cart.aggregate([
+        { $match: { userEmail: email } },
+        { $lookup: { from: "products", localField: "product_id", foreignField: "_id", as: "productDetails", },},
+        { $unwind: "$productDetails" },
+      ]);
+      res.json(cartItems);
+}
+
+const deleteCart = async(req,res)=>{
+    const id = req.params.id;
+    await cart.findByIdAndDelete(id);
+}
+
+module.exports = {login,conformpassword,changeConformpassword,signup,signin,contactus,review,getReviews,cartitems,cartPrducts,deleteCart};

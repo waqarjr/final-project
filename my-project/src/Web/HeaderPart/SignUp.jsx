@@ -45,7 +45,6 @@ export const SignUp = ()=>{
         });
       }
     }
-
   })
   
   const useRef = useMask({

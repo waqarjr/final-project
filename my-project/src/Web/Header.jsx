@@ -1,8 +1,27 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faChevronDown, faMagnifyingGlass ,  faPhone,faLocationDot, faBars } from "@fortawesome/free-solid-svg-icons"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
+import axios from "axios";
+
 export const Header = ()=>{
+   const [isHovered, setIsHovered] = useState(false);
+  const [toogle , setToogle] = useState(false);
+   const [fetchData , setFetchData] = useState([]);
+  
+  const cartProducts = async()=>{
+    const email = localStorage.getItem("userEmail");
+    const alpha = await axios.post(`http://localhost:4000/cart-product`,{email:email})
+    setFetchData(alpha.data)
+  }
+  useEffect(()=>{
+    cartProducts();
+  },[])
+
+  const delCart = async(id)=>{
+  await axios.post(`http://localhost:4000/del-cart/${id}`);
+}
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 return(<>
@@ -44,7 +63,6 @@ return(<>
             </div>
             <Link to="/shop" className="text-emerald hover:text-gray-900">
               Shop
-              <FontAwesomeIcon icon={faChevronDown} className="ml-1 h-3 w-3" />
             </Link>
             <Link to="/account" className="text-emerald hover:text-gray-900">
               Account
@@ -64,10 +82,56 @@ return(<>
          </div>
 
          <div className="flex items-center space-x-2  md:space-x-4">
-            <Link href="/#" className="text-emerald hover:text-gray-900 flex items-center">
-              <FontAwesomeIcon icon={faCartShopping} className="h-5 w-5" />
-              <span className="ml-2 ">Cart</span>
-            </Link>
+         <div className="relative">
+      <div className="cursor-pointer"
+        onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onClick={()=>{setToogle(!toogle)}} >
+        <div className=" space-x-1 ">
+          <FontAwesomeIcon icon={faCartShopping}  className="text-emerald"  />
+          <span className="absolute left-2 -top-1 px-1  text-emerald text-xs font-bold rounded-full  bg-white ">
+            3
+          </span>
+        </div>
+      </div>
+      
+      {/* Cart Dropdown */}
+      <div className={`absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-50 transition-all duration-300 
+         ${isHovered || toogle ? ' opacity-100' : 'opacity-0 '}   `} >
+        <div className="p-4">
+          <h3 className="text-lg font-medium  mb-3 text-center text-emerald">Cart Items</h3>
+          <div className="space-y-3">
+            {fetchData.map(item => (
+              <div key={item._id} className="flex items-start border-b pb-3">
+                <img src={item.productDetails.image} alt={item.productDetails.title} className="w-12 h-12 object-cover mr-3" />
+                <div className="">
+                  <h4 className="text-sm font-medium text-gray-800 mb-1">{item.productDetails.title}</h4>
+                  <div className="text-sm text-gray-600">
+                   {item.quantity} * {item.productDetails.price} = { item.quantity * item.productDetails.price}
+                  </div>
+                </div>
+                <button className="text-gray-400 hover:text-gray-600" onClick={()=>delCart(item._id)}>
+                <span>&times;</span>
+                </button>
+              </div>
+            ))}
+          </div>  
+          
+          <div className="">
+            <div className="flex justify-between items-center mb-4">
+              <span className="font-medium text-gray-700">TOTAL</span>
+              <span className="font-medium text-gray-800">4</span>
+            </div>
+            <div className="flex space-x-2">
+              <button className="bg-emerald text-white hover:bg-white border hover:text-emerald border-emerald duration-200 px-4 py-2 rounded w-1/2 text-sm font-medium ">
+                View Cart
+              </button>
+              <button className="bg-emerald text-white hover:bg-white border hover:text-emerald border-emerald duration-200 px-4 py-2 rounded w-1/2 text-sm font-medium flex items-center justify-center transition-colors">
+                Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
             <div className="lg:hidden flex items-center">
                <button className="mobile-menu-button p-2 sm:p-4 " onClick={()=>{setIsMobileMenuOpen(!isMobileMenuOpen)}} > 
@@ -79,10 +143,10 @@ return(<>
          <div id="mobile-menu" 
          className={`lg:hidden w-full overflow-hidden transition-all duration-300 ease-in-out text-center
             ${isMobileMenuOpen  ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} bg-lightyellow`} >
-            <Link to="/" className="text-gray-800 font-semibold hover:border-b-2 mb-1 py-2 border-indigo-500">Category</Link><br/>
-            <Link to="/aboutus" className="text-gray-800 font-semibold hover:border-b-2 py-2 border-indigo-500">Deals</Link>
-            <Link href="#" className="block   py-2 text-gray-800 font-semibold hover:bg-blue-200">What's New</Link>
-            <Link to="/portfolio" className="text-gray-800 font-semibold hover:border-b-2 py-2 border-indigo-500">Delivery</Link>   
+            <Link to="/" className="text-gray-800 font-semibold hover:border-b-2 mb-1 py-2 border-indigo-500">Home</Link><br/>
+            <Link to="/shop" className="text-gray-800 font-semibold hover:border-b-2 py-2 border-indigo-500">Shop</Link>
+            <Link href="/account" className="block   py-2 text-gray-800 font-semibold hover:bg-blue-200">Account</Link>
+            <Link to="/contact" className="text-gray-800 font-semibold hover:border-b-2 py-2 border-indigo-500">Contact Us</Link>   
          </div>
    </div>
 </nav>

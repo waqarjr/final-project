@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faStar } from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom";
 export const Recomanded = ()=>{
+  
   const [products , setProducts] = useState([])
 
   const Product_data = async () => {
@@ -13,6 +14,11 @@ export const Recomanded = ()=>{
 useEffect(()=>{
     Product_data();
   },[])
+  const getId = async( id)=>{
+    const email = localStorage.getItem("userEmail");
+    const quantity = 1;
+    await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+  }
 
 return(<>
 <div className="max-w-[1390px] mx-auto px-4 py-8">
@@ -35,15 +41,16 @@ return(<>
                         <span className="text-gray-600 text-sm pl-4 absolute right-0 top-1">${values.price}</span>
                         <p className="text-sm text-gray-500 mt-2"> {values.title}</p>
                         <div className=" mt-2 ">
-                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
-                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
-                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
-                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
-                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 last:mr-0" /> 
+                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 " /> 
+                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 " /> 
+                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 " /> 
+                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 " /> 
+                            <FontAwesomeIcon icon={faStar} className="text-emerald mr-1 " /> 
                             
                         <span className="ml-2 text-sm text-gray-500">(121)</span>
                         </div>
-                        <button className="mt-4  border-2 border-emerald hover:text-lightyellow duration-100 p-2   rounded-2xl hover:bg-emerald">
+                        <button onClick={()=>getId(values._id)}
+                        className="mt-4  border-2 border-emerald hover:text-lightyellow duration-100 p-2   rounded-2xl hover:bg-emerald">
                         Add to Cart
                         </button>
                     </div>

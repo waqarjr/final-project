@@ -4,10 +4,40 @@ import Header from "../Header"
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export const Account = ()=>{
     const [toggle ,setToggle] = useState('dashbord');
+    const [firstName , setFirstName] = useState();
+    const [lastName , setLastName] = useState();
+    const [phone , setPhone] = useState();
+    const [email, setEmail] = useState();
+    const [incorrect , setIncorrect] = useState('');
+    const [error , setError] = useState('')
+    
+    const forme = useFormik({
+        initialValues:{
+            signoutpassword:""
+        },
+        validationSchema:Yup.object({
+            signoutpassword:Yup.string().required("Enter Your password"),
+        }),
+        onSubmit:async (values)=>{
+            const email1 = localStorage.getItem("userEmail");
+            const formData = new FormData();
+            formData.append("email",email);
+            formData.append("signoutpassword",values.signoutpassword);
+            const alpha = await axios.post('http://localhost:4000/signout',formData);
+            setError(alpha.data.password1)
+            if(alpha.data.a){
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("userFirstname");
+                localStorage.removeItem("userLastname");
+            }
+        }
+    })
+
     const formik = useFormik({
         initialValues:{
             currentpassword:'',
@@ -19,14 +49,37 @@ export const Account = ()=>{
             newpassword:Yup.string().required("please enter your new password"),
             conformpassword:Yup.string().oneOf([Yup.ref('newpassword'),null],"password must match").required("cofrompassword is required") 
         }),
-        onSubmit: (values)=>{
-            console.log(values);
+        onSubmit: async(values,{resetForm})=>{
+            const formData = new FormData();
+            const email1 = localStorage.getItem("userEmail");
+            formData.append("currentpassword",values.currentpassword);
+            formData.append("newpassword",values.newpassword);
+            formData.append("email",email1);
+            const alll = await axios.post('http://localhost:4000/change-password',formData);
+            setIncorrect(alll.data.message);
+            if(alll.data.cong){
+                resetForm();
+                //seeet alert
+            }
         }
     })
 
     const handleClick =(name)=>{
         setToggle(name)
     }
+
+    
+    const accountInfo = async()=>{
+        const email1 = localStorage.getItem("userEmail");
+        const alpha = await axios.post('http://localhost:4000/account-info',{email:email1})
+        setFirstName(alpha.data.firstname);
+        setLastName(alpha.data.lastname);
+        setEmail(alpha.data.email);  
+        setPhone(alpha.data.phone); 
+    }
+    useEffect(()=>{
+        accountInfo()
+    },[])
 
     return(<>
 <Header/>
@@ -43,7 +96,7 @@ export const Account = ()=>{
     <div className="grid grid-cols-[30%_auto] gap-6 my-5 ">
         <div>
             <div className="py-3 hover:text-emerald cursor-pointer">
-                <p className="" > <FontAwesomeIcon icon={faUser}  className="mr-1"/> Profile</p>
+                <p className="" > <FontAwesomeIcon icon={faUser}  className="mr-1"/>{firstName} {lastName} </p>
             </div><hr />
             <div className={`py-3 hover:text-emerald cursor-pointer ${toggle == "dashbord" ? "text-emerald": ""}`} onClick={()=>{handleClick("dashbord")}}  >
                 <p className="">Dashbord</p>
@@ -75,7 +128,7 @@ export const Account = ()=>{
                         <td>Created at</td>
                         <td>Action</td>
                     </tr>
-                </thead>
+                </thead> 
                 <tbody className="text-center">
                     <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 text-center">
                         <td>1</td>
@@ -85,6 +138,7 @@ export const Account = ()=>{
                         <td><button>Edit</button>| <button>Delete</button></td>
                     </tr>
                 </tbody>
+               
             </table>
         </div>    
         <div className={`${toggle == "orders" ? "":"hidden"}`}>
@@ -118,54 +172,67 @@ export const Account = ()=>{
             </div>
             <li className=" w-full grid grid-cols-[30%_auto] py-3 text-gray-500" >
                 <ol>First Name</ol>
-                <ol>Waqar </ol>
+                <ol>{firstName} </ol>
             </li><hr />
             <li className=" w-full grid grid-cols-[30%_auto] py-3 text-gray-500" >
                 <ol>last Name</ol>
-                <ol>Ahmad</ol>
+                <ol>{lastName}</ol>
             </li><hr />
             <li className=" w-full grid grid-cols-[30%_auto] py-3 text-gray-500" >
                 <ol>Email</ol>
-                <ol>waqarjr03@gmail.com</ol>
+                <ol>{email}</ol>
             </li><hr />
             <li className=" w-full grid grid-cols-[30%_auto] py-3 text-gray-500" >
                 <ol>Phone</ol>
-                <ol>+92 315 6417097</ol>
+                <ol>{phone}</ol>
             </li><hr />
         </div>
-        <form onSubmit={formik.handleSubmit}>
-            <div className={`${toggle == "changepassword" ? "":"hidden"}`} >
-            <div className="py-2" >
-                <p className="text-2xl font-medium" >Change Password</p>
-            </div>
-                <ol>
-                    <p className="py-1 text-gray-400 ">Current Password *</p>
-                    <input type="text" name="currentpassword" id="currentpassword" value={formik.values.currentpassword} onBlur={formik.handleBlur} onChange={formik.handleChange}
-                    className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " />
-                    {formik.touched.currentpassword && formik.errors.currentpassword && (
-                        <span className="text-red-500">{formik.errors.currentpassword}</span>
-                    )}                    
-                </ol>
-                <ol>
-                    <p className="py-1 text-gray-400 ">New Password *</p>
-                    <input type="text" name="newpassword" id="newpassword"  value={formik.values.newpassword} onBlur={formik.handleBlur} onChange={formik.handleChange}
-                    className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " />
-                    {formik.touched.newpassword && formik.errors.newpassword && (
-                        <span className="text-red-500" >{formik.errors.newpassword}</span>
-                    )}
-                </ol>
-                <ol>
-                    <p className="py-1 text-gray-400 ">Conform Password *</p>
-                    <input type="text" name="conformpassword" id="conformpassword"  value={formik.values.conformpassword} onBlur={formik.handleBlur} onChange={formik.handleChange}
-                    className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " />
-                    {formik.touched.conformpassword && formik.errors.conformpassword && (
-                        <span className="text-red-500" >{formik.errors.conformpassword}</span>
-                    )}
-                </ol>
-                <button type="submit" className=" rounded-sm px-4 py-2 hover:bg-emerald text-emerald hover:text-white mt-3 border-emerald border-2 " > Submit </button>
-            </div>
-        </form>
         
+          <div className={`${toggle == "changepassword" ? "":"hidden"}`} >
+            <form onSubmit={formik.handleSubmit}>
+                <div className="py-2" >
+                    <p className="text-2xl font-medium" >Change Password</p>
+                </div>
+                    <ol>
+                        <p className="py-1 text-gray-400 ">Current Password *</p>
+                        <input type="password" name="currentpassword" id="currentpassword" value={formik.values.currentpassword} onBlur={formik.handleBlur} onChange={formik.handleChange}
+                        className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " />
+                        {formik.touched.currentpassword && formik.errors.currentpassword && (
+                            <span className="text-red-500">{formik.errors.currentpassword}</span>
+                        )}<p className="text-red-500">{incorrect}</p>                    
+                    </ol>
+                    <ol>
+                        <p className="py-1 text-gray-400 ">New Password *</p>
+                        <input type="password" name="newpassword" id="newpassword"  value={formik.values.newpassword} onBlur={formik.handleBlur} onChange={formik.handleChange}
+                        className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " />
+                        {formik.touched.newpassword && formik.errors.newpassword && (
+                            <span className="text-red-500" >{formik.errors.newpassword}</span>
+                        )}
+                    </ol>
+                    <ol>
+                        <p className="py-1 text-gray-400 ">Conform Password *</p>
+                        <input type="password" name="conformpassword" id="conformpassword"  value={formik.values.conformpassword} onBlur={formik.handleBlur} onChange={formik.handleChange}
+                        className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " />
+                        {formik.touched.conformpassword && formik.errors.conformpassword && (
+                            <span className="text-red-500" >{formik.errors.conformpassword}</span>
+                        )}
+                    </ol>
+                    <button type="submit" className=" rounded-sm px-4 py-2 hover:bg-emerald text-emerald hover:text-white mt-3 border-emerald border-2 " > Submit </button>
+            </form>
+          </div>
+          <div className={`${toggle == "signout" ? "":"hidden"}`} >
+            <ol>
+                <p className="py-1 text-gray-400 ">Enter Your Password</p>
+                <form onSubmit={forme.handleSubmit}>
+                    <input type="password" name="signoutpassword" id="signoutpassword" value={forme.values.signoutpassword} onBlur={forme.handleBlur} onChange={forme.handleChange}
+                    className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " />
+                    {forme.touched.signoutpassword && forme.errors.signoutpassword && (
+                        <span className="text-red-500" >{formik.errors.signoutpassword}</span>
+                    )}
+                    <button type="submit" className=" rounded-sm px-4 py-2 hover:bg-emerald text-emerald hover:text-white mt-3 border-emerald border-2 " > Submit </button>
+                </form>
+            </ol>
+          </div>              
         </div>
     </div>
 </div>

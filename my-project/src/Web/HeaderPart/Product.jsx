@@ -190,9 +190,9 @@ return(<>
       <div className='m-3'>
           <span>Reviews ( {allReviews.length} ) </span>
           <div className='grid grid-cols-[60%_auto]' >
+                <div>
                 {allReviews.map((value,index)=>(
-                <div key={index} className=''>
-                  <div className='grid grid-cols-[22%_auto]'  >
+                  <div className='grid grid-cols-[22%_auto]' key={index} >
                     <div className='border-r border-emerald p-2 [&_*]:py-1   inline-block '>
                       <p className='text-gray-400' >{value.firstName} {value.lastName} </p>
                       {[...Array(value.rating)].map((_, i) => (
@@ -205,8 +205,8 @@ return(<>
                       <p>{value.reviews}</p>
                     </div>
                   </div>
-                </div>
                  ))} 
+                </div>
                 <Link to="/signin" className={`flex justify-center text-emerald ${localStorage.getItem('isSigup') ? 'hidden':''}`}>Sing in / Sign up</Link>
                 <div className={`mx-auto ${localStorage.getItem('isSigup') ? '':'hidden'} `}>
                   <form onSubmit={formik.handleSubmit}>

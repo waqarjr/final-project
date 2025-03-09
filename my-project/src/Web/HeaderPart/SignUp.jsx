@@ -4,7 +4,10 @@ import axios from "axios";
 import { useMask } from '@react-input/mask';
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useState } from "react";
 export const SignUp = ()=>{
+
+  const [error , setError] = useState('')
 
   const navigate = useNavigate();
   const validationSchema = Yup.object({
@@ -33,16 +36,18 @@ export const SignUp = ()=>{
       formData.append("phone",value.phone);
       formData.append('password',value.password);
       const alpha = await axios.post('http://localhost:4000/signup',formData);
-      if(alpha.data.message){
+      setError(alpha.data.message);
+      if(alpha.data.sucess){
         localStorage.setItem('isSigup','true');
         localStorage.setItem('userFirstname',value.firstname);
         localStorage.setItem('userLastname',value.lastname);
         localStorage.setItem('userEmail',value.email);
         Swal.fire({
           title: "Good job!",
-          text: "You clicked the button!",
+          text: `${alpha.data.sucess}`,
           icon: "success"
         });
+        navigate('/')
       }
     }
   })
@@ -83,7 +88,7 @@ return(<>
           </div>
           {formik.touched.email &&  formik.errors.email && (
             <span className="text-rose-500" >{formik.errors.email}</span>
-          )}
+          )} <p className="text-rose-500" >{error}</p>
           <div>
             <label htmlFor="phone"  className=" mb-1 text-sm font-medium text-emerald ">Phone *</label>
             <input type="text" ref={useRef} name="phone" id="phone" value={formik.values.phone} onChange={formik.handleChange} onBlur={formik.handleBlur}

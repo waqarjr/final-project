@@ -26,11 +26,14 @@ export const Signin = ()=>{
       const alpha = await axios.post('http://localhost:4000/signin',formData);
       setCheckEmail(alpha.data.email1);
       setCheckPassword(alpha.data.password1);
-      if(alpha.data.message){
-        navigate('/');
+      if(alpha.data){
+        localStorage.setItem('isSigup','true');
+        localStorage.setItem('userFirstname',alpha.data.firstname);
+        localStorage.setItem('userLastname',alpha.data.lastname);
+        localStorage.setItem('userEmail',alpha.data.email);;
       }
+      navigate('/');
     }
-
   })
   
 

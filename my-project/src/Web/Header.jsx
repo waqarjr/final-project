@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping, faChevronDown, faMagnifyingGlass ,  faPhone,faLocationDot, faBars } from "@fortawesome/free-solid-svg-icons"
+import { faCartShopping, faMagnifyingGlass ,  faPhone,faBars, faUser } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -9,6 +9,7 @@ export const Header = ()=>{
   const [toogle , setToogle] = useState(false);
    const [fetchData , setFetchData] = useState([]);
   
+  const sign =  localStorage.getItem("isSigup")
   const cartProducts = async()=>{
     const email = localStorage.getItem("userEmail");
     const alpha = await axios.post(`http://localhost:4000/cart-product`,{email:email})
@@ -30,14 +31,18 @@ return(<>
    <div className="w-full px-4 sm:px-6 lg:px-12 mx-auto flex items-center justify-between text-md">    
         <div className="flex items-center">
           <FontAwesomeIcon icon={faPhone} className="h-5 w-4 mr-2" />
-          <span>+00123456789</span>
+          <span>+92 315 6417097</span>
         </div>
 
       <div className="flex items-center space-x-4">
          <div className="relative">
             <button className="flex items-center space-x-1 hover:opacity-80">
-              <span >Location</span>
-              <FontAwesomeIcon icon={faLocationDot} className="h-4 w-3" />
+              { sign ? (<>
+              <FontAwesomeIcon icon={faUser} className="h-4 w-3" />
+              <Link to="/account" className="text-sm" >Account</Link>
+              </>):(
+              <Link to="/signin" className=" text-sm hover:border-b-2 border-white" >Sign In/Sign Up</Link>
+              )}
             </button>
 
          </div>
@@ -64,8 +69,8 @@ return(<>
             <Link to="/shop" className="text-emerald hover:text-gray-900">
               Shop
             </Link>
-            <Link to="/account" className="text-emerald hover:text-gray-900">
-              Account
+            <Link to="/" className="text-emerald hover:text-gray-900">
+              About Us
             </Link>
             <Link to="/contact" className="text-emerald hover:text-gray-900">
               Contact Us
@@ -88,7 +93,7 @@ return(<>
         <div className=" space-x-1 ">
           <FontAwesomeIcon icon={faCartShopping}  className="text-emerald"  />
           <span className="absolute left-2 -top-1 px-1  text-emerald text-xs font-bold rounded-full  bg-white ">
-            3
+            {fetchData.length}
           </span>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faMinus, faPlus, faRotateLeft, faStar, faTruck} from '@fortawesome/free-solid-svg-icons';
 import Header from '../Header';
 import Footer from '../Footer';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useFormik } from 'formik';
@@ -25,6 +25,8 @@ const [firstName , setFirstName] = useState();
 const [lastName , setLastName] = useState();
 const [allReviews,setAllReviews] = useState([]);
 const [count , setCount] = useState(1);
+const navigate = useNavigate();
+
 useEffect(()=>{
   const today = new Date();
   const formetedDate = today.toISOString().split("T")[0];
@@ -87,8 +89,12 @@ const formik = useFormik({
 
 const toCart = async ()=>{
   const email = localStorage.getItem("userEmail");
+  if(email != null){
     await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:count})
-}
+  } else {
+    navigate('/signin')
+  }
+} 
 
 return(<>
 
@@ -106,7 +112,7 @@ return(<>
             </div>
             <div className="grid grid-cols-4 gap-4 ">
                   {mulImage.map((value,index)=>(
-                <button key={index} className="relative   overflow-hidden rounded-lg border border-black bg-gray-100 hover:border-gray-900">
+                <button key={index} className="relative overflow-hidden rounded-lg border border-gray-300 bg-gray-100">
                   <img src={value.images} className="h-full w-full object-contain  " />
                 </button>
                   ))}
@@ -121,7 +127,7 @@ return(<>
               </p>
               <div className="flex items-center space-x-1">
                 {[...Array(5)].map((_, i) => (
-                <FontAwesomeIcon key={i}  icon={faStar} className="fa-solid fa-star text-lg text-emerald " />
+                <FontAwesomeIcon key={i}  icon={faStar} className="text-lg text-emerald " />
                 ))}
                 <span className="ml-2 text-sm text-gray-500">(121)</span>
               </div>
@@ -147,7 +153,7 @@ return(<>
             </div>
 
             <div className="flex space-x-4">
-              <button onClick={toCart} className="flex-1 rounded-full bg-emerald px-4 py-3 text-white hover:bg-[#3ac6a1] transition-colors">
+              <button onClick={toCart} className="flex-1 rounded-full bg-emerald px-4 py-3 text-white hover:bg-[#3ac6a1] transition-colors ">
                 Add to a Cart
               </button>
             </div>
@@ -196,7 +202,7 @@ return(<>
                     <div className='border-r border-emerald p-2 [&_*]:py-1   inline-block '>
                       <p className='text-gray-400' >{value.firstName} {value.lastName} </p>
                       {[...Array(value.rating)].map((_, i) => (
-                      <FontAwesomeIcon key={i}  icon={faStar} className="fa-solid fa-star text-lg text-yellow-400  " />
+                      <FontAwesomeIcon key={i}  icon={faStar} className="text-lg text-yellow-400  " />
                       ))}
                       < p className='text-gray-400'>{value.currentDate}</p>
                       <p className='text-gray-400' >{value.currentTime}</p>

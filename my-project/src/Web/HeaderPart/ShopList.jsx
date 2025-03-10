@@ -4,10 +4,10 @@ import { useEffect, useState,useMemo } from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const ShopList = ()=>{
-
+const navigate = useNavigate();
 const [categoriesClick,setCategoriesClick] = useState(true);
 const [productsClick , setProductsClick ] = useState(true);
 const [checkboxCategory , setCheckboxCategory] = useState([]);
@@ -86,6 +86,16 @@ const categoryCounts = useMemo(() => {
     Filter();
   },[checkboxCategory,checkboxManufacture])
 
+  const getId = async( id)=>{
+    const email = localStorage.getItem("userEmail");
+    const quantity = 1;
+    if(email != null){
+      await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+    } else {
+      navigate('/signin')
+    }
+  }
+
 return(<>
     <Header/>
     <div className="bg-[url('../../../public/page-header-bg.jpg')]  w-full  h-[150px] flex items-center justify-center">
@@ -157,9 +167,11 @@ return(<>
             </div>
             <div className='mx-auto my-auto ' >
                 <p className='' >Pkr {value.price}</p>
-                <FontAwesomeIcon icon={faStar} className='my-2 ' /><br />
-                <button className="bg-green-800 px-3 py-2 text-white hover:bg-green-700 transition-colors  rounded-md ">
-                Buy Now
+                {[...Array(5)].map((value,id)=>(
+                <FontAwesomeIcon key={id} icon={faStar} className='my-2 text-yellow-400' />
+                ))}<br/>
+                <button className="bg-emerald px-3 py-2 text-white  rounded-sm cursor-pointer" onClick={()=>getId(value._id)} >
+                 Add to cart
               </button>
             </div>
         </div>  

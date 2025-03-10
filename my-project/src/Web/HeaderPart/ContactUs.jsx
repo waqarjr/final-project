@@ -73,7 +73,7 @@ export const ContactUs = ()=>{
 
 return(<>
 <Header/>
-<div className="max-w-[1390px] mx-auto px-4 py-2">
+<div className="max-w-7xl mx-auto px-4 py-2">
   <div className='my-4 ' >
     <p className='text-gray-400' > <span className='hover:text-black cursor-pointer'>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Contact Us</span> </p>
   </div> <hr />
@@ -178,7 +178,7 @@ return(<>
                     )}
                 </div>
                 <div>
-                  <input type="text" ref={useRef} placeholder="+91 123 4567890" id="phone" name="phone" value={formik.values.phone} onChange={formik.handleChange} onBlur={formik.handleBlur}
+                  <input type="text" ref={useRef} placeholder="+92 123 4567890" id="phone" name="phone" value={formik.values.phone} onChange={formik.handleChange} onBlur={formik.handleBlur}
                     className="w-full px-4 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald focus:border-transparent"/>
                     {formik.touched.phone &&  formik.errors.phone && (
                     <span className="text-rose-500" >{formik.errors.phone}</span>

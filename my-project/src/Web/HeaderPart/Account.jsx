@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const Account = ()=>{
     const [toggle ,setToggle] = useState('dashbord');
@@ -15,7 +16,7 @@ export const Account = ()=>{
     const [email, setEmail] = useState();
     const [incorrect , setIncorrect] = useState('');
     const [error , setError] = useState('')
-    
+    const navigate = useNavigate();
     const forme = useFormik({
         initialValues:{
             signoutpassword:""
@@ -34,6 +35,8 @@ export const Account = ()=>{
                 localStorage.removeItem("userEmail");
                 localStorage.removeItem("userFirstname");
                 localStorage.removeItem("userLastname");
+                localStorage.removeItem("isSigup");
+                navigate('/')
             }
         }
     })
@@ -228,7 +231,7 @@ export const Account = ()=>{
                     className="bg-gray-50 border border-emerald focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2 " />
                     {forme.touched.signoutpassword && forme.errors.signoutpassword && (
                         <span className="text-red-500" >{formik.errors.signoutpassword}</span>
-                    )}
+                    )}<br/><span className="text-red-500" >{error}</span>
                     <button type="submit" className=" rounded-sm px-4 py-2 hover:bg-emerald text-emerald hover:text-white mt-3 border-emerald border-2 " > Submit </button>
                 </form>
             </ol>

@@ -3,14 +3,14 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faStar ,faChevronLeft,faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const ProductsCarousel = () =>{
   const [data, setData] = useState([]);
   const [products , setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
-
+  const navigate = useNavigate();
   const Product_data = async () => {
     const res = await axios.get("http://localhost:4000/read-product");
     setProducts(res.data);
@@ -72,7 +72,11 @@ export const ProductsCarousel = () =>{
   const getId = async(id)=>{
     const email = localStorage.getItem("userEmail");
     const quantity = 1;
-    await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+    if(email != null){
+      await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+    } else {
+      navigate('/signin')
+    }
   }
 
   return (<>

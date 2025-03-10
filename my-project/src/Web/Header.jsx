@@ -19,13 +19,23 @@ export const Header = ()=>{
     cartProducts();
   },[])
 
+let a = 0;
+fetchData.map((item)=>{
+  a += item.quantity * item.productDetails.price
+})
+
   const delCart = async(id)=>{
-  await axios.post(`http://localhost:4000/del-cart/${id}`);
+  const alpha = await axios.post(`http://localhost:4000/del-cart/${id}`);
+  if(alpha.data.a){
+    setFetchData((prevData) => prevData.filter((data) => data._id !== id));
+  }
 }
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 return(<>
+
+{/* i have a problem in mount the useEffect hook when i click on cart i want my useEffect goes mont but my useEffect hook is present in a header component and add to cart  button on which  press i want to mount my useEffect is present in  a productCarousel component  and other 3 components too teach me how can i do that   . teach me how can i do that */}
 
 <div className="bg-emerald text-white py-3 px-8 ">
    <div className="w-full px-4 sm:px-6 lg:px-12 mx-auto flex items-center justify-between text-md">    
@@ -41,7 +51,7 @@ return(<>
               <FontAwesomeIcon icon={faUser} className="h-4 w-3" />
               <Link to="/account" className="text-sm" >Account</Link>
               </>):(
-              <Link to="/signin" className=" text-sm hover:border-b-2 border-white" >Sign In/Sign Up</Link>
+              <Link to="/signin" className=" text-sm hover:border-b-2 border-white" >sign in/sign up</Link>
               )}
             </button>
 
@@ -93,12 +103,11 @@ return(<>
         <div className=" space-x-1 ">
           <FontAwesomeIcon icon={faCartShopping}  className="text-emerald"  />
           <span className="absolute left-2 -top-1 px-1  text-emerald text-xs font-bold rounded-full  bg-white ">
-            {fetchData.length}
+            { sign ? fetchData.length :""}
           </span>
         </div>
       </div>
-      
-      {/* Cart Dropdown */}
+      {sign ? (<>
       <div className={`absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-50 transition-all duration-300 
          ${isHovered || toogle ? ' opacity-100' : 'opacity-0 '}   `} >
         <div className="p-4">
@@ -123,19 +132,21 @@ return(<>
           <div className="">
             <div className="flex justify-between items-center mb-4">
               <span className="font-medium text-gray-700">TOTAL</span>
-              <span className="font-medium text-gray-800">4</span>
+              <span className="font-medium text-gray-800">{a}</span>
             </div>
             <div className="flex space-x-2">
-              <button className="bg-emerald text-white hover:bg-white border hover:text-emerald border-emerald duration-200 px-4 py-2 rounded w-1/2 text-sm font-medium ">
+              <Link to="/viewcart" className="bg-emerald text-white hover:bg-white border hover:text-emerald border-emerald duration-200 px-4 py-2 rounded w-1/2 text-sm font-medium ">
                 View Cart
-              </button>
-              <button className="bg-emerald text-white hover:bg-white border hover:text-emerald border-emerald duration-200 px-4 py-2 rounded w-1/2 text-sm font-medium flex items-center justify-center transition-colors">
+              </Link>
+              <Link to='/checkout' className="bg-emerald text-white hover:bg-white border hover:text-emerald border-emerald duration-200 px-4 py-2 rounded w-1/2 text-sm font-medium flex items-center justify-center transition-colors">
                 Checkout
-              </button>
+              </Link>
             </div>
           </div>
         </div>
       </div>
+      </>):""}
+     
     </div>
 
             <div className="lg:hidden flex items-center">

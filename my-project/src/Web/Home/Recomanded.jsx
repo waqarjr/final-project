@@ -2,11 +2,11 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faStar } from '@fortawesome/free-solid-svg-icons';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 export const Recomanded = ()=>{
   
   const [products , setProducts] = useState([])
-
+  const navigate = useNavigate();
   const Product_data = async () => {
     const res = await axios.get("http://localhost:4000/read-product");
     setProducts(res.data.slice(0, 8));
@@ -17,7 +17,11 @@ useEffect(()=>{
   const getId = async( id)=>{
     const email = localStorage.getItem("userEmail");
     const quantity = 1;
-    await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+    if(email != null){
+      await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+    } else {
+      navigate('/signin')
+    }
   }
 
 return(<>

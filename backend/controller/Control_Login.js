@@ -163,6 +163,7 @@ const cartPrducts = async(req,res)=>{
 const deleteCart = async(req,res)=>{
     const id = req.params.id;
     await cart.findByIdAndDelete(id);
+    res.json({a:true})
 }
 
 module.exports = {login,conformpassword,changeConformpassword,signup,signin,contactus,review,getReviews,cartitems,cartPrducts,deleteCart,accoutinfo,changePasswordUser,signout};

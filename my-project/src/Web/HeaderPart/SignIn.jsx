@@ -20,17 +20,19 @@ export const Signin = ()=>{
     validationSchema: validationSchema,
     onSubmit: async(value)=>{
       const formData = new FormData();
-      console.log(value);
       formData.append("email",value.email);
       formData.append('password',value.password);
       const alpha = await axios.post('http://localhost:4000/signin',formData);
       setCheckEmail(alpha.data.email1);
       setCheckPassword(alpha.data.password1);
       if(alpha.data){
+        const first =  alpha.data.firstname;
+        const second = alpha.data.lastname;
+        const third = alpha.data.email;
+        localStorage.setItem('userFirstname',first);
+        localStorage.setItem('userLastname',second);
+        localStorage.setItem('userEmail',third);;
         localStorage.setItem('isSigup','true');
-        localStorage.setItem('userFirstname',alpha.data.firstname);
-        localStorage.setItem('userLastname',alpha.data.lastname);
-        localStorage.setItem('userEmail',alpha.data.email);;
       }
       navigate('/');
     }

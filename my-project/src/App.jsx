@@ -36,6 +36,9 @@ import Product from './Web/HeaderPart/Product';
 import Signin from './Web/HeaderPart/SignIn';
 import SignUp from './Web/HeaderPart/SignUp';
 import Account from './Web/HeaderPart/Account';
+import ViewCart from './Web/HeaderPart/ViewCart';
+import Checkout from './Web/HeaderPart/Checkout';
+import ProtecedRouter from './Web/ProtectedAccount';
 
 function App() {
   return (
@@ -88,7 +91,9 @@ function App() {
         <Route path='/product/:id' element={<Product/>} />
         <Route path='/signin' element={<Signin/>} />
         <Route path='/signup' element={<SignUp/>} />
-        <Route path='/account' element={<Account/>} />
+        <Route path='/account' element={<Account/> } />
+        <Route path='/viewcart' element={<ViewCart/>} />
+        <Route path='/checkout' element={<Checkout/>} />
         </Route>
       </Routes>    
     </BrowserRouter>

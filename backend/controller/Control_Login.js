@@ -148,6 +148,7 @@ const cartitems = async(req,res)=>{
     else {
        await cart.updateOne({product_id:productid,userEmail:email },{$inc:{quantity:quantity}})
     }
+    res.json({message:"Item Added to cart Sucessfully"})
 }
 
 const cartPrducts = async(req,res)=>{

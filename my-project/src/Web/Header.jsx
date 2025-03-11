@@ -2,13 +2,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faMagnifyingGlass ,  faPhone,faBars, faUser } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
+import useCartStore from "./Store";
 import axios from "axios";
 
 export const Header = ()=>{
    const [isHovered, setIsHovered] = useState(false);
   const [toogle , setToogle] = useState(false);
    const [fetchData , setFetchData] = useState([]);
-  
+   const cartUpdated = useCartStore((state) => state.cartUpdated);
+
   const sign =  localStorage.getItem("isSigup")
   const cartProducts = async()=>{
     const email = localStorage.getItem("userEmail");
@@ -17,7 +19,7 @@ export const Header = ()=>{
   }
   useEffect(()=>{
     cartProducts();
-  },[])
+  },[cartUpdated])
 
 let a = 0;
 fetchData.map((item)=>{
@@ -34,8 +36,6 @@ fetchData.map((item)=>{
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 return(<>
-
-{/* i have a problem in mount the useEffect hook when i click on cart i want my useEffect goes mont but my useEffect hook is present in a header component and add to cart  button on which  press i want to mount my useEffect is present in  a productCarousel component  and other 3 components too teach me how can i do that   . teach me how can i do that */}
 
 <div className="bg-emerald text-white py-3 px-8 ">
    <div className="w-full px-4 sm:px-6 lg:px-12 mx-auto flex items-center justify-between text-md">    

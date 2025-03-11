@@ -5,9 +5,13 @@ import Header from '../Header';
 import Footer from '../Footer';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import useCartStore from '../Store';
 
 export const ShopList = ()=>{
+
 const navigate = useNavigate();
+const updateCart = useCartStore((state)=> state.updateCart);
 const [categoriesClick,setCategoriesClick] = useState(true);
 const [productsClick , setProductsClick ] = useState(true);
 const [checkboxCategory , setCheckboxCategory] = useState([]);
@@ -90,7 +94,16 @@ const categoryCounts = useMemo(() => {
     const email = localStorage.getItem("userEmail");
     const quantity = 1;
     if(email != null){
-      await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+    const a = await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+    updateCart();
+      if(a.data.message){
+      const Toast = Swal.mixin({
+        toast: true, position: "top-end", timer: 2000,timerProgressBar: true,showConfirmButton: false,
+      });
+      Toast.fire({
+        icon: "success",title: `${a.data.message}`
+      });
+      }
     } else {
       navigate('/signin')
     }

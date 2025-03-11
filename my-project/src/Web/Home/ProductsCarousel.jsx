@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faStar ,faChevronLeft,faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-
+import useCartStore from '../Store';
+import Swal from 'sweetalert2';
 export const ProductsCarousel = () =>{
+  const updateCart = useCartStore((state) => state.updateCart);
   const [data, setData] = useState([]);
   const [products , setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -73,7 +75,16 @@ export const ProductsCarousel = () =>{
     const email = localStorage.getItem("userEmail");
     const quantity = 1;
     if(email != null){
-      await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+     const a = await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity});
+     updateCart();
+     if(a.data.message){
+      const Toast = Swal.mixin({
+        toast: true, position: "top-end", timer: 2000, timerProgressBar: true,showConfirmButton: false,
+      });
+      Toast.fire({
+        icon: "success", title: `${a.data.message}`
+      });
+      }
     } else {
       navigate('/signin')
     }

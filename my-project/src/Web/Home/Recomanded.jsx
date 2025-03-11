@@ -3,8 +3,11 @@ import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faStar } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import useCartStore from "../Store";
 export const Recomanded = ()=>{
   
+  const updateCart = useCartStore((state) => state.updateCart);
   const [products , setProducts] = useState([])
   const navigate = useNavigate();
   const Product_data = async () => {
@@ -18,7 +21,16 @@ useEffect(()=>{
     const email = localStorage.getItem("userEmail");
     const quantity = 1;
     if(email != null){
-      await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+    const a = await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:quantity})
+    updateCart();
+      if(a.data.message){
+      const Toast = Swal.mixin({
+        toast: true, position: "top-end", timer: 2000, timerProgressBar: true,showConfirmButton: false,
+      });
+      Toast.fire({
+        icon: "success", title: `${a.data.message}`
+      });
+      }
     } else {
       navigate('/signin')
     }

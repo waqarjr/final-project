@@ -69,7 +69,8 @@ return(<>
                 <td className="py-2 text-gray-800">{item.productDetails.price}</td>
                 <td className="py-2 " >
                 <div className="w-24 flex items-center rounded-md border border-emerald">
-                <input type="number" min="1" defaultValue={item.quantity} onChange={(e)=>{setCount(e.target.value),quantity(item._id)}}
+                <input type="number" min="1" defaultValue={item.quantity} onChange={(e)=>{const newValue = e.target.value;
+                setCount(newValue); quantity(item._id, newValue);}} 
                 className="w-full p-2 border border-gray-300 rounded text-center" />                  
                 </div>
                 </td>

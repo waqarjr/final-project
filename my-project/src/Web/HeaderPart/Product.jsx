@@ -7,8 +7,12 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
+import Swal from 'sweetalert2';
+import useCartStore from '../Store';
+
 export const Product = ()=>{
 
+const updateCart = useCartStore((state)=> state.updateCart);
 const {id} = useParams();
 const [title , setTitle] = useState();
 const [keywords, setKeywords] = useState();
@@ -90,7 +94,16 @@ const formik = useFormik({
 const toCart = async ()=>{
   const email = localStorage.getItem("userEmail");
   if(email != null){
-    await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:count})
+  const a =  await axios.post('http://localhost:4000/cartitems',{email:email,productid:id,quantity:count})
+    updateCart();
+      if(a.data.message){
+      const Toast = Swal.mixin({
+        toast: true, position: "top-end", timer: 2000,timerProgressBar: true,showConfirmButton: false,
+      });
+      Toast.fire({
+        icon: "success",title: `${a.data.message}`
+      });
+      }
   } else {
     navigate('/signin')
   }

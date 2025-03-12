@@ -4,9 +4,13 @@ import Header from "../Header";
 import * as Yup from "yup";
 import { useState,useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 export const Checkout = ()=>{
-
+  const navigate = useNavigate();
   const [fetchData,setFetchData] = useState([]);
+  const [currentDate , setCurrentDate] = useState();
+  const [currentTime , setCurrentTime] = useState();
 
   const cartProducts = async()=>{
     const email = localStorage.getItem("userEmail");
@@ -16,10 +20,20 @@ export const Checkout = ()=>{
   useEffect(()=>{
     cartProducts();
   },[])
+
+useEffect(()=>{
+  const today = new Date();
+  const formetedDate = today.toISOString().split("T")[0];
+  const formattedTime = today.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+  setCurrentDate(formetedDate);
+  setCurrentTime(formattedTime);
+},[])
+
   let a = 0;
   fetchData.map((item)=>{
     a += item.quantity * item.productDetails.price ;
   })
+  const status = "pending";
 const formik = useFormik({
     initialValues:{
         firstName:'',
@@ -28,7 +42,7 @@ const formik = useFormik({
         phone:"",
         address:"",
         postcode:"",
-        city:""
+        city:"",
     },
     validationSchema:Yup.object({
         firstName:Yup.string().required("please enter your name here"),
@@ -39,8 +53,30 @@ const formik = useFormik({
         postcode:Yup.string().required("enter your postcode here"),
         city:Yup.string().required("enter your city name here ")
     }),
-    onSubmit: (values)=>{
-        console.log(values);
+    onSubmit: async(values,{resetForm})=>{
+      const formData = new FormData();
+      formData.append("firstName",values.firstName);
+      formData.append("lastName",values.lastName);
+      formData.append("email",values.email);
+      formData.append("phone",values.phone);
+      formData.append("address",values.address);
+      formData.append("postcode",values.postcode);
+      formData.append("city",values.city);
+      formData.append("currentDate",currentDate);
+      formData.append("currentTime",currentTime);
+      formData.append("status",status);
+      formData.append("amount",a)
+      fetchData.forEach((product) => formData.append("productId", product.productDetails._id));
+      const alpha = await axios.post("http://localhost:4000/finalorder",formData);
+      if(alpha.data.abc){
+        Swal.fire({
+          title: "Good job!",
+          text: `${alpha.data.abc}`,
+          icon: "success"
+        });
+        resetForm();
+        navigate('/');
+      }
     }
 })
 
@@ -135,14 +171,20 @@ return(<>
             <h2 className="text-xl font-medium mb-6 text-gray-800">Your Order</h2>
             
             <div className="border-b border-gray-200 pb-4 mb-4">
-              <div className="flex justify-between mb-2">
-                <span className="font-medium text-gray-800">Product</span>
-                <span className="font-medium text-gray-800">Total</span>
+              <div className="grid grid-cols-[60%_auto] mb-2 text-center">
+                <span className="font-medium text-gray-800 text-justify">Product</span>
+                <span className="font-medium text-gray-800 space-x-2">
+                  <span>Quantity</span>
+                  <span>Total</span>
+                </span>
               </div>
               {fetchData.map((item)=>(
-              <div className="flex justify-between py-1" key={item._id}>
+              <div className="grid grid-cols-[60%_auto] py-1" key={item._id}>
                   <p className="text-gray-500">{item.productDetails.title}</p>
-                <span className=" text-emerald ">{item.productDetails.price}</span>
+                <span className=" text-emerald grid grid-cols-2 text-center ">
+                  <span>{item.quantity}</span>
+                  <span>{item.productDetails.price}</span>
+                </span>
               </div>
               ))}
             </div>
@@ -167,7 +209,6 @@ return(<>
                 <span className="text-emerald font-medium">{a + 200}</span>
               </div>
             </div>
-            
             <button type="submit" className="w-full bg-white border border-emerald text-emerald py-3 rounded hover:bg-emerald hover:text-white transition-colors">
               Place Order
             </button>

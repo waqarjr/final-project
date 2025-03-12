@@ -4,6 +4,10 @@ const sign = require('../model/model_userSignUp');
 const contact = require('../model/model_Contactus');
 const reviewsalpha = require('../model/model_reviews');
 const cart = require('../model/model_cart');
+const order = require('../model/model_orders');
+const items = require('../model/model_items');
+const singleImage = require('../model/module_Products');
+
 const login = async(req,res)=>{
 
     const alpha = await Login.findOne();
@@ -16,8 +20,7 @@ const login = async(req,res)=>{
     }else{
         res.send({message:"Email is incorrect"});
     }
-    
-}
+}          
 const conformpassword = async ( req , res)=>{
     
     const alpha = await Login.findOne();
@@ -167,4 +170,61 @@ const deleteCart = async(req,res)=>{
     res.json({a:true})
 }
 
-module.exports = {login,conformpassword,changeConformpassword,signup,signin,contactus,review,getReviews,cartitems,cartPrducts,deleteCart,accoutinfo,changePasswordUser,signout};
+const changeQuantity = async(req,res)=>{
+    const {email,id,quantity} = req.body;
+    const a = await cart.updateOne({_id:id,userEmail:email },{$set:{quantity:quantity}})
+    res.json({message:"Item Added to cart Sucessfully"})
+}
+
+const final = async(req,res)=>{
+    const {firstName,lastName,email,phone,address,postcode,city,productId,currentDate,currentTime,status,amount} = req.body;
+    console.log(productId,firstName);
+// await order.create({
+//     firstname: firstName,
+//     lastname: lastName,
+//     email: email,
+//     phone: phone,
+//     address: address,
+//     postcode: postcode,
+//     city: city,
+//     currentDate:currentDate,
+//     currentTime:currentTime,
+//     status:status,
+//     amount:amount
+// })
+// const user = await order.find().sort({$natural:-1}).limit(1);
+//     const id = user[0]._id;
+//     const userData = productId.map((path) => ({
+//         orders_id:id,
+//         product_id:path,
+//     }));
+//     await items.insertMany(userData);
+//     res.json({abc:"your data inserted sucessfully"})
+}
+
+const findOrders = async(req,res)=>{
+   const data = await order.find();
+    res.json(data)
+}
+
+const findCustomer_Data = async(req,res)=>{
+    const id = req.params.id;
+    const Information = await order.findById(id);
+    res.json(Information)
+}   
+const findCustomer_Product = async(req,res)=>{
+    const id = req.params.id;
+    const Item = await items.find({ orders_id:id})
+    const product = Item.map(pro => {
+        return pro.product_id
+    })
+    const newProduct = await Promise.all(
+        product.map(async pro =>{
+            return await singleImage.findById(pro)
+        })
+    ) 
+    res.json(newProduct);
+}
+
+module.exports = {findOrders,final,changeQuantity,login,conformpassword,changeConformpassword,findCustomer_Data,findCustomer_Product,
+    signup,signin,contactus,review,getReviews,cartitems,cartPrducts,deleteCart,accoutinfo,changePasswordUser,signout};

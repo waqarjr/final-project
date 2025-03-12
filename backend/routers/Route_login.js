@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 
-const {login,conformpassword,changeConformpassword, signup, signin, contactus, review, getReviews, cartitems, cartPrducts, deleteCart, accoutinfo, changePasswordUser, signout} = require('../controller/Control_Login');
+const {login,conformpassword,changeConformpassword, signup, signin, contactus, review, getReviews, cartitems, cartPrducts, deleteCart, accoutinfo, changePasswordUser, signout, changeQuantity, final, findOrders, findCustomer_Data, findCustomer_Product} = require('../controller/Control_Login');
 
 const uplode = multer();
 
@@ -33,4 +33,15 @@ router.post('/account-info',uplode.single(null),accoutinfo);
 router.post('/change-password',uplode.single(null),changePasswordUser);
 
 router.post('/signout',uplode.single(null),signout);
+
+router.post('/chnagequantity',uplode.single(null),changeQuantity);
+
+router.post('/finalorder',uplode.single(null),final);
+
+router.get('/customerorder',uplode.single(null),findOrders);
+
+router.post('/siglecus-data/:id',uplode.single(null),findCustomer_Data);
+
+router.post('/singcus-product/:id',uplode.single(null),findCustomer_Product);
+
 module.exports = router;

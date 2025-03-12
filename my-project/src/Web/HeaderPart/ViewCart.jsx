@@ -5,12 +5,15 @@ import { faClose, faRefresh,faPlus,faMinus } from "@fortawesome/free-solid-svg-i
 import { useNavigate } from "react-router-dom";
 import { useState , useEffect} from "react";
 import axios from "axios";
+import useCartStore from "../Store";
 
 export const ViewCart = ()=>{
-    const navigate = useNavigate();
-    const [fetchData ,setFetchData] = useState([]);
-    const [count , setCount] = useState();
 
+  const navigate = useNavigate();
+    const [fetchData ,setFetchData] = useState([]);
+    const updateCart = useCartStore((state)=> state.updateCart);
+    const cartRemove = useCartStore((state) => state.cartRemove);
+    const [change ,setChange] = useState();
     const cartProducts = async()=>{
       const email = localStorage.getItem("userEmail");
       const alpha = await axios.post(`http://localhost:4000/cart-product`,{email:email})
@@ -18,14 +21,28 @@ export const ViewCart = ()=>{
     }
     useEffect(()=>{
       cartProducts();
-    },[])
+    },[change,cartRemove])
     let a = 0;
     fetchData.map((item)=>{
       a += item.quantity * item.productDetails.price ;
     })
-    const quantity = (id,count)=>{
-      console.log(id,count);
+
+    const quantityValue = async(id,count)=>{
+      const email = localStorage.getItem("userEmail");
+    if(email != null){
+       await axios.post('http://localhost:4000/chnagequantity',{email:email,id:id,quantity:count});
+      updateCart();
+      setChange(count);
+    } 
     }
+
+const delCart = async(id)=>{
+  const alpha = await axios.post(`http://localhost:4000/del-cart/${id}`);
+  if(alpha.data.a){
+    setFetchData((prevData) => prevData.filter((data) => data._id !== id));
+    updateCart();
+  }
+}   
 return(<>
 <Header/>
 
@@ -69,15 +86,14 @@ return(<>
                 <td className="py-2 text-gray-800">{item.productDetails.price}</td>
                 <td className="py-2 " >
                 <div className="w-24 flex items-center rounded-md border border-emerald">
-                <input type="number" min="1" defaultValue={item.quantity} onChange={(e)=>{const newValue = e.target.value;
-                setCount(newValue); quantity(item._id, newValue);}} 
+                <input type="number" min="1" defaultValue={item.quantity} onChange={(e)=>{const newValue = e.target.value; quantityValue(item._id, newValue);}} 
                 className="w-full p-2 border border-gray-300 rounded text-center" />                  
                 </div>
                 </td>
                 <td className="py-2 text-emerald font-medium">{ item.quantity * item.productDetails.price}</td>
                 <td className="py-2">
                   <button className="text-gray-400 hover:text-gray-600">
-                    <FontAwesomeIcon icon={faClose} />
+                    <FontAwesomeIcon icon={faClose}  onClick={()=>{delCart(item._id)}} />
                   </button>
                 </td>
               </tr>

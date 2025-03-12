@@ -27,6 +27,7 @@ import ProtectedRoute from './Sliderbar/ProtecedRouter';
 import ConformPassword from './Sliderbar/Login/ConformPassword';
 import ChangePassword from './Sliderbar/Login/ChangePassword';
 import ProtectChanPass from './Sliderbar/ProtectedChngPass';
+
 import Weblayout from './Web/weblayout';
 import Index from './Web/Index';
 import Carousel from './Web/Home/Carousel';
@@ -39,6 +40,8 @@ import Account from './Web/HeaderPart/Account';
 import ViewCart from './Web/HeaderPart/ViewCart';
 import Checkout from './Web/HeaderPart/Checkout';
 import ProtecedRouter from './Web/ProtectedAccount';
+import View_orders from './Sliderbar/orders/View_orders';
+import Read_orders from './Sliderbar/orders/Read_orders';
 
 function App() {
   return (
@@ -71,7 +74,11 @@ function App() {
           <Route path='/admin/contactus' element={<ProtectedRoute><Contact_Us/></ProtectedRoute> } /> 
           <Route path='/admin/iconchange' element={<ProtectedRoute><Icon_change/></ProtectedRoute> } />
           {/* Admin Page */}
-          <Route path='/admin/conformpassword' element={<ProtectedRoute><ConformPassword/></ProtectedRoute> } />  
+          <Route path='/admin/conformpassword' element={<ProtectedRoute><ConformPassword/></ProtectedRoute> } />
+          
+          {/* Costomer Orders */}
+          <Route path='/admin/orders' element={<ProtecedRouter><Read_orders/></ProtecedRouter>} />
+          <Route path='/admin/orders/:id' element={<ProtecedRouter><View_orders/></ProtecedRouter>}  />  
 
           <Route path='/admin/changepassword' element={<ProtectedRoute> <ProtectChanPass><ChangePassword/></ProtectChanPass></ProtectedRoute>} />
 

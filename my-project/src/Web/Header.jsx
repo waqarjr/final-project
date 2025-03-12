@@ -10,8 +10,10 @@ export const Header = ()=>{
   const [toogle , setToogle] = useState(false);
    const [fetchData , setFetchData] = useState([]);
    const cartUpdated = useCartStore((state) => state.cartUpdated);
-
-  const sign =  localStorage.getItem("isSigup")
+   const removeCart = useCartStore((state)=> state.removeCart);
+  
+  const sign =  localStorage.getItem("isSigup");
+  
   const cartProducts = async()=>{
     const email = localStorage.getItem("userEmail");
     const alpha = await axios.post(`http://localhost:4000/cart-product`,{email:email})
@@ -29,6 +31,7 @@ fetchData.map((item)=>{
   const delCart = async(id)=>{
   const alpha = await axios.post(`http://localhost:4000/del-cart/${id}`);
   if(alpha.data.a){
+    removeCart();
     setFetchData((prevData) => prevData.filter((data) => data._id !== id));
   }
 }

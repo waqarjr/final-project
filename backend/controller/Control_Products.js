@@ -215,8 +215,7 @@ const front_filter = async(req,res)=>{
     const Array_Category = category.split(',');
     const Array_Manufacture = manufacture.split(',');
     let data ;
-
-    
+        
         if(category.trim() && manufacture.trim()){
             data = await singleImage.find({
                 category: { $in: Array_Category },

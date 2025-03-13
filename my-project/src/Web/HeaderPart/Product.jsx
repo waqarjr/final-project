@@ -113,7 +113,7 @@ return(<>
 
 <Header/>
 <div className='my-8 max-w-7xl mx-auto' >
-        <p className='text-gray-400' > <span className='hover:text-black cursor-pointer'>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Product</span> </p>
+        <p className='text-gray-400' > <span className='hover:text-black cursor-pointer' onClick={()=>{navigate('/')}}>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Product</span> </p>
     </div>
 <div className="min-h-screen bg-white p-6 md:p-12">
       <div className="mx-auto max-w-7xl">

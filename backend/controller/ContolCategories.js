@@ -8,7 +8,7 @@ const creat_category = async (req,res)=>{
         name:name,
         status:status,
         date:date,
-        image:`http://localhost:4000/${req.file.path}`,
+        image:`http://localhost:4000/${req.file.path}`, 
     })
     res.send({message:"your data has been insertes sucessfully..."})
 }
@@ -26,7 +26,7 @@ const read_category = async (req,res)=>{
     } else if (status !== '' && fromdate === '') {
         read = await category.find({ status: status });
     } else {
-        read = await category.find();
+        read = await category.find(); 
     }
     res.json(read);
     }

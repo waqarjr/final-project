@@ -66,7 +66,7 @@ return(<>
                         <th>Created at</th>
                         <th>Action</th>
                     </tr>
-                </thead>
+                </thead>    
                 <tbody>
                     {fetchData.map((item ,index) =>(
                     <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 [&>*]:font-normal"  key={index}>

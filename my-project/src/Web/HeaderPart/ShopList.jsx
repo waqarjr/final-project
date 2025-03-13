@@ -119,7 +119,7 @@ return(<>
     </div>
     <div className="max-w-7xl mx-auto ">
     <div className='my-8' >
-        <p className='text-gray-400' > <span className='hover:text-black cursor-pointer'>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Shop</span> </p>
+        <p className='text-gray-400' > <span className='hover:text-black cursor-pointer' onClick={()=>{navigate('/')}}>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Shop</span> </p>
     </div>
     <h3>Filters</h3>
     <div className="grid grid-cols-[25%_auto] gap-6 ">

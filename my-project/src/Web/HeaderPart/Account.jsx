@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 export const Account = ()=>{
     const [toggle ,setToggle] = useState('dashbord');
     const [firstName , setFirstName] = useState();
@@ -16,6 +16,7 @@ export const Account = ()=>{
     const [email, setEmail] = useState();
     const [incorrect , setIncorrect] = useState('');
     const [error , setError] = useState('')
+    const [fetchData , setFetchData] = useState([])
     const navigate = useNavigate();
     const forme = useFormik({
         initialValues:{
@@ -62,7 +63,6 @@ export const Account = ()=>{
             setIncorrect(alll.data.message);
             if(alll.data.cong){
                 resetForm();
-                //seeet alert
             }
         }
     })
@@ -80,7 +80,13 @@ export const Account = ()=>{
         setEmail(alpha.data.email);  
         setPhone(alpha.data.phone); 
     }
+    const usetData = async()=>{
+        const email1 = localStorage.getItem("userEmail");
+        const alpha = await axios.post('http://localhost:4000/account-userdata',{email:email1})
+        setFetchData(alpha.data);
+    }
     useEffect(()=>{
+        usetData()
         accountInfo()
     },[])
 
@@ -94,7 +100,7 @@ export const Account = ()=>{
 </div>
 <div className="max-w-7xl mx-auto ">
     <div className='my-8' >
-        <p className='text-gray-400' > <span className='hover:text-black cursor-pointer'>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Account</span> </p>
+        <p className='text-gray-400' > <span className='hover:text-black cursor-pointer' onClick={()=>{navigate('/')}} >Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Account</span> </p>
     </div> <hr />
     <div className="grid grid-cols-[30%_auto] gap-6 my-5 ">
         <div>
@@ -133,13 +139,17 @@ export const Account = ()=>{
                     </tr>
                 </thead> 
                 <tbody className="text-center">
-                    <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 text-center">
-                        <td>1</td>
-                        <td>133</td>
-                        <td>enable</td>
-                        <td>waqar</td>
-                        <td><button>Edit</button>| <button>Delete</button></td>
-                    </tr>
+                {fetchData.map((item,index) =>(
+                  <tr className="[&>*]:p-3 [&>*]:border-2 [&>*]:border-gray-300 text-center" key={item._id}>
+                        <td>{index+1}</td>
+                        <td>{item.amount}</td>
+                        <td className="">{item.status}</td>
+                        <td>{item.currentDate} {item.currentTime}</td>
+                        <td>
+                        <Link to={`/customerDetail/${item._id}`}  className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded">View</Link>
+                        </td>
+                    </tr>  
+                ))}
                 </tbody>
                
             </table>

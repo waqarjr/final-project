@@ -42,6 +42,7 @@ import Checkout from './Web/HeaderPart/Checkout';
 import ProtecedRouter from './Web/ProtectedAccount';
 import View_orders from './Sliderbar/orders/View_orders';
 import Read_orders from './Sliderbar/orders/Read_orders';
+import CustomerDetail from './Web/HeaderPart/CustomerDetails';
 
 function App() {
   return (
@@ -101,6 +102,7 @@ function App() {
         <Route path='/account' element={<Account/> } />
         <Route path='/viewcart' element={<ViewCart/>} />
         <Route path='/checkout' element={<Checkout/>} />
+        <Route path='/customerDetail/:id' element={<CustomerDetail/>} />
         </Route>
       </Routes>    
     </BrowserRouter>

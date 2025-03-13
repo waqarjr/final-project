@@ -67,6 +67,7 @@ const formik = useFormik({
       formData.append("status",status);
       formData.append("amount",a)
       fetchData.forEach((product) => formData.append("productId", product.productDetails._id));
+      fetchData.forEach((product) => formData.append("productQty", product.quantity));
       const alpha = await axios.post("http://localhost:4000/finalorder",formData);
       if(alpha.data.abc){
         Swal.fire({
@@ -91,8 +92,8 @@ return(<>
     </div>
 </div>
 <div className='my-4  ' >
-    <p className='text-gray-400 max-w-7xl mx-auto' > <span className='hover:text-black cursor-pointer'>Home </span> &nbsp; &gt; &nbsp;
-    <span className='hover:text-black cursor-pointer'  >View Cart</span> &nbsp; &gt; &nbsp; <span className='hover:text-black cursor-pointer'  >Check Out</span></p>
+    <p className='text-gray-400 max-w-7xl mx-auto' > <span className='hover:text-black cursor-pointer' onClick={()=>{navigate('/')}}>Home </span> &nbsp; &gt; &nbsp;
+    <span className='hover:text-black cursor-pointer' onClick={()=>{navigate('/viewcart')}} >View Cart</span> &nbsp; &gt; &nbsp; <span className='hover:text-black cursor-pointer'  >Check Out</span></p>
 </div> <hr />
 <div className="max-w-6xl mx-auto p-4 font-sans">
 <form  onSubmit={formik.handleSubmit}>

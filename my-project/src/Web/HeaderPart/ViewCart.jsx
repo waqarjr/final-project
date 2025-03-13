@@ -57,7 +57,7 @@ return(<>
     </div>
 </div>
 <div className='my-4  ' >
-    <p className='text-gray-400 max-w-7xl mx-auto' > <span className='hover:text-black cursor-pointer'>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >View Cart</span> </p>
+    <p className='text-gray-400 max-w-7xl mx-auto' > <span className='hover:text-black cursor-pointer' onClick={()=>{navigate('/')}}>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >View Cart</span> </p>
 </div> <hr />
 <div className="max-w-7xl mx-auto p-4 font-sans">
       <div className="flex flex-col lg:flex-row gap-6">

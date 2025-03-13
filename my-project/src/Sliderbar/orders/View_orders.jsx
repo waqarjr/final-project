@@ -1,11 +1,14 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Index from "../Index";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export const View_orders = ()=>{
 
   const {id} = useParams();
+  const navigate = useNavigate();
   const [fetchData ,setFetchData] = useState([]);
 
   const [firstName , setFirstName] = useState();
@@ -44,6 +47,10 @@ export const View_orders = ()=>{
     customerProduct(id)
   },[id])
 
+  let total = 0;
+  fetchData.map(item =>{
+   total += item._doc.price * item.quantity;
+  })
     return(<>
     <Index/>
 <div className="sm:ml-64 mt-14">
@@ -51,8 +58,13 @@ export const View_orders = ()=>{
         <p className="capitalize text-3xl font-sans py-3 ">product categories</p>
     </div>
   <div className="p-2">
-    <p className="capitalize text-2xl font-sans py-1 px-3">Customer Details</p>
-    <div className="max-w-auto mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-auto mx-auto p-4   bg-white shadow-md rounded-lg">
+      <div className="grid grid-cols-2 justify-between px-3">
+        <span className="capitalize text-2xl font-sans pb-4 ">Customer Details</span>
+        <span onClick={()=>{navigate('/admin/orders')}} className="bg-yellow-400 cursor-pointer py-1 h-8 px-2 justify-self-end text-white border-none hover:bg-yellow-300 rounded">
+          <FontAwesomeIcon icon={faArrowLeft} className="mr-2" /> Back
+        </span>
+      </div>
       <div className="mb-6">
         <div className="grid grid-cols-[20%_auto] border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-gray-50 p-4 font-medium text-gray-700 border-b border-r border-gray-200">Name</div>
@@ -94,11 +106,11 @@ export const View_orders = ()=>{
         <tbody>
           {fetchData.map(item =>(
             <tr className="[&>*]:p-1 [&>*]:border-2 [&>*]:border-gray-300 " key={item._id}>
-            <td><img src={item.image} alt="" width={100} className="mx-auto" /></td>
-            <td width={400}>{item.title}</td>
-            <td>{item.price}</td>
-            <td>{item.stock}</td>
-            <td>{item.price * item.stock}</td>
+            <td><img src={item._doc.image} alt="" width={100} className="mx-auto" /></td>
+            <td width={400}>{item._doc.title}</td>
+            <td>{item._doc.price}</td>
+            <td>{item.quantity}</td>
+            <td>{item._doc.price * item.quantity}</td>
           </tr>
           ))}
         </tbody>
@@ -108,7 +120,7 @@ export const View_orders = ()=>{
       <div>
         <h1 className="text-lg font-bold text-gray-800 mb-4 capitalize py-4 border-b-2">Shoping Cart Total</h1>
         <div className="flex items-center justify-between *:font-semibold *:text-gray-800" >
-          <span>Total</span> <span>Rs. 2,000</span>
+          <span>Total</span> <span>Rs. {total}</span>
         </div>
       </div>
       </div>

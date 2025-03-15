@@ -1,11 +1,10 @@
 import Index from "../Index";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
-export const Read_orders = ()=>{
-const navigate = useNavigate()    
+export const Read_orders = ()=>{ 
 const [fetchData , setFromData] = useState([]);
 
 const customerOrders = async()=>{
@@ -16,7 +15,7 @@ const customerOrders = async()=>{
 useEffect(()=>{
     customerOrders();
 },[])
-
+console.log("welcome to the wo")
 return(<>
 <Index/>
 <div className="sm:ml-64 mt-14">
@@ -30,28 +29,20 @@ return(<>
 
         <div className=" grid md:grid-cols-4 sm:grid-cols-2  grid-cols-1   " >
             <div className="p-2">
-                <input type="date" 
-                // value={fromDate} onChange={(e)=>setFromDate(e.target.value)}
-                 className="w-full border-2 p-1 rounded-md " id="date" />
+                <input type="date"  className="w-full border-2 p-1 rounded-md " id="date" />
             </div>
             <div className="p-2">
-                <input type="date"
-                //  value={toDate} onChange={(e) => setToDate(e.target.value)}
-                 className="w-full border-2 p-1 rounded-md " id="date" />
+                <input type="date" className="w-full border-2 p-1 rounded-md " id="date" />
             </div>
             <div className="p-2">
-                <select name="" id="" className=" p-[6px] w-full border-2 text-center  rounded-md"
-                // onChange={(e)=> setStatus(e.target.value)} 
-                >
+                <select name="" id="" className=" p-[6px] w-full border-2 text-center  rounded-md">
                     <option value="">All</option>
                     <option value="enable">Enable</option>
                     <option value="disable">Disable</option>
                 </select>
             </div>
             <div className="p-2">
-                <input type="text" 
-                //  value={search} onChange={(e)=>setSearch(e.target.value)}
-                 placeholder="Search" className="w-full border-2 p-[6px]  rounded-md" id="date" />
+                <input type="text" placeholder="Search" className="w-full border-2 p-[6px]  rounded-md" id="date" />
             </div>
         </div>  
 

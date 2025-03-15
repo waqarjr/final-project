@@ -28,6 +28,9 @@ import ConformPassword from './Sliderbar/Login/ConformPassword';
 import ChangePassword from './Sliderbar/Login/ChangePassword';
 import ProtectChanPass from './Sliderbar/ProtectedChngPass';
 
+import View_orders from './Sliderbar/orders/View_orders';
+import Read_orders from './Sliderbar/orders/Read_orders';
+
 import Weblayout from './Web/weblayout';
 import Index from './Web/Index';
 import Carousel from './Web/Home/Carousel';
@@ -40,9 +43,8 @@ import Account from './Web/HeaderPart/Account';
 import ViewCart from './Web/HeaderPart/ViewCart';
 import Checkout from './Web/HeaderPart/Checkout';
 import ProtecedRouter from './Web/ProtectedAccount';
-import View_orders from './Sliderbar/orders/View_orders';
-import Read_orders from './Sliderbar/orders/Read_orders';
 import CustomerDetail from './Web/HeaderPart/CustomerDetails';
+import AboutUs from './Web/HeaderPart/AboutUs';
 
 function App() {
   return (
@@ -103,6 +105,7 @@ function App() {
         <Route path='/viewcart' element={<ViewCart/>} />
         <Route path='/checkout' element={<Checkout/>} />
         <Route path='/customerDetail/:id' element={<CustomerDetail/>} />
+        <Route path='/aboutus' element={<AboutUs/>} />
         </Route>
       </Routes>    
     </BrowserRouter>

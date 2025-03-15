@@ -82,7 +82,7 @@ return(<>
             <Link to="/shop" className="text-emerald hover:text-gray-900">
               Shop
             </Link>
-            <Link to="/" className="text-emerald hover:text-gray-900">
+            <Link to="/aboutus" className="text-emerald hover:text-gray-900">
               About Us
             </Link>
             <Link to="/contact" className="text-emerald hover:text-gray-900">

@@ -28,7 +28,7 @@ export const Account = ()=>{
         onSubmit:async (values)=>{
             const email1 = localStorage.getItem("userEmail");
             const formData = new FormData();
-            formData.append("email",email);
+            formData.append("email",email1);
             formData.append("signoutpassword",values.signoutpassword);
             const alpha = await axios.post('http://localhost:4000/signout',formData);
             setError(alpha.data.password1)

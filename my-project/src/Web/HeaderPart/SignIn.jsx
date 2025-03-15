@@ -29,9 +29,11 @@ export const Signin = ()=>{
         const first =  alpha.data.firstname;
         const second = alpha.data.lastname;
         const third = alpha.data.email;
+        const phone = alpha.data.phone;
         localStorage.setItem('userFirstname',first);
         localStorage.setItem('userLastname',second);
-        localStorage.setItem('userEmail',third);;
+        localStorage.setItem('userEmail',third);
+        localStorage.setItem("userPhone",phone);
         localStorage.setItem('isSigup','true');
       }
       navigate('/');

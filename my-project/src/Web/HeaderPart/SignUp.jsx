@@ -42,6 +42,7 @@ export const SignUp = ()=>{
         localStorage.setItem('userFirstname',value.firstname);
         localStorage.setItem('userLastname',value.lastname);
         localStorage.setItem('userEmail',value.email);
+        localStorage.setItem('userPhone',value.phone);
         Swal.fire({
           title: "Good job!",
           text: `${alpha.data.sucess}`,

@@ -8,8 +8,7 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import Swal from 'sweetalert2';
-import useCartStore from '../Store';
-
+import useCartStore from '../Store';  
 export const Product = ()=>{
 
 const updateCart = useCartStore((state)=> state.updateCart);
@@ -73,7 +72,7 @@ const formik = useFormik({
   validationSchema: Yup.object({
     reviews:Yup.string().required("please write ur idea about this product").min(10,"text must be longer then 10 digits"),
   }),
-  onSubmit: async(values)=>{
+  onSubmit: async(values,{resetForm})=>{
     if(rating == 0){
       setEror("please select this");
     } else  {
@@ -86,7 +85,13 @@ const formik = useFormik({
       formData.append("firstName",firstName);
       formData.append("lastName",lastName);
       const alpha =  await axios.post("http://localhost:4000/reviews",formData)
-      console.log(alpha.data.mess);
+      if(alpha.data.mess){
+        Swal.fire({
+          text: `${alpha.data.mess}`,
+          icon: "success"
+        });
+      }
+      resetForm();
     }
   }
 })

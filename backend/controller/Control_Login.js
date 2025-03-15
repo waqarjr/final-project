@@ -130,7 +130,7 @@ const review = async(req,res)=>{
         firstName:firstName,
         lastName:lastName,
     })
-    res.send({mess:"your review has been send sucessfully..."})
+    res.send({mess:"Thanks for givig  review..."})
 }
 const getReviews = async(req,res)=>{
     const id = req.params.id
@@ -172,14 +172,14 @@ const deleteCart = async(req,res)=>{
 
 const changeQuantity = async(req,res)=>{
     const {email,id,quantity} = req.body;
-    const a = await cart.updateOne({_id:id,userEmail:email },{$set:{quantity:quantity}})
-    res.json({message:"Item Added to cart Sucessfully"})
+    await cart.updateOne({_id:id,userEmail:email },{$set:{quantity:quantity}})
+    res.json({message:"Item Quantity Updated Sucessfully"})
 }
 
 const final = async(req,res)=>{
     const {firstName,lastName,email,phone,address,postcode,city,productId,currentDate,currentTime,status,amount,productQty} = req.body;
-    console.log(productId,productQty);
-await order.create({
+  
+    await order.create({
     firstname: firstName,
     lastname: lastName,
     email: email,
@@ -194,23 +194,32 @@ await order.create({
 })
 const user = await order.find().sort({$natural:-1}).limit(1);
     const id = user[0]._id;
-    const userData = productId.map((path,index) => ({
-        orders_id:id,
-        product_id:path,
-        quantity:productQty[index],
-    }));
-    await items.insertMany(userData);
-    res.json({abc:"your data inserted sucessfully"})
-}
+    if(productQty.length == 1){
+        await items.create({
+            orders_id:id,
+            product_id:productId,
+            quantity:productQty,
+        })
+        res.json({abc:"your order is taken sucessfully sucessfully"})
+    } else {
+        const userData = productId.map((path,index) => ({
+            orders_id:id,
+            product_id:path,
+            quantity:productQty[index],
+        }));
+        await items.insertMany(userData);
+        res.json({abc:"your order is taken sucessfully sucessfully"}) 
+    }
+} 
 
 const findOrders = async(req,res)=>{
    const data = await order.find();
-    res.json(data)
+    res.json(data) 
 }
 
 const findCustomer_Data = async(req,res)=>{
     const id = req.params.id;
-    const Information = await order.findById(id);
+    const Information = await order.findById(id); 
     res.json(Information)
 }   
 const findCustomer_Product = async(req,res)=>{
@@ -235,11 +244,16 @@ const findCustomer_Product = async(req,res)=>{
     res.json(finalOutPut);
 }
 
-const accountUserData = async(req,res)=>{
+const accountUserData = async(req,res)=>{ 
     const {email} = req.body;
     const data = await order.find({email:email})
     res.json(data) 
 }
 
-module.exports = {findOrders,final,changeQuantity,login,conformpassword,changeConformpassword,findCustomer_Data,findCustomer_Product,accountUserData,
-    signup,signin,contactus,review,getReviews,cartitems,cartPrducts,deleteCart,accoutinfo,changePasswordUser,signout};
+const emptyCart = async(req,res)=>{
+    const {email} = req.body;
+    await cart.deleteMany({userEmail:email});
+}
+module.exports = {findOrders,final,changeQuantity,login,conformpassword,changeConformpassword,findCustomer_Data,
+    findCustomer_Product,accountUserData,emptyCart, signup,signin,contactus,review,getReviews,cartitems,cartPrducts,
+    deleteCart,accoutinfo,changePasswordUser,signout};

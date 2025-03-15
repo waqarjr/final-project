@@ -303,7 +303,7 @@ return(<>
         
         <div className="mx-5 mt-4">
             <label htmlFor="short_description" className="font-bold">Short Description<span className="text-red-700">*</span> </label>
-            <textarea name="short_description" id="short_description" 
+            <textarea name="short_description" id="short_description" cols={10}
             value={formik.values.short_description} onChange={formik.handleChange} onBlur={formik.handleBlur}
             className="w-full border-2"></textarea>
             {formik.touched.short_description && formik.errors.short_description && (

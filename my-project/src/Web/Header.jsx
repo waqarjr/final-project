@@ -17,7 +17,7 @@ export const Header = ()=>{
   const cartProducts = async()=>{
     const email = localStorage.getItem("userEmail");
     const alpha = await axios.post(`http://localhost:4000/cart-product`,{email:email})
-    setFetchData(alpha.data)
+    setFetchData(alpha.data);
   }
   useEffect(()=>{
     cartProducts();

@@ -6,11 +6,15 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useMask } from "@react-input/mask";
+import useCartStore from "../Store";
 export const Checkout = ()=>{
   const navigate = useNavigate();
   const [fetchData,setFetchData] = useState([]);
   const [currentDate , setCurrentDate] = useState();
   const [currentTime , setCurrentTime] = useState();
+  const cartRemove = useCartStore((state) => state.cartRemove);
+  const updateCart = useCartStore((state) => state.updateCart);
 
   const cartProducts = async()=>{
     const email = localStorage.getItem("userEmail");
@@ -19,7 +23,13 @@ export const Checkout = ()=>{
   }
   useEffect(()=>{
     cartProducts();
-  },[])
+  },[cartRemove])
+
+  
+  const storageEmail = localStorage.getItem('userEmail');
+  const storageFirstName = localStorage.getItem('userFirstname');
+  const StoageLastName = localStorage.getItem('userLastname');
+  const storagePhone = localStorage.getItem('userPhone')
 
 useEffect(()=>{
   const today = new Date();
@@ -36,10 +46,10 @@ useEffect(()=>{
   const status = "pending";
 const formik = useFormik({
     initialValues:{
-        firstName:'',
-        lastName:"",
-        email:"",
-        phone:"",
+        firstName:storageFirstName,
+        lastName:StoageLastName,
+        email:storageEmail,
+        phone:storagePhone,
         address:"",
         postcode:"",
         city:"",
@@ -53,7 +63,8 @@ const formik = useFormik({
         postcode:Yup.string().required("enter your postcode here"),
         city:Yup.string().required("enter your city name here ")
     }),
-    onSubmit: async(values,{resetForm})=>{
+    enableReinitialize:true,
+    onSubmit: async(values)=>{
       const formData = new FormData();
       formData.append("firstName",values.firstName);
       formData.append("lastName",values.lastName);
@@ -70,17 +81,20 @@ const formik = useFormik({
       fetchData.forEach((product) => formData.append("productQty", product.quantity));
       const alpha = await axios.post("http://localhost:4000/finalorder",formData);
       if(alpha.data.abc){
+        updateCart();  
+        navigate('/'); 
         Swal.fire({
-          title: "Good job!",
           text: `${alpha.data.abc}`,
           icon: "success"
         });
-        resetForm();
-        navigate('/');
+        await axios.post('http://localhost:4000/empty-cart',{email:storageEmail});
       }
     }
 })
-
+  const useRef = useMask({
+    mask: '+92 ___ _______',
+    replacement: { _: /\d/ },
+  })
 return(<>
 <Header/>
 <div className="relative mx-auto    bg-slate-200 "  >
@@ -131,7 +145,7 @@ return(<>
               </div>
               <div>
               <p className="mb-2 text-gray-500"> Phone <span className="text-emerald">*</span></p>
-                <input type="tel" id="phone" name="phone" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.phone}
+                <input type="tel" ref={useRef} id="phone" name="phone" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.phone}
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-emerald    "/>
               {formik.touched.phone &&  formik.errors.phone && (
             <span className="text-rose-500" >{formik.errors.phone}</span>

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useState , useEffect} from "react";
 import axios from "axios";
 import useCartStore from "../Store";
-
+import Swal from 'sweetalert2';
 export const ViewCart = ()=>{
 
   const navigate = useNavigate();
@@ -30,9 +30,17 @@ export const ViewCart = ()=>{
     const quantityValue = async(id,count)=>{
       const email = localStorage.getItem("userEmail");
     if(email != null){
-       await axios.post('http://localhost:4000/chnagequantity',{email:email,id:id,quantity:count});
+      const a = await axios.post('http://localhost:4000/chnagequantity',{email:email,id:id,quantity:count});
       updateCart();
       setChange(count);
+      if(a.data.message){
+        const Toast = Swal.mixin({
+          toast: true, position: "top-end", timer: 2000, timerProgressBar: true,showConfirmButton: false,
+        });
+        Toast.fire({
+          icon: "success", title: `${a.data.message}`
+        });
+      }
     } 
     }
 

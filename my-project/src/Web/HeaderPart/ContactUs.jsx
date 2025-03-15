@@ -76,7 +76,7 @@ return(<>
 <Header/>
 <div className="max-w-7xl mx-auto px-4 py-2">
   <div className='my-4 ' >
-    <p className='text-gray-400' > <span className='hover:text-black cursor-pointer' onClick={()=>{navigate('/viewcart')}}>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'  >Contact Us</span> </p>
+    <p className='text-gray-400' > <span className='hover:text-black cursor-pointer' onClick={()=>{navigate('/')}}>Home </span> &nbsp; &gt; &nbsp;<span className='hover:text-black cursor-pointer'>Contact Us</span> </p>
   </div> <hr />
   <div className="relative mx-auto    bg-slate-200 "  >
     <div className="bg-[url('../../../public/contact-header-bg.jpg')]  w-full h-[400px] flex items-center justify-center">

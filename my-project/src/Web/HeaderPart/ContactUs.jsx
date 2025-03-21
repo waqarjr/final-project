@@ -26,6 +26,7 @@ export const ContactUs = ()=>{
   }
   useEffect(()=>{
     constact_Data();
+    document.title = 'Contact Us';
   },[])
 
   const validationSchema = Yup.object({

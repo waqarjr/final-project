@@ -88,6 +88,7 @@ export const Account = ()=>{
     useEffect(()=>{
         usetData()
         accountInfo()
+        document.title ='Account';
     },[])
 
     return(<>

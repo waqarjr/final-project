@@ -45,6 +45,7 @@ import Checkout from './Web/HeaderPart/Checkout';
 import ProtecedRouter from './Web/ProtectedAccount';
 import CustomerDetail from './Web/HeaderPart/CustomerDetails';
 import AboutUs from './Web/HeaderPart/AboutUs';
+import { ForgetPassword } from './Web/HeaderPart/Forgetpassword';
 
 function App() {
   return (
@@ -106,6 +107,7 @@ function App() {
         <Route path='/checkout' element={<Checkout/>} />
         <Route path='/customerDetail/:id' element={<CustomerDetail/>} />
         <Route path='/aboutus' element={<AboutUs/>} />
+        <Route path='/forgetpassword' element={<ForgetPassword/>}  />
         </Route>
       </Routes>    
     </BrowserRouter>

@@ -47,6 +47,7 @@ useEffect(()=>{
 fetchData(id);
 fetchMultiple(id);
 fetchReviews(id);
+document.title = "Product";
 },[id])
 const fetchReviews = async(id)=>{
   const data = await axios.get(`http://localhost:4000/getreviews/${id}`);

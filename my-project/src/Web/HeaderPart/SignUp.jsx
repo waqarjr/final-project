@@ -7,7 +7,11 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 export const SignUp = ()=>{
 
-  const [error , setError] = useState('')
+  const [error , setError] = useState('');
+
+  useEffect (()=>{
+    document.title = "Sign Up";
+  },[]);
 
   const navigate = useNavigate();
   const validationSchema = Yup.object({

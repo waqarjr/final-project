@@ -7,6 +7,7 @@ const cart = require('../model/model_cart');
 const order = require('../model/model_orders');
 const items = require('../model/model_items');
 const singleImage = require('../model/module_Products');
+const nodemailer = require('nodemailer');
 
 const login = async(req,res)=>{
 
@@ -200,6 +201,14 @@ const user = await order.find().sort({$natural:-1}).limit(1);
             product_id:productId,
             quantity:productQty,
         })
+        const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com", port: 587, secure: false,               
+            auth: { user: 'waqarjr03@gmail.com',pass: 'mrfxynsptfzbplxm'}
+          });   
+          transporter.sendMail({
+            from: 'waqarjr03@gmail.com',to: `${email}`,subject: "Orders Status",   
+            text: `your order is in a ${status} situation .Thanks for give us order `,
+            });
         res.json({abc:"your order is taken sucessfully sucessfully"})
     } else {
         const userData = productId.map((path,index) => ({
@@ -208,6 +217,14 @@ const user = await order.find().sort({$natural:-1}).limit(1);
             quantity:productQty[index],
         }));
         await items.insertMany(userData);
+        const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com", port: 587, secure: false,               
+        auth: { user: 'waqarjr03@gmail.com',pass: 'mrfxynsptfzbplxm'}
+        });   
+        transporter.sendMail({
+        from: 'waqarjr03@gmail.com',to: `${email}`,subject: "Orders Status",   
+        text: `your order is in a ${status} situation .Thanks for give us order `,
+        });
         res.json({abc:"your order is taken sucessfully sucessfully"}) 
     }
 } 
@@ -254,6 +271,30 @@ const emptyCart = async(req,res)=>{
     const {email} = req.body;
     await cart.deleteMany({userEmail:email});
 }
-module.exports = {findOrders,final,changeQuantity,login,conformpassword,changeConformpassword,findCustomer_Data,
+
+const customerStatus = async(req,res)=>{
+    const {id,status} = req.body;
+    const user = await order.findById(id);
+      await order.updateOne({_id:id},{$set:{status:status}})
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",      
+        port: 587,
+        secure: false,               
+        auth: {
+          user: 'waqarjr03@gmail.com',  
+          pass: 'mrfxynsptfzbplxm' 
+        }
+      });
+
+      transporter.sendMail({
+        from: 'waqarjr03@gmail.com',            
+        to: `${user.email}`,        
+        subject: "Orders Status",   
+        text: `your order is in a ${status} situation .Thanks for give us order `,
+        });
+    res.json({message:"user Status updated sucessfully.."})
+}   
+
+module.exports = {findOrders,final,changeQuantity,login,conformpassword,changeConformpassword,findCustomer_Data,customerStatus,
     findCustomer_Product,accountUserData,emptyCart, signup,signin,contactus,review,getReviews,cartitems,cartPrducts,
     deleteCart,accoutinfo,changePasswordUser,signout};

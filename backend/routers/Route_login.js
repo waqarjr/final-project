@@ -4,7 +4,8 @@ const multer = require('multer');
 
 const {login,conformpassword,changeConformpassword, signup, signin, contactus, review, getReviews, cartitems, 
      cartPrducts, deleteCart, accoutinfo, changePasswordUser, signout, changeQuantity, final, findOrders, findCustomer_Data, 
-     findCustomer_Product, accountUserData, emptyCart} = require('../controller/Control_Login');
+     findCustomer_Product, accountUserData, emptyCart,
+     customerStatus} = require('../controller/Control_Login');
 
 const uplode = multer();
 
@@ -49,5 +50,7 @@ router.post('/singcus-product/:id',uplode.single(null),findCustomer_Product);
 router.post('/account-userdata',uplode.single(null),accountUserData);
 
 router.post('/empty-cart',uplode.single(null),emptyCart);
- 
+
+router.post('/customer-status',uplode.single(null),customerStatus);
+
 module.exports = router;

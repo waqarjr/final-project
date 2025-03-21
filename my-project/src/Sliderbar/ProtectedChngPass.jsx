@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom"; 
 export const ProtectChanPass = ({children})=>{
 
-const isAuthenticated = se.getItem("changepassword"); 
+const isAuthenticated = sessionStorage.getItem("changepassword"); 
 
 return isAuthenticated ? children : <Navigate to="admin/conformpassword" replace />;
 

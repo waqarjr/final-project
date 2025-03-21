@@ -37,6 +37,7 @@ useEffect(()=>{
   const formattedTime = today.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
   setCurrentDate(formetedDate);
   setCurrentTime(formattedTime);
+  document.title = "Check Out"
 },[])
 
   let a = 0;

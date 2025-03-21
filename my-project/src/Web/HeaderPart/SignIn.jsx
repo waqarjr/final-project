@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export const Signin = ()=>{
 
   const [checkEmail,setCheckEmail] = useState('');
@@ -12,6 +12,10 @@ export const Signin = ()=>{
     email:Yup.string().email().required("Email is required"),
     password:Yup.string().required("password is required")
   })
+
+  useEffect (()=>{
+    document.title = "Sign In";
+  },[])
   const formik = useFormik({
     initialValues:{
       email:"",
@@ -63,7 +67,7 @@ return(<>
             )}<br /><span className="text-red-500" >{checkEmail}</span>
           <div>
             <label htmlFor="password" className="block mb-2 text-sm font-medium text-emerald ">Password</label>
-            <input type="password" name="password" id="password" placeholder="••••••••" alue={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur}
+            <input type="password" name="password" id="password" placeholder="••••••••" value={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur}
             className="bg-gray-50 border border-emerald  rounded-lg focus:outline-2 focus:outline-offset-2 focus:outline-emerald block w-full p-2.5"/>
           </div>
           {formik.touched.password && formik.errors.password && (
@@ -78,7 +82,7 @@ return(<>
                 <label htmlFor="remember" className="text-gray-500 dark:text-emerald">Remember me</label>
               </div>
             </div>
-            <a href="#" className="text-sm font-medium text-emerald hover:underline ">Forgot password?</a>
+            <Link to="/forgetpassword" className="text-sm font-medium text-emerald hover:underline ">Forgot password?</Link>
           </div>
           <button type="submit" className="w-full text-white bg-emerald font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
           <p className="text-sm font-light text-gray-500 ">

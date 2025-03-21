@@ -112,8 +112,8 @@ export const CustomerDetail = ()=>{
           </tr>
         </thead>
         <tbody>
-          {fetchData.map(item =>(
-            <tr className="[&>*]:p-1 [&>*]:border-2 [&>*]:border-gray-300 " key={item._id}>
+          {fetchData.map((item,index) =>(
+            <tr className="[&>*]:p-1 [&>*]:border-2 [&>*]:border-gray-300 " key={index}>
             <td><img src={item._doc.image} alt="" width={100} className="mx-auto" /></td>
             <td width={400}>{item._doc.title}</td>
             <td>{item._doc.price}</td>

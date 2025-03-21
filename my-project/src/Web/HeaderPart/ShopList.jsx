@@ -52,6 +52,7 @@ const read_Manufacturer = async()=>{
 useEffect(()=>{
 read_Category();
 read_Manufacturer();
+document.title = "Shop";
 },[])
 
 const categoryCounts = useMemo(() => {

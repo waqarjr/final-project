@@ -1,11 +1,16 @@
 import axios from "axios";
 import Footer from "../Footer";
 import Header from "../Header"
+import { useEffect } from "react";
 export const AboutUs = ()=>{
 
 const EmailSend = async()=>{
     await axios.post('http://localhost:4000/email');
 }
+
+useEffect(()=>{
+    document.title = "About Us"
+},[])
 
 return(<>
 <Header/>

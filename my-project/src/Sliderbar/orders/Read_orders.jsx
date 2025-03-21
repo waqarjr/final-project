@@ -2,7 +2,7 @@ import Index from "../Index";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+import Swal from "sweetalert2";
 
 export const Read_orders = ()=>{ 
 const [fetchData , setFromData] = useState([]);
@@ -14,8 +14,21 @@ const customerOrders = async()=>{
 
 useEffect(()=>{
     customerOrders();
+    document.title = "Orders"
 },[])
-console.log("welcome to the wo")
+
+const handleStatusChange = async(id,value)=>{
+    const data = await axios.post("http://localhost:4000/customer-status",{id:id,status:value})
+    if(data.data.message){
+    const Toast = Swal.mixin({
+        toast: true, position: "top-end", timer: 2000, timerProgressBar: true,showConfirmButton: false,
+        });
+        Toast.fire({
+        icon: "success", title: `${data.data.message}`
+        });
+    }
+}
+
 return(<>
 <Index/>
 <div className="sm:ml-64 mt-14">
@@ -64,7 +77,15 @@ return(<>
                         <th  >{index+1}</th>
                         <th>{item.firstname} {item.lastname}</th>
                         <th>{item.amount}</th>
-                        <th>{item.status}</th>
+                        <th>
+                            <select defaultValue={item.status} onChange={(e) =>  handleStatusChange(item._id, e.target.value)}
+                            className="w-[150px] border-2 rounded-md" >
+                            <option value="pending">Pending</option>
+                            <option value="progressing">Progressing</option>
+                            <option value="complete">Complete</option>
+                            <option value="cancel">Cancel</option>
+                            </select>
+                            </th>
                         <th>{item.currentDate} {item.currentTime}</th>
                         <th>
                             <Link to={`/admin/orders/${item._id}`} className="bg-blue-600 px-3 py-1 text-white border-none hover:bg-blue-700 rounded">View</Link>

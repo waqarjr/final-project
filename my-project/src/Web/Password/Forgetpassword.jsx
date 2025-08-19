@@ -60,3 +60,4 @@ return(<>
 </section>
 </>)
 }
+export default ForgetPassword;

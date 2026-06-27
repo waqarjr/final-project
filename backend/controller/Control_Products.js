@@ -1,245 +1,210 @@
-const singleImage = require('../model/module_Products');
+const Product = require('../model/module_Products');
 const multipleImage = require('../model/module_Prod_Multiple');
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
+const asyncHandler = require('../utils/asyncHandler');
 
-const insertImage = async(req,res)=>{
-    const {title ,category, manufacturer,price,price_discount,keywords,stock,short_description,long_description,status} = req.body;
-    const image = req.files['image'] ? req.files['image'][0] : null;
-    await singleImage.create({
-        title:title,
-        category:category,
-        manufacturer:manufacturer,
-        price:price,
-        price_discount:price_discount,
-        keywords:keywords,
-        stock:stock,
-        short_description:short_description,
-        status:status,
-        long_description:long_description,
-        image: `http://localhost:4000/${image.path}`,
-    })
-    const single = await singleImage.find().sort({$natural:-1}).limit(1);
-    const images = req.files['multipleImages'] ? req.files['multipleImages'] : [];
-    const imagePaths = images.map((file) => `http://localhost:4000/${file.path}`);
-    const id = single[0]._id;
+const getBaseUrl = () => process.env.BASE_URL || 'http://localhost:4000';
+
+const insertImage = asyncHandler(async (req, res) => {
+  const { title, category, manufacturer, price, price_discount, keywords, stock, short_description, long_description, status } = req.body;
+  const image = req.files && req.files['image'] ? req.files['image'][0] : null;
+
+  if (!title || !category || !manufacturer || !price || stock === undefined) {
+    return res.status(400).json({ error: 'Title, category, manufacturer, price, and stock are required' });
+  }
+
+  const newProd = await Product.create({
+    title,
+    category,
+    manufacturer,
+    price: Number(price),
+    price_discount: price_discount ? Number(price_discount) : 0,
+    keywords,
+    stock: Number(stock),
+    short_description,
+    long_description,
+    status: status || 'active',
+    image: image ? `${getBaseUrl()}/${image.path.replace(/\\/g, '/')}` : '',
+  });
+
+  const images = req.files && req.files['multipleImages'] ? req.files['multipleImages'] : [];
+  const imageData = images.map((file) => ({
+    images: `${getBaseUrl()}/${file.path.replace(/\\/g, '/')}`,
+    person_id: newProd._id,
+  }));
+
+  if (imageData.length > 0) {
+    await multipleImage.insertMany(imageData);
+  }
+
+  res.json({ message: 'Data Has Been Added...' });
+});
+
+const readData = asyncHandler(async (req, res) => {
+  const { category, manufacturer, status, limit, name } = req.body;
+  const query = {};
+
+  if (name && name !== '') {
+    query.title = { $regex: name, $options: 'i' };
+  }
+  if (category && category !== '') {
+    query.category = category;
+  }
+  if (manufacturer && manufacturer !== '') {
+    query.manufacturer = manufacturer;
+  }
+  if (status && status !== '') {
+    query.status = status;
+  }
+
+  let read = Product.find(query);
+  if (limit) {
+    read = read.limit(Number(limit));
+  }
+
+  const results = await read;
+  res.json(results);
+});
+
+const update_Read_Data = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const data = await Product.findById(id);
+  if (!data) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+  res.json(data);
+});
+
+const update_Mul_Images = asyncHandler(async (req, res) => {
+  const alpha = await multipleImage.find({ person_id: req.params.id });
+  res.json(alpha);
+});
+
+const mul_Del_Image = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const imageLocation = await multipleImage.findById(id);
+  if (!imageLocation) {
+    return res.status(404).json({ error: 'Image not found' });
+  }
+
+  const filepath = path.join(__dirname, '../', imageLocation.images.replace(getBaseUrl() + '/', ''));
+  if (fs.existsSync(filepath)) {
+    fs.unlinkSync(filepath);
+  }
+  await multipleImage.findByIdAndDelete(id);
+  res.json({ message: 'Your Image Have Been Deleted Sucessfully' });
+});
+
+const update = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { title, category, manufacturer, vendor, price, price_discount, keywords, stock, short_description, long_description, status } = req.body;
+
+  const updateFields = {
+    title,
+    category,
+    manufacturer,
+    vendor,
+    price: Number(price),
+    price_discount: price_discount ? Number(price_discount) : 0,
+    keywords,
+    stock: Number(stock),
+    short_description,
+    long_description,
+    status,
+  };
+
+  const currentProduct = await Product.findById(id);
+  if (!currentProduct) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+
+  if (req.files && req.files['image'] !== undefined) {
+    const filePath = path.join(__dirname, '../', currentProduct.image.replace(getBaseUrl() + '/', ''));
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    updateFields.image = `${getBaseUrl()}/${req.files['image'][0].path.replace(/\\/g, '/')}`;
+  }
+
+  await Product.updateOne({ _id: id }, { $set: updateFields });
+
+  if (req.files && req.files['multipleImages'] !== undefined) {
+    const imagePaths = req.files['multipleImages'].map((file) => `${getBaseUrl()}/${file.path.replace(/\\/g, '/')}`);
     const imageData = imagePaths.map((path) => ({
-        images: path,
-        person_id:id,
-      }));
-      await multipleImage.insertMany(imageData);
-      res.json({message:"Data Has Been Added..."});
-}
+      images: path,
+      person_id: id,
+    }));
+    await multipleImage.insertMany(imageData);
+  }
 
-const readData = async(req,res)=>{
-     const {category,manufacturer,status,limit,name} = req.body;
-     let read;
-     if (name && name !== '') { 
-        read = await singleImage.find({ title: { $regex: name, $options: "i" } });
-    } 
-     // for all type value data 
-    else  if((category && category != '') && (manufacturer && manufacturer != '') && (status && status !='') && (limit && limit && limit !='') )
-        {
-        read = await singleImage.find({status:status,category:category,manufacturer:manufacturer}).limit(limit);
+  res.json({ mes: 'Your Data Have Been Updated' });
+});
+
+const deleteData = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const imageLocation = await Product.findById(id);
+  if (!imageLocation) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+
+  await Product.deleteOne({ _id: id });
+  if (imageLocation.image) {
+    const filepath = path.join(__dirname, '../', imageLocation.image.replace(getBaseUrl() + '/', ''));
+    if (fs.existsSync(filepath)) {
+      fs.unlinkSync(filepath);
     }
-    else if((category && category != '') && (manufacturer && manufacturer != '') && (status && status !=''))
-        {
-        read = await singleImage.find({status:status,category:category,manufacturer:manufacturer});
-    } 
-    // for categories and manufacturer 
-    else if((category && category != '') && (manufacturer && manufacturer != '') && (limit && limit && limit !='') )
-        {
-         read = await singleImage.find({category:category,manufacturer:manufacturer}).limit(limit);
-     }
-    else if((category && category != '') && (manufacturer && manufacturer != ''))
-        {
-         read = await singleImage.find({category:category,manufacturer:manufacturer});
-     }
-     // for categories and status
-      else if ((category && category != '') && (status && status !='') && (limit && limit && limit !=''))
-        {
-        read = await singleImage.find({category:category,status:status}).limit(limit);
-     }
-      else if ((category && category != '') && (status && status !=''))
-        {
-        read = await singleImage.find({category:category,status:status});
-     }
-     // for manufacturer and Status
-      else if ((manufacturer && manufacturer != '') && (status && status !='') && (limit && limit && limit !=''))
-        {
-        read = await singleImage.find({status:status,manufacturer:manufacturer}).limit(limit);
-     } 
-      else if ((manufacturer && manufacturer != '') && (status && status !=''))
-        {
-        read = await singleImage.find({status:status,manufacturer:manufacturer});
-     } 
-     // for category only
-     else if((category && category != '') && (limit && limit && limit !=''))
-        {
-        read = await singleImage.find({category:category}).limit(limit);
-     } 
-     else if(category && category != '')
-        {
-        read = await singleImage.find({category:category});
-     } 
-    // for manufacutrer
-     else if((manufacturer && manufacturer != '') && (limit && limit && limit !='')){
-        read = await singleImage.find({manufacturer:manufacturer}).limit(limit);
-     }
-     else if(manufacturer && manufacturer != ''){
-        read = await singleImage.find({manufacturer:manufacturer});
-     }
-     // for Status
-     else if ((status && status !='') && (limit && limit && limit !='')) {
-        read = await singleImage.find({status:status}).limit(limit);
-     }
-     else if (status && status !='') {
-        read = await singleImage.find({status:status});
-     }
-     // for all data 
-      else if(limit && limit && limit !='') {
-        read = await singleImage.find().limit(limit);
-     }
-      else {
-        read = await singleImage.find();
-     }
-     res.json(read);
-}
-const update_Read_Data = async (req,res)=>{
-    const id = req.params.id;
-    const data =  await singleImage.findById(id);
-    res.json(data);
-}
+  }
 
-const update_Mul_Images = async(req,res)=>{
-    const alpha = await multipleImage.find({person_id:req.params.id});
-    res.json(alpha);
-}
+  const multiple = await multipleImage.find({ person_id: id });
+  await multipleImage.deleteMany({ person_id: id });
 
-const mul_Del_Image = async(req,res)=>{
-    const id = req.params.id;
-    const imageLocation = await multipleImage.findById(req.params.id)
-    const filepath = path.join(__dirname , '../', imageLocation.images.replace('http://localhost:4000/',''));
-    if(fs.existsSync(filepath)){
-         fs.unlinkSync(filepath);
+  for (const item of multiple) {
+    if (item.images) {
+      const filePathImage = path.join(__dirname, '../', item.images.replace(getBaseUrl() + '/', ''));
+      if (fs.existsSync(filePathImage)) {
+        fs.unlinkSync(filePathImage);
+      }
     }
-     await multipleImage.findByIdAndDelete(id);
-    res.json({message:"Your Image Have Been Deleted Sucessfully"}); 
-}
+  }
 
-const update = async(req,res)=>{
-    const id = req.params.id;
-    const {title ,category, manufacturer,vendor,price,price_discount,keywords,stock,short_description,long_description,status} =req.body; 
+  res.json({ message: 'Your product and associated images have been deleted' });
+});
 
-    if(req.files['image'] !== undefined){
-        const imageRecord = await singleImage.findById(id);
-        const filePath = path.join(__dirname, '../', imageRecord.image.replace('http://localhost:4000/', ''));
-    if(req.files["image"][0].path){
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-        }
-        await singleImage.updateOne({_id:id},{$set:{
-            title:title,
-            category:category,
-            manufacturer:manufacturer,
-            vendor:vendor,
-            price:price,
-            price_discount:price_discount,
-            keywords:keywords,
-            stock:stock,
-            short_description:short_description,
-            long_description:long_description,
-            image:`http://localhost:4000/${req.files["image"][0].path}`,
-            status:status,
-            }});
-            res.json({mes:"Your Data Have Been Updated"})}
-    }else {
-    await singleImage.updateOne({_id:id},{$set:{
-        title:title,
-            category:category,
-            manufacturer:manufacturer,
-            vendor:vendor,
-            price:price,
-            price_discount:price_discount,
-            keywords:keywords,
-            stock:stock,
-            short_description:short_description,
-            long_description:long_description,
-            status:status,
-    }});
-    res.json({mes:"Your Data Have Been Updated"})
-    };
-    if (req.files['multipleImages'] !== undefined) {
-        const imagePaths = req.files['multipleImages'].map((file) => `http://localhost:4000/${file.path}`);
-        const imageData = imagePaths.map((path) => ({
-            images: path,
-            person_id:id,
-        }));
-            await multipleImage.insertMany(imageData);
-    }
-}
+const select_update_state = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { status } = req.body;
+  await Product.updateOne({ _id: id }, { $set: { status } });
+  res.json({ message: 'Status updated successfully...' });
+});
 
-const deleteData = async(req,res)=>{
-const id = req.params.id;
-const imageLoation = await singleImage.findById(id);
-if(imageLoation){
-    await singleImage.deleteOne({_id:id});
-    const filepath = path.join(__dirname, '../', imageLoation.image.replace("http://localhost:4000/",""))
-    if(fs.existsSync(filepath)){
-        fs.unlinkSync(filepath);
-        const multiple = await multipleImage.find({ person_id: id });
-            await multipleImage.deleteMany({person_id: id});
-            for (const item of multiple) {
-                if (item.images) {
-                    const filePathImage = path.join(__dirname, '../', item.images.replace('http://localhost:4000/', ''));
-                    if (fs.existsSync(filePathImage)) {
-                        fs.unlinkSync(filePathImage);
-                    }
-                }
-        }
-        res.json({message:"Your image have been Deleted......."})
-    }
-}
-}
+const front_filter = asyncHandler(async (req, res) => {
+  const category = req.body.category || '';
+  const manufacture = req.body.manufacture || '';
 
-const select_update_state = async(req,res)=>{
-    const id = req.params.id;
-    const {status} =  req.body;
-    await singleImage.updateOne({_id:id},{$set:{status:status}})
-    res.send({message:"Status updated sucessfully..."})
-}
+  const Array_Category = category ? category.split(',') : [];
+  const Array_Manufacture = manufacture ? manufacture.split(',') : [];
 
-const front_filter = async(req,res)=>{
-    const category =  req.body.category;
-    const manufacture = req.body.manufacture;
-    const Array_Category = category.split(',');
-    const Array_Manufacture = manufacture.split(',');
-    let data ;
-        
-        if(category.trim() && manufacture.trim()){
-            data = await singleImage.find({
-                category: { $in: Array_Category },
-                manufacturer: { $in: Array_Manufacture }
-              });
-        } else if(category.trim()){
+  const query = {};
+  if (Array_Category.length > 0 && category.trim()) {
+    query.category = { $in: Array_Category };
+  }
+  if (Array_Manufacture.length > 0 && manufacture.trim()) {
+    query.manufacturer = { $in: Array_Manufacture };
+  }
 
-            data = await Promise.all(
-                Array_Category.map( async(e )=>{
-                  return await singleImage.find({category:e})  
-                } ) 
-            );
-        } else if(manufacture.trim()){
+  const data = await Product.find(query);
+  res.json(data);
+});
 
-            data = await Promise.all(
-                Array_Manufacture.map( async(e )=>{
-                 return  await singleImage.find({manufacturer:e})  
-                } ) 
-            );
-           }
-        else {
-            data = await singleImage.find();
-        }
-    res.json(data);
-}
-
-module.exports = {select_update_state,insertImage,readData,update_Read_Data,update_Mul_Images,mul_Del_Image,update,deleteData,front_filter};
+module.exports = {
+  select_update_state,
+  insertImage,
+  readData,
+  update_Read_Data,
+  update_Mul_Images,
+  mul_Del_Image,
+  update,
+  deleteData,
+  front_filter,
+};

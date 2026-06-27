@@ -1,12 +1,13 @@
-const mongoose = require("mongoose");
-mongoose.connect('mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/');
+const mongoose = require('mongoose');
+
 const schema = mongoose.Schema({
-    firstname:String,
-    lastname:String,
-    email:String,
-    subject:String,
-    phone:String,
-    message:String,
-})
-const contactUs = mongoose.model('contactus',schema);
+  firstname: { type: String, required: true },
+  lastname:  { type: String, required: true },
+  email:     { type: String, required: true },
+  subject:   String,
+  phone:     String,
+  message:   { type: String, required: true },
+});
+
+const contactUs = mongoose.model('contactus', schema);
 module.exports = contactUs;

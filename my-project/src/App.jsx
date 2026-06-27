@@ -47,75 +47,72 @@ import CustomerDetail from './Web/HeaderPart/CustomerDetails';
 import AboutUs from './Web/HeaderPart/AboutUs';
 import ForgetPassword  from './Web/Password/Forgetpassword';
 
-
 function App() {
   return (
-  <>
-  <div className='bg-slate-100 '>
-    <BrowserRouter>
-      <Routes>
+    <>
+      <div className='bg-slate-100'>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/admin" element={<Admin/>} />
 
-        <Route path="/admin" element={<Admin/>} />
+            <Route path="/" element={<Layout/>} >
+              <Route path="/admin/dashbord" element={<ProtectedRoute><Dashbord/></ProtectedRoute>} /> 
+              {/* Categories */}
+              <Route path='/admin/categories' element={<ProtectedRoute><CategoriesRead/></ProtectedRoute> }/>
+              <Route path='/admin/categoriescreat' element={<ProtectedRoute><CategoriesCreat/></ProtectedRoute>  }/>
+              <Route path='/admin/categoriesupdate/:id' element={<ProtectedRoute><CategoriesUpdate/></ProtectedRoute> } />
+              {/* Products */}
+              <Route path='/admin/product' element={ <ProtectedRoute><ProductRead/></ProtectedRoute> } />
+              <Route path='/admin/productscreat' element={  <ProtectedRoute><ProductCreat/></ProtectedRoute> } />
+              <Route path='/admin/productupdate/:id' element={<ProtectedRoute><ProductUpdate/></ProtectedRoute> } />
+              {/* manufacturer */}
+              <Route path='/admin/manufacture' element={ <ProtectedRoute><Read_manufacture/></ProtectedRoute> }/>
+              <Route path='/admin/manufacturecreat' element={<ProtectedRoute><Creat_manufacture/></ProtectedRoute> } />
+              <Route path='/admin/manufactureupdate/:id' element={<ProtectedRoute><Update_manufacture/></ProtectedRoute> } />
+              {/* Carousel */}
+              <Route path='/admin/carousel' element={ <ProtectedRoute><Read_Carousel/></ProtectedRoute>} />
+              <Route path='/admin/carouselcreat' element={<ProtectedRoute><Creat_Carousel/></ProtectedRoute> } />
+              <Route path='/admin/carouselupdate/:id' element={<ProtectedRoute><Update_Carousel/></ProtectedRoute>}  />
+              {/* webSetting */}
+              <Route path='/admin/contactus' element={<ProtectedRoute><Contact_Us/></ProtectedRoute> } /> 
+              <Route path='/admin/iconchange' element={<ProtectedRoute><Icon_change/></ProtectedRoute> } />
+              {/* Admin Page */}
+              <Route path='/admin/conformpassword' element={<ProtectedRoute><ConformPassword/></ProtectedRoute> } />
+              
+              {/* Customer Orders — Fixed: Swapped to ProtectedRoute for Admin-only access */}
+              <Route path='/admin/orders' element={<ProtectedRoute><Read_orders/></ProtectedRoute>} />
+              <Route path='/admin/orders/:id' element={<ProtectedRoute><View_orders/></ProtectedRoute>}  />  
 
-        <Route path="/" element={<Layout/>} >
-          <Route path="/admin/dashbord" element={<ProtectedRoute><Dashbord/></ProtectedRoute>} /> 
-          {/* Categories */}
-          <Route path='/admin/categories' element={<ProtectedRoute><CategoriesRead/></ProtectedRoute> }/>
-          <Route path='/admin/categoriescreat' element={<ProtectedRoute><CategoriesCreat/></ProtectedRoute>  }/>
-          <Route path='/admin/categoriesupdate/:id' element={<ProtectedRoute><CategoriesUpdate/></ProtectedRoute> } />
-          {/* Products */}
-          <Route path='/admin/product' element={ <ProtectedRoute><ProductRead/></ProtectedRoute> } />
-          <Route path='/admin/productscreat' element={  <ProtectedRoute><ProductCreat/></ProtectedRoute> } />
-          <Route path='/admin/productupdate/:id' element={<ProtectedRoute><ProductUpdate/></ProtectedRoute> } />
-          {/* manufacturer */}
-          <Route path='/admin/manufacture' element={ <ProtectedRoute><Read_manufacture/></ProtectedRoute> }/>
-          <Route path='/admin/manufacturecreat' element={<ProtectedRoute><Creat_manufacture/></ProtectedRoute> } />
-          <Route path='/admin/manufactureupdate/:id' element={<ProtectedRoute><Update_manufacture/></ProtectedRoute> } />
-          {/* Carousel */}
-          <Route path='/admin/carousel' element={ <ProtectedRoute><Read_Carousel/></ProtectedRoute>} />
-          <Route path='/admin/carouselcreat' element={<ProtectedRoute><Creat_Carousel/></ProtectedRoute> } />
-          <Route path='/admin/carouselupdate/:id' element={<ProtectedRoute><Update_Carousel/></ProtectedRoute>}  />
-          {/* webSetting */}
-          <Route path='/admin/contactus' element={<ProtectedRoute><Contact_Us/></ProtectedRoute> } /> 
-          <Route path='/admin/iconchange' element={<ProtectedRoute><Icon_change/></ProtectedRoute> } />
-          {/* Admin Page */}
-          <Route path='/admin/conformpassword' element={<ProtectedRoute><ConformPassword/></ProtectedRoute> } />
-          
-          {/* Costomer Orders */}
-          <Route path='/admin/orders' element={<ProtecedRouter><Read_orders/></ProtecedRouter>} />
-          <Route path='/admin/orders/:id' element={<ProtecedRouter><View_orders/></ProtecedRouter>}  />  
+              <Route path='/admin/changepassword' element={<ProtectedRoute> <ProtectChanPass><ChangePassword/></ProtectChanPass></ProtectedRoute>} />
+            </Route>
+          </Routes>    
+        </BrowserRouter>
+      </div>
 
-          <Route path='/admin/changepassword' element={<ProtectedRoute> <ProtectChanPass><ChangePassword/></ProtectChanPass></ProtectedRoute>} />
-
-        </Route>
-      </Routes>    
-    </BrowserRouter>
-  </div>
-
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Weblayout/>} >
-
-        <Route path='/' element={<Index/>} />
-        <Route path='/carousel' element={<Carousel/>} />
-        <Route path="/shop"  element={<ShopList/>}  />
-        <Route path='/contact' element={<ContactUs/>} />
-        <Route path='/product/:id' element={<Product/>} />
-        <Route path='/signin' element={<Signin/>} />
-        <Route path='/signup' element={<SignUp/>} />
-        <Route path='/account' element={<Account/> } />
-        <Route path='/viewcart' element={<ViewCart/>} />
-        <Route path='/checkout' element={<Checkout/>} />
-        <Route path='/customerDetail/:id' element={<CustomerDetail/>} />
-        <Route path='/aboutus' element={<AboutUs/>} />
-        <Route path='/forgetpassword' element={<ForgetPassword/>} />
-        </Route>
-      </Routes>    
-    </BrowserRouter>
-  
-    
-  </>
-  )
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Weblayout/>} >
+            <Route path='/' element={<Index/>} />
+            <Route path='/carousel' element={<Carousel/>} />
+            <Route path="/shop"  element={<ShopList/>}  />
+            <Route path='/contact' element={<ContactUs/>} />
+            <Route path='/product/:id' element={<Product/>} />
+            <Route path='/signin' element={<Signin/>} />
+            <Route path='/signup' element={<SignUp/>} />
+            
+            {/* User Protected Routes */}
+            <Route path='/account' element={<ProtecedRouter><Account/></ProtecedRouter>} />
+            <Route path='/viewcart' element={<ProtecedRouter><ViewCart/></ProtecedRouter>} />
+            <Route path='/checkout' element={<ProtecedRouter><Checkout/></ProtecedRouter>} />
+            <Route path='/customerDetail/:id' element={<ProtecedRouter><CustomerDetail/></ProtecedRouter>} />
+            
+            <Route path='/aboutus' element={<AboutUs/>} />
+            <Route path='/forgetpassword' element={<ForgetPassword/>} />
+          </Route>
+        </Routes>    
+      </BrowserRouter>
+    </>
+  );
 }
 
-export default App
+export default App;

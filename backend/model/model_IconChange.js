@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/");
+
+// mongoose.connect is called once in first.js — do NOT connect here
 
 const schema = mongoose.Schema ({
-    icon:String,
+    icon: String,
 })
 
-const IconChange = mongoose.model('IconChanges',schema);
+const IconChange = mongoose.model('IconChanges', schema);
 module.exports = IconChange;
-    

@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema({
-    product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-    userEmail:String,
-    quantity:Number
-})
-const cart = mongoose.model("carts",Schema);
+  product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'products', required: true },
+  userEmail:  { type: String, required: true },
+  quantity:   { type: Number, required: true, min: 1 },
+});
+
+const cart = mongoose.model('carts', Schema);
 module.exports = cart;

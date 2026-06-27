@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/");
 
- const schema = mongoose.Schema ({
-    name:String,
-    title:String,
-    status:String,
-    image:String,
+// mongoose.connect is called once in first.js — do NOT connect here
+
+const schema = mongoose.Schema ({
+    name:   { type: String, required: true },
+    title:  String,
+    status: { type: String, default: 'active' },
+    image:  String,
 })
 
-const carousel = mongoose.model('carousel',schema);
+const carousel = mongoose.model('carousel', schema);
 
 module.exports = carousel;

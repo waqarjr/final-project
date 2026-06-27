@@ -1,42 +1,38 @@
-const  multer = require("multer");
-const {read_update_category,creat_category,read_category,delete_category, update_category,select_update} = require("../controller/ContolCategories");
-
-const express = require("express");
+const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const {
+  read_update_category,
+  creat_category,
+  read_category,
+  delete_category,
+  update_category,
+  select_update,
+} = require('../controller/ContolCategories');
+const { verifyAdmin } = require('../middleware/authMiddleware');
 
+// Shared Disk Storage Configuration for Categories
 const storage = multer.diskStorage({
-    destination: function(req,file,cd) {
-        cd(null,"Images/categories");
-    },
-    filename: function(req,file,cd){
-        const file_name = `${Date.now()}-${file.originalname}`;
-        cd(null,file_name);
-    }
-})
-const uploads = multer({storage:storage})
-router.post('/creatcategories',uploads.single('image'),creat_category);
+  destination: function (req, file, cb) {
+    cb(null, 'Images/categories');
+  },
+  filename: function (req, file, cb) {
+    const file_name = `${Date.now()}-${file.originalname}`;
+    cb(null, file_name);
+  },
+});
 
-router.get('/readcategory',read_category);
+const uploads = multer({ storage: storage });
 
-router.post('/readcategory',read_category);
+// ─── Public Routes ───────────────────────────────────────────────────────────
+router.get('/readcategory', read_category);
+router.post('/readcategory', read_category);
+router.get('/readupdatecategory/:id', read_update_category);
 
-router.get('/deletecategory/:id',delete_category);
-
-router.get('/readupdatecategory/:id',read_update_category);
-
-const categories_update = multer.diskStorage({
-    destination: function(req,file,cd){
-        cd(null,"Images/categories")
-    },
-    filename:function(req,file,cd){
-        const file_name = `${Date.now()}-${file.originalname}`
-        cd(null,file_name);
-    }
-})
-const update = multer({storage:categories_update});
-
-router.post('/updatecategory/:id',update.single('image'),update_category);
-
-router.post('/selectupdate/:id',select_update);
+// ─── Admin Routes ────────────────────────────────────────────────────────────
+router.post('/creatcategories', verifyAdmin, uploads.single('image'), creat_category);
+router.post('/updatecategory/:id', verifyAdmin, uploads.single('image'), update_category);
+router.delete('/deletecategory/:id', verifyAdmin, delete_category); // Changed from GET to DELETE
+router.post('/selectupdate/:id', verifyAdmin, select_update);
 
 module.exports = router;

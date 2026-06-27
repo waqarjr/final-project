@@ -1,19 +1,20 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-mongoose.connect("mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/")
+// mongoose.connect is called once in first.js — do NOT connect here
 
-const chema = mongoose.Schema({
-    firstname:String,
-    lastname:String,
-    email:String,
-    phone:String,
-    password:String,
-})
-chema.pre('save',function(next){
-  const password = bcrypt.hashSync(this.password,10);
-  this.password = password;
+const schema = mongoose.Schema({
+  firstname: { type: String, required: true, trim: true },
+  lastname:  { type: String, required: true, trim: true },
+  email:     { type: String, required: true, unique: true, lowercase: true, trim: true },
+  phone:     { type: String, required: true },
+  password:  { type: String, required: true },
+});
+
+schema.pre('save', function (next) {
+  this.password = bcrypt.hashSync(this.password, 10);
   next();
-})
-const signup = mongoose.model("Signup",chema);
-module.exports = signup;
+});
+
+const Signup = mongoose.model('Signup', schema);
+module.exports = Signup;

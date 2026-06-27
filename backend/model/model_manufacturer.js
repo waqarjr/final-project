@@ -1,13 +1,11 @@
-const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/");
+const mongoose = require('mongoose');
 
- const schema = mongoose.Schema ({
-    name:String,
-    status:String,
-    image:String,
-    date:String,
-})
+const schema = mongoose.Schema({
+  name:   { type: String, required: true, trim: true },
+  status: { type: String, default: 'active' },
+  image:  String,
+  date:   String,
+});
 
-const category = mongoose.model('manufacture',schema);
-
-module.exports = category;
+const manufacturer = mongoose.model('manufacture', schema);
+module.exports = manufacturer;

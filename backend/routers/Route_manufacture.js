@@ -1,40 +1,38 @@
-const  multer = require("multer");
-const {read_update_manufacture,creat_manufacture,read_manufacture,delete_manufacture, update_manufacture,select_update} = require("../controller/Control_manufacture");
-
-const express = require("express");
+const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const {
+  read_update_manufacture,
+  creat_manufacture,
+  read_manufacture,
+  delete_manufacture,
+  update_manufacture,
+  select_update,
+} = require('../controller/Control_manufacture');
+const { verifyAdmin } = require('../middleware/authMiddleware');
 
+// Shared Disk Storage Configuration for Manufacturers
 const storage = multer.diskStorage({
-    destination: function(req,file,cd) {
-        cd(null,"Images/manufactuer");
-    },
-    filename: function(req,file,cd){
-        const file_name = `${Date.now()}-${file.originalname}`;
-        cd(null,file_name);
-    }
-})
-const uploads = multer({storage:storage})
-router.post('/creatmanufacture',uploads.single('image'),creat_manufacture);
+  destination: function (req, file, cb) {
+    cb(null, 'Images/manufactuer');
+  },
+  filename: function (req, file, cb) {
+    const file_name = `${Date.now()}-${file.originalname}`;
+    cb(null, file_name);
+  },
+});
 
-router.get('/readmanufacture',read_manufacture);
-router.post('/readmanufacture',read_manufacture);
+const uploads = multer({ storage: storage });
 
-router.get('/deletemanufacture/:id',delete_manufacture);
+// ─── Public Routes ───────────────────────────────────────────────────────────
+router.get('/readmanufacture', read_manufacture);
+router.post('/readmanufacture', read_manufacture);
+router.get('/readupdatemanufacture/:id', read_update_manufacture);
 
-router.get('/readupdatemanufacture/:id',read_update_manufacture);
+// ─── Admin Routes ────────────────────────────────────────────────────────────
+router.post('/creatmanufacture', verifyAdmin, uploads.single('image'), creat_manufacture);
+router.post('/updatemanufacture/:id', verifyAdmin, uploads.single('image'), update_manufacture);
+router.delete('/deletemanufacture/:id', verifyAdmin, delete_manufacture); // Changed from GET to DELETE
+router.post('/selectupdate_manufacture/:id', verifyAdmin, select_update);
 
-const categories_update = multer.diskStorage({
-    destination: function(req,file,cd){
-        cd(null,"Images/manufactuer")
-    },
-    filename:function(req,file,cd){
-        const file_name = `${Date.now()}-${file.originalname}`
-        cd(null,file_name);
-    }
-})
-const update = multer({storage:categories_update});
-
-router.post('/updatemanufacture/:id',update.single('image'),update_manufacture);
-
-router.post('/selectupdate_manufacture/:id',select_update);
 module.exports = router;

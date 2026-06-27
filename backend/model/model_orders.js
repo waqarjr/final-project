@@ -1,17 +1,18 @@
-const mongoose = require("mongoose");
-mongoose.connect('mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/');
+const mongoose = require('mongoose');
+
 const schema = mongoose.Schema({
-    firstname:String,
-    lastname:String,
-    email:String,
-    address:String,
-    phone:String,
-    postcode:String,
-    city:String,
-    currentDate:String,
-    currentTime:String,
-    status:String,
-    amount:String
-})
-const orders = mongoose.model('orders',schema);
+  firstname:   { type: String, required: true },
+  lastname:    { type: String, required: true },
+  email:       { type: String, required: true },
+  address:     { type: String, required: true },
+  phone:       { type: String, required: true },
+  postcode:    { type: String, required: true },
+  city:        { type: String, required: true },
+  currentDate: String,
+  currentTime: String,
+  status:      { type: String, default: 'pending' },
+  amount:      Number, // Store as Number, not String
+});
+
+const orders = mongoose.model('orders', schema);
 module.exports = orders;

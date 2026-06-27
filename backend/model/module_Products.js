@@ -1,20 +1,18 @@
-const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://waqarjr03:waqarjr03@project.itikg.mongodb.net/");
+const mongoose = require('mongoose');
 
- const schema = mongoose.Schema ({
-    title:String,
-    category:String,
-    manufacturer:String,
-    price:Number,
-    price_discount:Number,
-    keywords:String,
-    stock:Number,
-    short_description:String,
-    long_description:String,
-    image:String,
-    status:String,
-})
+const schema = mongoose.Schema({
+  title:             { type: String, required: true },
+  category:          { type: String, required: true },
+  manufacturer:      { type: String, required: true },
+  price:             { type: Number, required: true, min: 0 },
+  price_discount:    { type: Number, default: 0, min: 0 },
+  keywords:          String,
+  stock:             { type: Number, required: true, min: 0 },
+  short_description: String,
+  long_description:  String,
+  image:             String,
+  status:            { type: String, enum: ['active', 'inactive'], default: 'active' },
+});
 
-const category = mongoose.model('products',schema);
-
-module.exports = category;
+const Product = mongoose.model('products', schema);
+module.exports = Product;
